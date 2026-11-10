@@ -3,6 +3,38 @@
    Clean, Efficient, Data-Driven Desktop & Tablet Interface
    ========================================================================== */
 
+/* ==========================================================================
+   THMANYAH TYPEFACE (خط ثمانية الأصيل) — Web Font Definitions
+   ========================================================================== */
+@font-face {
+  font-family: 'Thmanyah Sans';
+  src: url('/fonts/thmanyah/woff2/thmanyahsans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Thmanyah Sans';
+  src: url('/fonts/thmanyah/woff2/thmanyahsans-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Thmanyah Sans';
+  src: url('/fonts/thmanyah/woff2/thmanyahsans-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Thmanyah Serif Display';
+  src: url('/fonts/thmanyah/woff2/thmanyahserifdisplay-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --adm-bg: #F4F5F7;
   --adm-surface: #FFFFFF;
@@ -29,8 +61,12 @@
 body {
   background: var(--adm-bg);
   color: var(--adm-text);
-  font-family: 'Tajawal', 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Thmanyah Sans', 'Tajawal', 'Plus Jakarta Sans', sans-serif;
   line-height: 1.55;
+}
+
+h1, h2, h3, .sidebar-brand-name {
+  font-family: 'Thmanyah Serif Display', 'Thmanyah Sans', serif;
 }
 
 .admin-layout {

@@ -3,6 +3,124 @@
    Sultanate of Oman, Sohar | Bilingual RTL & LTR Design System
    ========================================================================== */
 
+/* ==========================================================================
+   THMANYAH TYPEFACE (خط ثمانية الأصيل) — Web Font Definitions
+   Thmanyah Serif Display (Headings & Royal Accents)
+   Thmanyah Sans (Interface, Body, Buttons & Pricing)
+   Thmanyah Serif Text (Story, Descriptions & Captions)
+   ========================================================================== */
+
+/* 1. Thmanyah Serif Display (For Headings, Royal Titles, Product Names) */
+@font-face {
+  font-family: 'Thmanyah Serif Display';
+  src: url('/fonts/thmanyah/woff2/thmanyahserifdisplay-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Thmanyah Serif Display';
+  src: url('/fonts/thmanyah/woff2/thmanyahserifdisplay-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Thmanyah Serif Display';
+  src: url('/fonts/thmanyah/woff2/thmanyahserifdisplay-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Thmanyah Serif Display';
+  src: url('/fonts/thmanyah/woff2/thmanyahserifdisplay-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Thmanyah Serif Display';
+  src: url('/fonts/thmanyah/woff2/thmanyahserifdisplay-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 2. Thmanyah Sans (For UI, Body, Buttons, Tags, Prices) */
+@font-face {
+  font-family: 'Thmanyah Sans';
+  src: url('/fonts/thmanyah/woff2/thmanyahsans-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Thmanyah Sans';
+  src: url('/fonts/thmanyah/woff2/thmanyahsans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Thmanyah Sans';
+  src: url('/fonts/thmanyah/woff2/thmanyahsans-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Thmanyah Sans';
+  src: url('/fonts/thmanyah/woff2/thmanyahsans-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Thmanyah Sans';
+  src: url('/fonts/thmanyah/woff2/thmanyahsans-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* 3. Thmanyah Serif Text (For Brand Story, Quotes, Extended Editorial Copy) */
+@font-face {
+  font-family: 'Thmanyah Serif Text';
+  src: url('/fonts/thmanyah/woff2/thmanyahseriftext-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Thmanyah Serif Text';
+  src: url('/fonts/thmanyah/woff2/thmanyahseriftext-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Thmanyah Serif Text';
+  src: url('/fonts/thmanyah/woff2/thmanyahseriftext-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Thmanyah Serif Text';
+  src: url('/fonts/thmanyah/woff2/thmanyahseriftext-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Thmanyah Serif Text';
+  src: url('/fonts/thmanyah/woff2/thmanyahseriftext-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --brand-primary: #4A0E13;
   --brand-primary-dark: #2D070A;
@@ -20,8 +138,8 @@
   --brand-surface-alt: #E5D7C3;
   --brand-white: #FFFFFF;
   --text-heading: #2B080B;
-  --text-body: #5A463F;
-  --text-muted: #877168;
+  --text-body: #4A3A34;
+  --text-muted: #7E6A63;
   --border-gold: rgba(198, 163, 101, 0.38);
   --border-subtle: rgba(74, 14, 19, 0.12);
   --shadow-soft: 0 10px 28px -4px rgba(45, 7, 10, 0.08), 0 2px 6px rgba(198, 163, 101, 0.1);
@@ -31,8 +149,10 @@
   --radius-md: 16px;
   --radius-lg: 24px;
   --radius-xl: 32px;
-  --font-ar-heading: 'Amiri', 'Tajawal', serif;
-  --font-ar-body: 'Tajawal', sans-serif;
+  /* Arabic Typography: Thmanyah Royal Typeface Hierarchy */
+  --font-ar-heading: 'Thmanyah Serif Display', 'Thmanyah Serif Text', 'Amiri', serif;
+  --font-ar-body: 'Thmanyah Sans', 'Tajawal', sans-serif;
+  --font-ar-serif: 'Thmanyah Serif Text', 'Thmanyah Serif Display', serif;
   --font-en-heading: 'Cormorant Garamond', Georgia, serif;
   --font-en-body: 'Plus Jakarta Sans', sans-serif;
 }
@@ -734,11 +854,13 @@ img, svg {
 }
 
 .product-title {
-  font-size: 1.16rem;
+  font-family: var(--font-ar-heading);
+  font-size: 1.18rem;
   font-weight: 700;
   color: var(--brand-primary-dark);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.35rem;
   cursor: pointer;
+  line-height: 1.35;
 }
 
 .product-title:hover {

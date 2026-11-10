@@ -354,6 +354,14 @@ class TajAlMalikRequestHandler(BaseHTTPRequestHandler):
             mime_type = "application/javascript; charset=utf-8"
         elif file_path.endswith(".html"):
             mime_type = "text/html; charset=utf-8"
+        elif file_path.endswith(".woff2"):
+            mime_type = "font/woff2"
+        elif file_path.endswith(".woff"):
+            mime_type = "font/woff"
+        elif file_path.endswith(".otf"):
+            mime_type = "font/otf"
+        elif file_path.endswith(".ttf"):
+            mime_type = "font/ttf"
 
         with open(file_path, "rb") as f:
             content = f.read()
