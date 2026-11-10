@@ -148,33 +148,87 @@ function renderAllStorefront() {
   const isAr = STATE.lang === 'ar';
   const t = UI_TEXT[STATE.lang];
 
-  // Language Button in Drawer
-  const langBtn = document.getElementById('lang-switch-btn');
-  if (langBtn) langBtn.textContent = t.langBtn;
+  // Desktop Header & Top bar (Directive: keep previous desktop version)
+  const headerBrandName = document.getElementById('header-brand-name');
+  if (headerBrandName) headerBrandName.textContent = isAr ? brand.store_name_ar : brand.store_name_en;
+  const headerBrandTagline = document.getElementById('header-brand-tagline');
+  if (headerBrandTagline) headerBrandTagline.textContent = isAr ? brand.tagline_ar : brand.tagline_en;
 
-  // Floating Cart Label
+  const topLocation = document.getElementById('top-location-text');
+  if (topLocation) {
+    topLocation.textContent = isAr
+      ? `📍 ${brand.location_ar} — توصيل لكافة ولايات السلطنة أو استلام من الفرع`
+      : `📍 ${brand.location_en} — Delivery across Oman or Branch Pickup`;
+  }
+  const topPhone = document.getElementById('top-phone-link');
+  if (topPhone) {
+    topPhone.textContent = `📞 ${brand.phone_display}`;
+    topPhone.href = `https://wa.me/${brand.whatsapp_number}`;
+  }
+
+  // Desktop Header Controls
+  const langBtn = document.getElementById('lang-switch-btn');
+  if (langBtn) langBtn.textContent = isAr ? 'English 🇬🇧' : 'العربية 🇴🇲';
+  const drawerLangLbl = document.getElementById('drawer-lang-label');
+  if (drawerLangLbl) drawerLangLbl.textContent = isAr ? 'English' : 'العربية';
+
   const cartLbl = document.getElementById('cart-btn-label');
   if (cartLbl) cartLbl.textContent = t.cartLabel;
+  const mobileCartLbl = document.getElementById('mobile-cart-btn-label');
+  if (mobileCartLbl) mobileCartLbl.textContent = t.cartLabel;
 
-  // Corner Nav Button Label
+  // Corner Nav Button Label (Mobile)
   const cornerNavLbl = document.getElementById('corner-nav-label');
   if (cornerNavLbl) cornerNavLbl.textContent = isAr ? 'القائمة' : 'Menu';
 
-  // Hero Section (Full-Screen Clean Hero)
-  const heroTitle = document.getElementById('hero-title');
-  if (heroTitle) {
-    heroTitle.textContent = isAr ? 'تاج الملك، حلا الملوك' : 'Taj Al Malik — Sweets of Kings';
+  // Desktop Hero Section (Desktop Split Grid)
+  const hero = sections.HERO || {};
+  const heroKicker = document.getElementById('hero-kicker-text');
+  if (heroKicker) {
+    heroKicker.textContent = isAr
+      ? `${brand.tagline_ar} • ${brand.location_ar}`
+      : `${brand.tagline_en} • ${brand.location_en}`;
+  }
+  const desktopHeroTitle = document.getElementById('hero-title');
+  if (desktopHeroTitle) {
+    desktopHeroTitle.textContent = isAr
+      ? (hero.title_ar || 'تاج الملك .. حلا الملوك لذوي الذوق الرفيع')
+      : (hero.title_en || 'Taj Al Malik Royal Sweets');
+  }
+  const desktopHeroSubtitle = document.getElementById('hero-subtitle');
+  if (desktopHeroSubtitle) {
+    desktopHeroSubtitle.textContent = isAr
+      ? (hero.subtitle_ar || 'كل قطعة من حلوياتنا تُصنع بحب، مستوحاة من التقاليد ولمسة ملكية، لنقدم لكم أرقى نكهات الشرق في سلطنة عُمان.')
+      : (hero.subtitle_en || 'Every piece of our sweets is handcrafted with passion and royalty.');
   }
   const heroBtnPrimary = document.getElementById('hero-btn-primary');
   if (heroBtnPrimary) {
-    heroBtnPrimary.innerHTML = `
+    heroBtnPrimary.textContent = isAr
+      ? `👑 ${hero.button_ar || 'تسوق الحلويات الملكية'}`
+      : `👑 ${hero.button_en || 'Shop Royal Sweets'}`;
+  }
+  const heroBtnSecondary = document.getElementById('hero-btn-secondary');
+  if (heroBtnSecondary) {
+    heroBtnSecondary.textContent = isAr
+      ? (hero.secondary_button_ar || 'استكشف مختارات تاج الملك')
+      : (hero.secondary_button_en || 'Explore Menu');
+  }
+
+  // Mobile Hero Section (Full-Screen Seamless Mobile Hero)
+  const mobileHeroTitle = document.getElementById('mobile-hero-title');
+  if (mobileHeroTitle) {
+    mobileHeroTitle.textContent = isAr ? 'تاج الملك، حلا الملوك' : 'Taj Al Malik — Sweets of Kings';
+  }
+  const mobileHeroBtnPrimary = document.getElementById('mobile-hero-btn-primary');
+  if (mobileHeroBtnPrimary) {
+    mobileHeroBtnPrimary.innerHTML = `
       <svg class="ico-svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
       <span>${isAr ? 'تصفح القائمة واطلب الآن' : 'Browse Menu & Order Now'}</span>
     `;
   }
-  const heroScrollText = document.getElementById('hero-scroll-text');
-  if (heroScrollText) {
-    heroScrollText.textContent = isAr ? 'تصفح أصناف الحلويات والأسعار' : 'Browse Sweets & Prices';
+  const mobileHeroScroll = document.getElementById('mobile-hero-scroll-text');
+  if (mobileHeroScroll) {
+    mobileHeroScroll.textContent = isAr ? 'تصفح أصناف الحلويات والأسعار' : 'Browse Sweets & Prices';
   }
 
   // Drawer Links Bilingual Sync
@@ -761,10 +815,17 @@ function updateCartUI() {
   const isAr = STATE.lang === 'ar';
   const t = UI_TEXT[STATE.lang];
 
-  const countEl = document.getElementById('header-cart-count');
-  if (countEl) countEl.textContent = totalCount;
-  const totalEl = document.getElementById('header-cart-total');
-  if (totalEl) totalEl.textContent = formatPriceWithCurrency(subtotal);
+  // Update Desktop Header Cart
+  const desktopCountEl = document.getElementById('header-cart-count');
+  if (desktopCountEl) desktopCountEl.textContent = totalCount;
+  const desktopTotalEl = document.getElementById('header-cart-total');
+  if (desktopTotalEl) desktopTotalEl.textContent = formatPriceWithCurrency(subtotal);
+
+  // Update Mobile Floating Cart
+  const mobileCountEl = document.getElementById('mobile-cart-count');
+  if (mobileCountEl) mobileCountEl.textContent = totalCount;
+  const mobileTotalEl = document.getElementById('mobile-cart-total');
+  if (mobileTotalEl) mobileTotalEl.textContent = formatPriceWithCurrency(subtotal);
 
   const cartBtn = document.getElementById('floating-cart-trigger');
   if (cartBtn) {
