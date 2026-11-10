@@ -11,17 +11,21 @@
   --brand-accent-light: #E2C792;
   --brand-accent-dark: #9E7B3E;
   --brand-card-gold: #C5A267;
+  /* Card Background requested by user: Red 247, Green 239, Blue 228 (#F7EFE4) */
+  --brand-card-bg: rgb(247, 239, 228);
   --brand-cashmere: #EFE5D4;
-  --brand-surface: #FAF7F2;
-  --brand-surface-alt: #F3ECE0;
+  /* Background behind cards: darkened by subtle luxury degrees (#ECE1D1) for rich contrast */
+  --brand-surface: #ECE1D1;
+  /* Section alternate background: darkened warm sand (#E5D7C3) */
+  --brand-surface-alt: #E5D7C3;
   --brand-white: #FFFFFF;
   --text-heading: #2B080B;
   --text-body: #5A463F;
   --text-muted: #877168;
-  --border-gold: rgba(198, 163, 101, 0.28);
-  --border-subtle: rgba(74, 14, 19, 0.09);
-  --shadow-soft: 0 10px 30px -5px rgba(45, 7, 10, 0.07);
-  --shadow-hover: 0 20px 40px -10px rgba(74, 14, 19, 0.15);
+  --border-gold: rgba(198, 163, 101, 0.38);
+  --border-subtle: rgba(74, 14, 19, 0.12);
+  --shadow-soft: 0 10px 28px -4px rgba(45, 7, 10, 0.08), 0 2px 6px rgba(198, 163, 101, 0.1);
+  --shadow-hover: 0 20px 42px -8px rgba(74, 14, 19, 0.16), 0 4px 12px rgba(198, 163, 101, 0.2);
   --shadow-gold: 0 8px 25px -4px rgba(198, 163, 101, 0.35);
   --radius-sm: 10px;
   --radius-md: 16px;
@@ -479,6 +483,7 @@ img, svg {
 .section-block {
   padding: 4rem 0;
   width: 100%;
+  background: var(--brand-surface);
 }
 
 .section-block.alt-bg {
@@ -525,7 +530,7 @@ img, svg {
 }
 
 .category-card {
-  background: var(--brand-white);
+  background: var(--brand-card-bg);
   border: 1.5px solid var(--border-gold);
   border-radius: var(--radius-md);
   padding: 1.1rem;
@@ -540,7 +545,7 @@ img, svg {
 .category-card:hover,
 .category-card.active {
   border-color: var(--brand-primary);
-  background: linear-gradient(180deg, #FFFFFF 0%, #FBF5E9 100%);
+  background: linear-gradient(180deg, #FFFFFF 0%, rgb(247, 239, 228) 100%);
   transform: translateY(-3px);
   box-shadow: var(--shadow-hover);
 }
@@ -572,8 +577,8 @@ img, svg {
 
 /* 6. Catalog Toolbar (Search, Filter, Sort) */
 .catalog-toolbar {
-  background: var(--brand-white);
-  border: 1px solid var(--border-gold);
+  background: var(--brand-card-bg);
+  border: 1.5px solid var(--border-gold);
   border-radius: var(--radius-md);
   padding: 1.05rem 1.25rem;
   margin-bottom: 1.85rem;
@@ -597,7 +602,7 @@ img, svg {
   border: 1.5px solid var(--border-gold);
   border-radius: 999px;
   font-size: 0.92rem;
-  background: var(--brand-surface);
+  background: #FFFFFF;
   color: var(--text-heading);
   outline: none;
   transition: border-color 0.2s ease;
@@ -605,7 +610,7 @@ img, svg {
 
 .search-input:focus {
   border-color: var(--brand-primary);
-  background: var(--brand-white);
+  background: #FFFFFF;
 }
 
 .toolbar-controls {
@@ -619,7 +624,7 @@ img, svg {
   padding: 0.7rem 1rem;
   border: 1.5px solid var(--border-gold);
   border-radius: 999px;
-  background: var(--brand-surface);
+  background: #FFFFFF;
   color: var(--text-heading);
   font-weight: 600;
   font-size: 0.88rem;
@@ -635,29 +640,30 @@ img, svg {
 }
 
 .product-card {
-  background: var(--brand-white);
-  border: 1.5px solid var(--border-gold);
+  background: var(--brand-card-bg);
+  border: 1.5px solid rgba(198, 163, 101, 0.42);
   border-radius: var(--radius-lg);
   overflow: hidden;
   display: flex;
   flex-direction: column;
   transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
-  box-shadow: var(--shadow-soft);
+  box-shadow: 0 10px 28px -4px rgba(45, 7, 10, 0.08), 0 2px 6px rgba(198, 163, 101, 0.1);
   position: relative;
 }
 
 .product-card:hover {
   transform: translateY(-5px);
-  box-shadow: var(--shadow-hover);
+  box-shadow: 0 18px 38px -6px rgba(74, 14, 19, 0.16), 0 4px 12px rgba(198, 163, 101, 0.2);
   border-color: var(--brand-accent);
 }
 
 .product-img-wrap {
   position: relative;
   height: 225px;
-  background: #F4ECE0;
+  background: linear-gradient(180deg, #EAE0D0 0%, rgb(247, 239, 228) 100%);
   overflow: hidden;
   cursor: pointer;
+  border-bottom: 1px solid rgba(198, 163, 101, 0.24);
 }
 
 .product-img {
@@ -807,9 +813,9 @@ img, svg {
 }
 
 .btn-details-icon {
-  background: var(--brand-surface);
+  background: #FFFFFF;
   color: var(--brand-primary);
-  border: 1px solid var(--border-gold);
+  border: 1.5px solid var(--border-gold);
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -820,6 +826,7 @@ img, svg {
   font-weight: 700;
   transition: all 0.2s ease;
   flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
 }
 
 .btn-details-icon:hover {
@@ -910,8 +917,8 @@ img, svg {
 }
 
 .feature-box {
-  background: var(--brand-white);
-  border: 1px solid var(--border-gold);
+  background: var(--brand-card-bg);
+  border: 1.5px solid var(--border-gold);
   border-radius: var(--radius-md);
   padding: 1.6rem 1.25rem;
   text-align: center;
@@ -938,8 +945,8 @@ img, svg {
 }
 
 .testimonial-card {
-  background: var(--brand-white);
-  border: 1px solid var(--border-gold);
+  background: var(--brand-card-bg);
+  border: 1.5px solid var(--border-gold);
   border-radius: var(--radius-md);
   padding: 1.45rem;
   box-shadow: var(--shadow-soft);

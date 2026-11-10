@@ -85,7 +85,7 @@ def seed_database():
                 '#4A0E13',
                 '#2D070A',
                 '#C6A365',
-                '#FAF7F2',
+                '#ECE1D1',
                 'ROYAL_BURGUNDY_GOLD',
                 '/assets/logo-gold.svg',
                 '96891247722',
