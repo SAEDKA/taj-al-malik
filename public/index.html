@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/storefront.css?v=6" />
+  <link rel="stylesheet" href="/css/storefront.css?v=7" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -32,61 +32,17 @@
 </head>
 <body>
 
-  <!-- 1. Top Royal Announcement Bar -->
-  <div class="top-bar">
-    <div class="container top-bar-inner">
-      <div class="top-bar-items">
-        <span class="top-pill" id="top-promo-pill">👑 كود خصم الافتتاح 10%: ROYAL10</span>
-        <span id="top-location-text">📍 سلطنة عُمان، صحار — توصيل لكافة ولايات السلطنة أو استلام من الفرع</span>
-        <a href="https://wa.me/96891247722" target="_blank" rel="noopener" id="top-phone-link" style="color:#E5CB96;font-weight:700;">📞 +968 91247722</a>
-      </div>
-      <div class="top-bar-actions">
-        <button class="top-link-btn" onclick="openLoyaltyModal()" id="btn-loyalty-top">✨ نقاط الولاء الملكية</button>
-        <a href="/admin" class="top-link-btn" id="btn-admin-top">⚙️ لوحة تحكم الإدارة</a>
-      </div>
-    </div>
-  </div>
+  <!-- Clean Floating Corner Navigation Button (Opens Slide-Out Menu Drawer) -->
+  <button class="corner-nav-btn" onclick="openMobileNavDrawer()" aria-label="قائمة الخيارات" id="corner-nav-trigger">
+    <span class="corner-nav-lines">
+      <span></span>
+      <span></span>
+      <span></span>
+    </span>
+    <span class="corner-nav-label" id="corner-nav-label">القائمة</span>
+  </button>
 
-  <!-- 2. Main Sticky Header -->
-  <header class="site-header">
-    <div class="container header-inner">
-      <!-- Corner 3-Line Hamburger Menu Button (Visible on Mobile <= 768px) -->
-      <button class="mobile-menu-btn" onclick="openMobileNavDrawer()" aria-label="القائمة الجانبية" id="mobile-hamburger-btn">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-
-      <div class="brand-logo-wrap" onclick="window.scrollTo({top:0,behavior:'smooth'})">
-        <img src="/assets/logo-gold.svg" alt="تاج الملك - حلا الملوك" class="brand-logo-img" id="header-logo" />
-        <div class="brand-title-block">
-          <span class="brand-name-main" id="header-brand-name">تاج الملك</span>
-          <span class="brand-tagline-sub" id="header-brand-tagline">تاج الملك - حلا الملوك • عُمان</span>
-        </div>
-      </div>
-
-      <nav class="main-nav">
-        <a class="nav-link active" onclick="scrollToSection('catalog-section', 'ALL')" data-i18n="nav_menu">القائمة الكاملة</a>
-        <a class="nav-link" onclick="scrollToSection('catalog-section', 'royal-baklava')" data-i18n="nav_baklava">الحلويات الملكية</a>
-        <a class="nav-link" onclick="scrollToSection('catalog-section', 'al-qashati')" data-i18n="nav_qashati">ركن القشاطي</a>
-        <a class="nav-link" onclick="scrollToSection('catalog-section', 'syrian-savory')" data-i18n="nav_syrian">المأكولات السورية</a>
-        <a class="nav-link" onclick="scrollToSection('bestsellers-section')" data-i18n="nav_bestsellers">الأكثر مبيعاً</a>
-        <a class="nav-link" onclick="scrollToSection('story-section')" data-i18n="nav_story">قصتنا</a>
-      </nav>
-
-      <div class="header-controls">
-        <button class="lang-btn" onclick="toggleLanguage()" id="lang-switch-btn">English 🇬🇧</button>
-        <button class="cart-trigger-btn" onclick="openCartDrawer()">
-          <span>🛒</span>
-          <span id="cart-btn-label">السلة</span>
-          <span class="cart-count-badge" id="header-cart-count">0</span>
-          <span id="header-cart-total" style="font-size:0.84rem;">0.000 ر.ع</span>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- 2B. Mobile Slide-Out Side Navigation Drawer (قائمة جانبية للموبايل) -->
+  <!-- Slide-Out Side Navigation Drawer (قائمة جانبية للمتجر) -->
   <div class="mobile-nav-backdrop" id="mobile-nav-backdrop" onclick="if(event.target===this)closeMobileNavDrawer()">
     <aside class="mobile-nav-drawer" id="mobile-nav-drawer">
       <div class="mobile-drawer-header">
@@ -94,138 +50,101 @@
           <img src="/assets/logo-gold.svg" alt="تاج الملك" class="mobile-drawer-logo" />
           <div>
             <div class="mobile-drawer-title" id="drawer-brand-title">تاج الملك — حلا الملوك</div>
-            <div class="mobile-drawer-sub" id="drawer-brand-sub">سلطنة عُمان، صحار • ضيافة الملوك</div>
+            <div class="mobile-drawer-sub" id="drawer-brand-sub">سلطنة عُمان، صحار</div>
           </div>
         </div>
         <button class="mobile-drawer-close" onclick="closeMobileNavDrawer()" aria-label="إغلاق">✕</button>
       </div>
 
+      <!-- Language Switcher relocated to the drawer -->
+      <div class="drawer-lang-row">
+        <button class="drawer-lang-btn" onclick="toggleLanguage()" id="drawer-lang-btn">
+          <svg class="ico-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          <span id="lang-switch-btn">English</span>
+        </button>
+      </div>
+
       <div class="mobile-drawer-links">
         <a class="mobile-drawer-link active" onclick="navigateFromMobileDrawer('catalog-section', 'ALL')">
-          <span class="drawer-link-icon">👑</span>
+          <svg class="drawer-link-icon ico-svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
           <span class="drawer-link-text" id="mnav-menu">القائمة الكاملة</span>
           <span class="drawer-link-arrow">‹</span>
         </a>
         <a class="mobile-drawer-link" onclick="navigateFromMobileDrawer('catalog-section', 'royal-baklava')">
-          <span class="drawer-link-icon">🍯</span>
+          <svg class="drawer-link-icon ico-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
           <span class="drawer-link-text" id="mnav-baklava">الحلويات الملكية</span>
           <span class="drawer-link-arrow">‹</span>
         </a>
         <a class="mobile-drawer-link" onclick="navigateFromMobileDrawer('catalog-section', 'al-qashati')">
-          <span class="drawer-link-icon">🥛</span>
+          <svg class="drawer-link-icon ico-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 12s1.5 2 4 2 4-2 4-2"/></svg>
           <span class="drawer-link-text" id="mnav-qashati">ركن القشاطي</span>
           <span class="drawer-link-arrow">‹</span>
         </a>
         <a class="mobile-drawer-link" onclick="navigateFromMobileDrawer('catalog-section', 'syrian-savory')">
-          <span class="drawer-link-icon">🍃</span>
+          <svg class="drawer-link-icon ico-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.5 1.4 8-1.5 8-8 10-9.4 10z"/></svg>
           <span class="drawer-link-text" id="mnav-syrian">المأكولات السورية</span>
           <span class="drawer-link-arrow">‹</span>
         </a>
         <a class="mobile-drawer-link" onclick="navigateFromMobileDrawer('bestsellers-section')">
-          <span class="drawer-link-icon">⭐</span>
+          <svg class="drawer-link-icon ico-svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
           <span class="drawer-link-text" id="mnav-bestsellers">الأكثر مبيعاً</span>
           <span class="drawer-link-arrow">‹</span>
         </a>
         <a class="mobile-drawer-link" onclick="navigateFromMobileDrawer('story-section')">
-          <span class="drawer-link-icon">📜</span>
+          <svg class="drawer-link-icon ico-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
           <span class="drawer-link-text" id="mnav-story">قصتنا</span>
           <span class="drawer-link-arrow">‹</span>
         </a>
       </div>
 
       <div class="mobile-drawer-footer">
-        <div class="mobile-drawer-promo">
-          <span>🎁 كود خصم الافتتاح 10%:</span>
-          <strong>ROYAL10</strong>
-        </div>
         <button class="mobile-drawer-action-btn" onclick="closeMobileNavDrawer(); openLoyaltyModal();">
-          ✨ استعلم عن نقاط الولاء الملكية
+          <svg class="ico-svg" viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
+          <span>نقاط الولاء الملكية</span>
         </button>
         <a href="https://wa.me/96891247722" target="_blank" rel="noopener" class="mobile-drawer-wa-btn">
-          📲 تواصل مباشر واتساب: +968 91247722
+          <svg class="ico-svg" viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          <span>تواصل واتساب: +968 91247722</span>
         </a>
-        <a href="/admin" class="mobile-drawer-admin-link">⚙️ لوحة تحكم الإدارة</a>
+        <a href="/admin" class="mobile-drawer-admin-link">
+          <svg class="ico-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span>لوحة تحكم الإدارة</span>
+        </a>
       </div>
     </aside>
   </div>
 
-  <!-- 3. Hero Section (Desktop Split Grid + Mobile Luxury Hook Ad Showcase) -->
-  <section class="hero-section">
-    <!-- Desktop Hero Grid (Visible on Desktop > 768px) -->
-    <div class="container hero-grid">
-      <div>
-        <div class="hero-kicker">
-          <img src="/assets/crown-emblem.svg" alt="Crown" />
-          <span id="hero-kicker-text">تاج الملك — حلا الملوك • سلطنة عُمان، صحار</span>
-        </div>
-        <h1 class="hero-title" id="hero-title">تاج الملك .. حلا الملوك لذوي الذوق الرفيع</h1>
-        <p class="hero-subtitle" id="hero-subtitle">
-          كل قطعة من حلوياتنا تُصنع بحب، مستوحاة من التقاليد ولمسة ملكية، لنقدم لكم أرقى نكهات الشرق في سلطنة عُمان.
-        </p>
-        <div class="hero-highlights" id="hero-chips">
-          <span class="hero-chip">✨ فستق حلبي أول وسمن بلدي فاخر</span>
-          <span class="hero-chip">🥛 قشطة بلدية وحلاوة جبن طازجة يومياً</span>
-          <span class="hero-chip">🍃 يالنجي وكبة شامية ومحاشي على الطلب</span>
-          <span class="hero-chip">📲 طلب فوري ومباشر عبر واتساب</span>
-        </div>
-        <div class="hero-actions">
-          <button class="btn-royal-gold" onclick="scrollToSection('catalog-section', 'ALL')" id="hero-btn-primary">
-            👑 تسوق الحلويات الملكية
-          </button>
-          <button class="btn-royal-outline" onclick="scrollToSection('featured-section')" id="hero-btn-secondary">
-            استكشف مختارات تاج الملك
-          </button>
-        </div>
+  <!-- 3. Full-Screen Seamless Royal Hero (No enclosing box borders) -->
+  <section class="hero-section full-screen-hero">
+    <div class="hero-content-center">
+      <!-- Royal Crown Motif -->
+      <img src="/assets/crown-emblem.svg" alt="Crown" class="hero-crown-motif" />
+
+      <!-- Enlarged Central Calligraphy Logo -->
+      <div class="hero-central-logo-wrap">
+        <img src="/assets/logo-gold.svg" alt="تاج الملك - حلا الملوك" class="hero-central-logo" id="hero-main-logo" />
       </div>
 
-      <div class="hero-visual-card">
-        <img src="/assets/products/mabrouma-pistachio.svg" alt="مبرومة فستق تاج الملك" class="hero-showcase-img" id="hero-main-img" />
-        <img src="/assets/logo-gold.svg" alt="شعار تاج الملك" class="hero-logo-watermark" />
-        <p style="color:#E8CFA0;font-size:0.9rem;font-weight:600;" id="hero-card-caption">
-          مبرومة فستق ملكية • بلورية • بقلاوة • قشاطي • مأكولات سورية
-        </p>
+      <!-- Headline: "تاج الملك، حلا الملوك" -->
+      <h1 class="hero-brand-headline" id="hero-title">تاج الملك، حلا الملوك</h1>
+
+      <!-- Visual Platter Showcase without enclosing card borders -->
+      <div class="hero-showcase-visual">
+        <img src="/assets/products/mabrouma-pistachio.svg" alt="حلويات تاج الملك" class="hero-platter-img" id="hero-main-img" />
       </div>
-    </div>
 
-    <!-- Mobile Luxury Promotional Hook Ad (إعلان هوك فخم للشركة يظهر في واجهة الموبايل قبل النزول للقائمة) -->
-    <div class="container mobile-hook-ad" id="mobile-hook-ad">
-      <div class="hook-ad-card">
-        <div class="hook-ad-top-ribbon">
-          <img src="/assets/crown-emblem.svg" alt="Crown" class="hook-crown-icon" />
-          <span id="hook-ribbon-text">دار الضيافة الملكية الأولى في صحار • سلطنة عُمان</span>
-        </div>
+      <!-- Primary CTA Button -->
+      <div class="hero-cta-wrap">
+        <button class="btn-royal-gold hero-action-btn" onclick="scrollToSection('catalog-section', 'ALL')" id="hero-btn-primary">
+          <svg class="ico-svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
+          <span>تصفح القائمة واطلب الآن</span>
+        </button>
+      </div>
 
-        <div class="hook-brand-centerpiece">
-          <img src="/assets/logo-gold.svg" alt="تاج الملك - حلا الملوك" class="hook-main-logo" />
-        </div>
-
-        <h1 class="hook-headline" id="hook-headline">
-          حين تتحول الحلوى الشرقية إلى <span class="hook-gold-text">تحفة ملكية</span>
-        </h1>
-
-        <p class="hook-subcopy" id="hook-subcopy">
-          كل قطعة من حلويات «تاج الملك» تُصنع بحب وشغف من أفخر الفستق الحلبي الأخضر والسمن البلدي الأصيل، لتليق بضيافتكم ومناسباتكم الراقية.
-        </p>
-
-        <div class="hook-showcase-frame">
-          <span class="hook-offer-floating-badge" id="hook-offer-badge">👑 خصم الافتتاح 10% • كود: ROYAL10</span>
-          <img src="/assets/products/mabrouma-pistachio.svg" alt="مبرومة وبقلاوة تاج الملك" class="hook-showcase-img" />
-          <div class="hook-showcase-overlay-caption" id="hook-img-caption">
-            مبرومة فستق • بلورية ملكية • بقلاوة • حلاوة جبن وقشاطي طازجة
-          </div>
-        </div>
-
-        <div class="hook-cta-stack">
-          <button class="hook-primary-cta" onclick="scrollToSection('catalog-section', 'ALL')" id="hook-cta-btn">
-            <span>👑</span>
-            <span id="hook-cta-label">اكتشف القائمة الملكية واطلب الآن</span>
-          </button>
-        </div>
-
-        <div class="hook-scroll-indicator" onclick="scrollToSection('categories-section')">
-          <span id="hook-scroll-text">اسحب للأسفل لتصفح قائمة الويب والأسعار</span>
-          <span class="hook-scroll-chevron">⌄</span>
-        </div>
+      <!-- Smooth Scroll Prompt Down -->
+      <div class="hero-scroll-prompt" onclick="scrollToSection('categories-section')">
+        <span id="hero-scroll-text">تصفح أصناف الحلويات والأسعار</span>
+        <svg class="chevron-down ico-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
       </div>
     </div>
   </section>
@@ -311,7 +230,7 @@
     <div class="container">
       <div class="catering-banner">
         <div>
-          <span class="top-pill" style="margin-bottom:0.85rem;display:inline-block;" id="catering-badge">🍃 لمحبي المأكولات السورية والمناسبات الخاصة</span>
+          <span class="top-pill" style="margin-bottom:0.85rem;display:inline-block;" id="catering-badge">لمحبي المأكولات السورية والمناسبات الخاصة</span>
           <h2 style="color:#FFFDF9;font-size:2rem;margin-bottom:0.8rem;" id="catering-title">
             لدينا محاشي، ورق عنب «يالنجي»، كبة شامية، وصواني مناسبات على الطلب
           </h2>
@@ -323,7 +242,8 @@
               تصفح ركن المأكولات السورية
             </button>
             <button class="btn-royal-outline" onclick="openSpecialEventWhatsApp()" id="catering-btn-wa">
-              💬 تنسيق طلب مناسبة أو محاشي عبر واتساب
+              <svg class="ico-svg" viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              <span>تنسيق طلب مناسبة أو محاشي عبر واتساب</span>
             </button>
           </div>
         </div>
@@ -350,7 +270,7 @@
         </p>
         <div class="royal-story-signoff" id="story-signoff">مع خالص الامتنان، تاج الملك - حلا الملوك</div>
         <a href="https://www.instagram.com/Tajalamlik.om" target="_blank" rel="noopener" class="royal-insta-pill">
-          <span>📸</span>
+          <svg class="ico-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
           <span id="story-insta-handle">Tajalamlik.om</span>
         </a>
       </div>
@@ -366,22 +286,30 @@
       </div>
       <div class="features-grid" id="why-choose-grid">
         <div class="feature-box">
-          <div class="feature-icon">👑</div>
+          <div class="feature-icon">
+            <svg class="ico-svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
+          </div>
           <h3 style="margin-bottom:0.4rem;font-size:1.15rem;" id="w1-title">جودة ملكية أصيلة</h3>
           <p style="font-size:0.88rem;color:var(--text-muted);" id="w1-desc">نستخدم أجود الفستق الحلبي الأخضر الأول والسمن البلدي الصافي في كافة حلوياتنا.</p>
         </div>
         <div class="feature-box">
-          <div class="feature-icon">🥛</div>
+          <div class="feature-icon">
+            <svg class="ico-svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 12s1.5 2 4 2 4-2 4-2"/></svg>
+          </div>
           <h3 style="margin-bottom:0.4rem;font-size:1.15rem;" id="w2-title">تحضير طازج يومياً</h3>
           <p style="font-size:0.88rem;color:var(--text-muted);" id="w2-desc">القشاطي، حلاوة الجبن، المدلوقة، القطايف واليالنجي تُحضر طازجة يومياً في صحار.</p>
         </div>
         <div class="feature-box">
-          <div class="feature-icon">🎁</div>
+          <div class="feature-icon">
+            <svg class="ico-svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+          </div>
           <h3 style="margin-bottom:0.4rem;font-size:1.15rem;" id="w3-title">تغليف إهداء فاخر</h3>
           <p style="font-size:0.88rem;color:var(--text-muted);" id="w3-desc">بوكسات أنيقة باللون العنابي والذهبي مع بطاقة إهداء «تاج الملك - حلا الملوك».</p>
         </div>
         <div class="feature-box">
-          <div class="feature-icon">🚚</div>
+          <div class="feature-icon">
+            <svg class="ico-svg" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          </div>
           <h3 style="margin-bottom:0.4rem;font-size:1.15rem;" id="w4-title">توصيل سريع أو استلام</h3>
           <p style="font-size:0.88rem;color:var(--text-muted);" id="w4-desc">توصيل سريع في صحار وشمال الباطنة ومسقط، أو استلام مباشر من فرعنا في صحار.</p>
         </div>
@@ -421,8 +349,14 @@
             تاج الملك — حلا الملوك. وجهتكم الأولى للحلويات الشرقية الملكية، القشاطي الطازجة، والمأكولات السورية الأصيلة في سلطنة عُمان، صحار.
           </p>
           <div style="display:flex;gap:0.65rem;flex-wrap:wrap;">
-            <a href="https://www.instagram.com/Tajalamlik.om" target="_blank" rel="noopener" class="top-pill">📸 @Tajalamlik.om</a>
-            <a href="https://wa.me/96891247722" target="_blank" rel="noopener" class="top-pill">💬 +968 91247722</a>
+            <a href="https://www.instagram.com/Tajalamlik.om" target="_blank" rel="noopener" class="top-pill">
+              <svg class="ico-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/></svg>
+              <span>@Tajalamlik.om</span>
+            </a>
+            <a href="https://wa.me/96891247722" target="_blank" rel="noopener" class="top-pill">
+              <svg class="ico-svg" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              <span>+968 91247722</span>
+            </a>
           </div>
         </div>
         <div>
@@ -446,9 +380,18 @@
         </div>
         <div>
           <h4 class="footer-title" id="f-contact-title">التواصل وفرع صحار</h4>
-          <p style="font-size:0.9rem;margin-bottom:0.5rem;">📍 <strong>الموقع:</strong> سلطنة عُمان، ولاية صحار</p>
-          <p style="font-size:0.9rem;margin-bottom:0.5rem;">📞 <strong>واتساب الطلبات:</strong> <span dir="ltr">+968 91247722</span></p>
-          <p style="font-size:0.9rem;margin-bottom:0.5rem;">🕒 <strong>ساعات العمل:</strong> يومياً من 9:00 صباحاً حتى 11:30 مساءً</p>
+          <p style="font-size:0.9rem;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.4rem;">
+            <svg class="ico-svg" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+            <span><strong>الموقع:</strong> سلطنة عُمان، ولاية صحار</span>
+          </p>
+          <p style="font-size:0.9rem;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.4rem;">
+            <svg class="ico-svg" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+            <span><strong>واتساب الطلبات:</strong> <span dir="ltr">+968 91247722</span></span>
+          </p>
+          <p style="font-size:0.9rem;margin-bottom:0.5rem;display:flex;align-items:center;gap:0.4rem;">
+            <svg class="ico-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span><strong>ساعات العمل:</strong> يومياً من 9:00 صباحاً حتى 11:30 مساءً</span>
+          </p>
           <p style="font-size:0.84rem;color:var(--brand-accent-light);margin-top:0.75rem;">العملة المعتمدة: الريال العُماني (OMR - 3 خانات عشرية)</p>
         </div>
       </div>
@@ -459,9 +402,25 @@
     </div>
   </footer>
 
-  <!-- Floating WhatsApp Button -->
+  <!-- Floating Luxury Cart Button on the Bottom-Left (Item ب-3) -->
+  <button class="floating-cart-btn" onclick="openCartDrawer()" id="floating-cart-trigger" aria-label="سلة المشتريات">
+    <div class="cart-btn-icon-wrap">
+      <svg class="ico-svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+      <span class="cart-count-badge" id="header-cart-count">0</span>
+    </div>
+    <div class="cart-btn-info-wrap">
+      <span class="cart-btn-label" id="cart-btn-label">السلة</span>
+      <span class="cart-btn-total" id="header-cart-total">0.000 ر.ع</span>
+    </div>
+  </button>
+
+  <!-- Floating WhatsApp Button (Bottom-Right) -->
   <a href="https://wa.me/96891247722" target="_blank" rel="noopener" class="floating-wa-btn" title="تواصل معنا عبر واتساب">
-    💬
+    <svg class="ico-svg" viewBox="0 0 24 24" width="26" height="26" fill="currentColor">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
   </a>
 
   <!-- ========================================================================
@@ -483,7 +442,10 @@
   <div class="cart-drawer-backdrop" id="cart-drawer-backdrop" onclick="if(event.target===this)closeCartDrawer()">
     <div class="cart-drawer">
       <div class="modal-header">
-        <h3 style="color:#FFFDF9;font-size:1.2rem;" id="cart-drawer-title">🛒 سلة الحلويات الملكية</h3>
+        <h3 style="color:#FFFDF9;font-size:1.2rem;display:flex;align-items:center;gap:0.5rem;" id="cart-drawer-title">
+          <svg class="ico-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span>سلة الحلويات الملكية</span>
+        </h3>
         <button class="modal-close-btn" onclick="closeCartDrawer()">✕</button>
       </div>
 
@@ -532,7 +494,10 @@
   <div class="modal-backdrop" id="checkout-modal" onclick="if(event.target===this)closeCheckoutModal()">
     <div class="modal-card" style="max-width:780px;">
       <div class="modal-header">
-        <h3 style="color:#FFFDF9;font-size:1.25rem;" id="checkout-modal-title">👑 إتمام الطلب وإرساله إلى واتساب تاج الملك</h3>
+        <h3 style="color:#FFFDF9;font-size:1.25rem;display:flex;align-items:center;gap:0.5rem;" id="checkout-modal-title">
+          <svg class="ico-svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
+          <span>إتمام الطلب وإرساله إلى واتساب</span>
+        </h3>
         <button class="modal-close-btn" onclick="closeCheckoutModal()">✕</button>
       </div>
       <div class="modal-body" id="checkout-modal-body">
@@ -541,10 +506,12 @@
           <h4 style="margin-bottom:0.65rem;color:var(--brand-primary);" id="chk-step1-title">1. اختر طريقة استلام الطلب</h4>
           <div class="fulfillment-tabs">
             <div class="fulfillment-tab active" id="tab-delivery" onclick="setFulfillmentType('DELIVERY')">
-              🚚 توصيل إلى العنوان / الولاية
+              <svg class="ico-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+              <span>توصيل إلى العنوان / الولاية</span>
             </div>
             <div class="fulfillment-tab" id="tab-pickup" onclick="setFulfillmentType('PICKUP')">
-              🏪 استلام من فرع صحار (مجاناً)
+              <svg class="ico-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              <span>استلام من فرع صحار (مجاناً)</span>
             </div>
           </div>
 
@@ -584,7 +551,10 @@
 
           <!-- Pickup Info Box -->
           <div id="pickup-fields-box" style="display:none;background:#FAF5EC;border:1.5px solid var(--border-gold);padding:1rem;border-radius:12px;margin-bottom:1rem;">
-            <strong style="color:var(--brand-primary);">📍 فرع الاستلام: تاج الملك - حلا الملوك (سلطنة عُمان، ولاية صحار)</strong>
+            <strong style="color:var(--brand-primary);display:flex;align-items:center;gap:0.4rem;">
+              <svg class="ico-svg" viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+              <span>فرع الاستلام: تاج الملك - حلا الملوك (سلطنة عُمان، ولاية صحار)</span>
+            </strong>
             <p style="font-size:0.86rem;color:var(--text-muted);margin-top:0.25rem;">رسوم التوصيل: 0.000 ر.ع — نجهز طلبك طازجاً ليكون جاهزاً فور وصولك للفرع.</p>
           </div>
 
@@ -613,7 +583,8 @@
           <div style="background:#FAF5EC;border:1px solid var(--border-gold);padding:0.9rem 1.1rem;border-radius:12px;margin-bottom:1rem;">
             <label style="display:flex;align-items:center;gap:0.6rem;cursor:pointer;font-weight:700;color:var(--brand-primary);">
               <input type="checkbox" id="chk-is-gift" onchange="toggleGiftFields()" style="width:18px;height:18px;" />
-              <span>🎁 إرسال هذا الطلب كهدية ملكية مع بطاقة إهداء «تاج الملك - حلا الملوك»</span>
+              <svg class="ico-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+              <span>إرسال هذا الطلب كهدية ملكية مع بطاقة إهداء «تاج الملك - حلا الملوك»</span>
             </label>
             <div id="gift-fields-wrap" style="display:none;margin-top:0.85rem;">
               <div class="form-grid">
@@ -661,7 +632,7 @@
           </div>
 
           <button type="submit" class="whatsapp-btn-big" id="btn-submit-wa-order">
-            <span>📲</span>
+            <svg class="ico-svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
             <span>اعتماد وحفظ الطلب وإرساله عبر واتساب (+968 91247722)</span>
           </button>
         </form>
@@ -678,7 +649,10 @@
   <div class="modal-backdrop" id="loyalty-modal" onclick="if(event.target===this)closeLoyaltyModal()">
     <div class="modal-card" style="max-width:520px;">
       <div class="modal-header">
-        <h3 style="color:#FFFDF9;font-size:1.2rem;">👑 برنامج ولاء «تاج الملك - حلا الملوك»</h3>
+        <h3 style="color:#FFFDF9;font-size:1.2rem;display:flex;align-items:center;gap:0.5rem;">
+          <svg class="ico-svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
+          <span>برنامج ولاء «تاج الملك - حلا الملوك»</span>
+        </h3>
         <button class="modal-close-btn" onclick="closeLoyaltyModal()">✕</button>
       </div>
       <div class="modal-body" style="text-align:center;">
@@ -695,6 +669,6 @@
     </div>
   </div>
 
-  <script src="/js/storefront.js?v=6"></script>
+  <script src="/js/storefront.js?v=7"></script>
 </body>
 </html>

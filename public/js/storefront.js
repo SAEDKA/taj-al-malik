@@ -17,7 +17,7 @@ const STATE = {
 
 const UI_TEXT = {
   ar: {
-    langBtn: 'English 🇬🇧',
+    langBtn: 'English',
     cartLabel: 'السلة',
     currency: 'ر.ع',
     allCategories: 'جميع الأصناف الملكية',
@@ -30,21 +30,21 @@ const UI_TEXT = {
     sortNewest: 'الأحدث إضافة',
     quickAdd: '+ أضف للسلة',
     customize: 'التفاصيل والخيارات',
-    bestsellerBadge: '👑 الأكثر مبيعاً',
-    offerBadge: '✨ عرض خاص',
+    bestsellerBadge: 'الأكثر مبيعاً',
+    offerBadge: '',
     featuredBadge: 'مختارات الملك',
     outOfStock: 'غير متوفر حالياً',
     inStock: 'متوفر — يحضر طازجاً',
     freeShippingLeft: (rem) => `أضف بقيمة ${rem} ر.ع أخرى للحصول على توصيل مجاني!`,
-    freeShippingUnlocked: '🎉 مبروك! طلبك مؤهل للتوصيل المجاني!',
+    freeShippingUnlocked: 'طلبك مؤهل للتوصيل المجاني!',
     emptyCart: 'سلة التسوق فارغة حالياً. تصفح حلويات تاج الملك وأضف أصنافك المفضلة!',
     relatedTitle: 'أصناف مشابهة قد تعجبك',
     specialNotesLabel: 'ملاحظات خاصة أو رسالة إهداء على هذا الصنف (اختياري):',
     specialNotesPlaceholder: 'مثال: قطر خفيف، أو تقطيع صغير للضيافة...',
-    addedToast: 'تمت الإضافة إلى سلة تاج الملك بنجاح 👑',
+    addedToast: 'تمت الإضافة إلى سلة تاج الملك بنجاح',
   },
   en: {
-    langBtn: 'العربية 🇴🇲',
+    langBtn: 'العربية',
     cartLabel: 'Cart',
     currency: 'OMR',
     allCategories: 'All Royal Categories',
@@ -57,18 +57,18 @@ const UI_TEXT = {
     sortNewest: 'Newest Arrivals',
     quickAdd: '+ Add to Cart',
     customize: 'Options & Details',
-    bestsellerBadge: '👑 Best Seller',
-    offerBadge: '✨ Special Offer',
+    bestsellerBadge: 'Best Seller',
+    offerBadge: '',
     featuredBadge: 'Royal Choice',
     outOfStock: 'Out of Stock',
     inStock: 'In Stock — Freshly Prepared',
     freeShippingLeft: (rem) => `Add ${rem} OMR more to unlock FREE delivery!`,
-    freeShippingUnlocked: '🎉 Congratulations! You unlocked FREE delivery!',
+    freeShippingUnlocked: 'Congratulations! You unlocked FREE delivery!',
     emptyCart: 'Your royal cart is currently empty. Explore our sweets to begin!',
     relatedTitle: 'Related Royal Sweets You May Like',
     specialNotesLabel: 'Special Request or Gift Note for this item (Optional):',
     specialNotesPlaceholder: 'e.g., Light syrup on the side, bite-size cut...',
-    addedToast: 'Added to your Taj Al Malik cart 👑',
+    addedToast: 'Added to your Taj Al Malik cart',
   },
 };
 
@@ -84,6 +84,7 @@ function formatPriceWithCurrency(val) {
 
 async function initStorefront() {
   applyLanguageDirection();
+  setupFloatingCartScroll();
   try {
     const res = await fetch('/api/storefront');
     STATE.store = await res.json();
@@ -98,6 +99,21 @@ async function initStorefront() {
   } catch (err) {
     console.error('Failed to load storefront:', err);
   }
+}
+
+function setupFloatingCartScroll() {
+  const syncCartVisibility = () => {
+    const cartBtn = document.getElementById('floating-cart-trigger');
+    if (!cartBtn) return;
+    const totalCount = STATE.cart.reduce((s, it) => s + it.quantity, 0);
+    if (window.scrollY > 120 || totalCount > 0) {
+      cartBtn.classList.add('visible');
+    } else {
+      cartBtn.classList.remove('visible');
+    }
+  };
+  window.addEventListener('scroll', syncCartVisibility, { passive: true });
+  syncCartVisibility();
 }
 
 function applyBrandTheme(brand) {
@@ -132,59 +148,36 @@ function renderAllStorefront() {
   const isAr = STATE.lang === 'ar';
   const t = UI_TEXT[STATE.lang];
 
-  // Header & Top bar
-  document.getElementById('header-brand-name').textContent = isAr ? brand.store_name_ar : brand.store_name_en;
-  document.getElementById('header-brand-tagline').textContent = isAr ? brand.tagline_ar : brand.tagline_en;
-  document.getElementById('cart-btn-label').textContent = t.cartLabel;
-  document.getElementById('top-location-text').textContent = isAr
-    ? `📍 ${brand.location_ar} — توصيل لكافة ولايات السلطنة أو استلام من الفرع`
-    : `📍 ${brand.location_en} — Delivery across Oman or Branch Pickup`;
-  document.getElementById('top-phone-link').textContent = `📞 ${brand.phone_display}`;
-  document.getElementById('top-phone-link').href = `https://wa.me/${brand.whatsapp_number}`;
+  // Language Button in Drawer
+  const langBtn = document.getElementById('lang-switch-btn');
+  if (langBtn) langBtn.textContent = t.langBtn;
 
-  // Hero Section (Desktop)
-  const hero = sections.HERO || {};
-  document.getElementById('hero-kicker-text').textContent = isAr
-    ? `${brand.tagline_ar} • ${brand.location_ar}`
-    : `${brand.tagline_en} • ${brand.location_en}`;
-  document.getElementById('hero-title').textContent = isAr ? hero.title_ar : hero.title_en;
-  document.getElementById('hero-subtitle').textContent = isAr ? hero.subtitle_ar : hero.subtitle_en;
-  document.getElementById('hero-btn-primary').textContent = isAr ? `👑 ${hero.button_ar}` : `👑 ${hero.button_en}`;
-  document.getElementById('hero-btn-secondary').textContent = isAr
-    ? hero.secondary_button_ar || 'استكشف القائمة'
-    : hero.secondary_button_en || 'Explore Menu';
+  // Floating Cart Label
+  const cartLbl = document.getElementById('cart-btn-label');
+  if (cartLbl) cartLbl.textContent = t.cartLabel;
 
-  // Mobile Luxury Hook Ad & Mobile Drawer Bilingual Sync
-  const hookRibbon = document.getElementById('hook-ribbon-text');
-  if (hookRibbon) {
-    hookRibbon.textContent = isAr
-      ? `دار الضيافة الملكية الأولى • ${brand.location_ar}`
-      : `Premier Royal Confectionery • ${brand.location_en}`;
+  // Corner Nav Button Label
+  const cornerNavLbl = document.getElementById('corner-nav-label');
+  if (cornerNavLbl) cornerNavLbl.textContent = isAr ? 'القائمة' : 'Menu';
+
+  // Hero Section (Full-Screen Clean Hero)
+  const heroTitle = document.getElementById('hero-title');
+  if (heroTitle) {
+    heroTitle.textContent = isAr ? 'تاج الملك، حلا الملوك' : 'Taj Al Malik — Sweets of Kings';
   }
-  const hookHeadline = document.getElementById('hook-headline');
-  if (hookHeadline) {
-    hookHeadline.innerHTML = isAr
-      ? `حين تتحول الحلوى الشرقية إلى <span class="hook-gold-text">تحفة ملكية</span>`
-      : `Where Oriental Sweets Become a <span class="hook-gold-text">Royal Masterpiece</span>`;
+  const heroBtnPrimary = document.getElementById('hero-btn-primary');
+  if (heroBtnPrimary) {
+    heroBtnPrimary.innerHTML = `
+      <svg class="ico-svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
+      <span>${isAr ? 'تصفح القائمة واطلب الآن' : 'Browse Menu & Order Now'}</span>
+    `;
   }
-  const hookSubcopy = document.getElementById('hook-subcopy');
-  if (hookSubcopy) {
-    hookSubcopy.textContent = isAr
-      ? 'كل قطعة من حلويات «تاج الملك» تُصنع بحب وشغف من أفخر الفستق الحلبي الأخضر والسمن البلدي الأصيل، لتليق بضيافتكم ومناسباتكم الراقية.'
-      : 'Every piece at Taj Al Malik is handcrafted with passion using first-grade Aleppo pistachios and pure ghee for your finest occasions.';
-  }
-  const hookCtaLabel = document.getElementById('hook-cta-label');
-  if (hookCtaLabel) {
-    hookCtaLabel.textContent = isAr ? 'اكتشف القائمة الملكية واطلب الآن' : 'Explore Royal Menu & Order Now';
-  }
-  const hookScrollText = document.getElementById('hook-scroll-text');
-  if (hookScrollText) {
-    hookScrollText.textContent = isAr
-      ? 'اسحب للأسفل لتصفح قائمة الويب والأسعار'
-      : 'Scroll down to browse the full web menu & prices';
+  const heroScrollText = document.getElementById('hero-scroll-text');
+  if (heroScrollText) {
+    heroScrollText.textContent = isAr ? 'تصفح أصناف الحلويات والأسعار' : 'Browse Sweets & Prices';
   }
 
-  // Mobile Drawer Links Bilingual Sync
+  // Drawer Links Bilingual Sync
   const mnavMap = {
     'mnav-menu': isAr ? 'القائمة الكاملة' : 'Full Menu',
     'mnav-baklava': isAr ? 'الحلويات الملكية' : 'Royal Sweets & Baklava',
@@ -199,20 +192,29 @@ function renderAllStorefront() {
   });
 
   // Search & Sort labels
-  document.getElementById('catalog-search-input').placeholder = t.searchPlaceholder;
-  document.getElementById('sort-opt-featured').textContent = t.sortFeatured;
-  document.getElementById('sort-opt-popular').textContent = t.sortPopular;
-  document.getElementById('sort-opt-asc').textContent = t.sortAsc;
-  document.getElementById('sort-opt-desc').textContent = t.sortDesc;
-  document.getElementById('sort-opt-newest').textContent = t.sortNewest;
+  const searchInput = document.getElementById('catalog-search-input');
+  if (searchInput) searchInput.placeholder = t.searchPlaceholder;
+  const sortFeatured = document.getElementById('sort-opt-featured');
+  if (sortFeatured) sortFeatured.textContent = t.sortFeatured;
+  const sortPopular = document.getElementById('sort-opt-popular');
+  if (sortPopular) sortPopular.textContent = t.sortPopular;
+  const sortAsc = document.getElementById('sort-opt-asc');
+  if (sortAsc) sortAsc.textContent = t.sortAsc;
+  const sortDesc = document.getElementById('sort-opt-desc');
+  if (sortDesc) sortDesc.textContent = t.sortDesc;
+  const sortNewest = document.getElementById('sort-opt-newest');
+  if (sortNewest) sortNewest.textContent = t.sortNewest;
 
   // Story Section
   const about = sections.ABOUT || {};
   if (about.title_ar) {
-    document.getElementById('story-title').textContent = isAr ? about.title_ar : about.title_en;
-    document.getElementById('story-quote-1').textContent = isAr ? about.content_ar : about.content_en;
+    const storyTitle = document.getElementById('story-title');
+    if (storyTitle) storyTitle.textContent = isAr ? about.title_ar : about.title_en;
+    const storyQuote = document.getElementById('story-quote-1');
+    if (storyQuote) storyQuote.textContent = isAr ? about.content_ar : about.content_en;
   }
-  document.getElementById('story-insta-handle').textContent = brand.instagram_handle || 'Tajalamlik.om';
+  const instaHandle = document.getElementById('story-insta-handle');
+  if (instaHandle) instaHandle.textContent = brand.instagram_handle || 'Tajalamlik.om';
 
   // Newsletter visibility
   const nlBox = document.getElementById('newsletter-box');
@@ -236,7 +238,7 @@ function renderCategories() {
 
   const allCard = `
     <div class="category-card ${STATE.selectedCategory === 'ALL' ? 'active' : ''}" onclick="selectCategory('ALL')">
-      <div class="category-card-title">👑 ${t.allCategories}</div>
+      <div class="category-card-title">${t.allCategories}</div>
       <div class="category-card-count">${products.length} ${t.itemsCount}</div>
     </div>
   `;
@@ -387,9 +389,6 @@ function buildProductCardHTML(p, catObj) {
   if (p.is_best_seller) {
     badgesHTML += `<span class="badge-pill badge-bestseller">${t.bestsellerBadge}</span>`;
   }
-  if (p.is_special_offer) {
-    badgesHTML += `<span class="badge-pill badge-offer">${t.offerBadge}</span>`;
-  }
 
   const compareHTML = p.compare_at_price_omr
     ? `<span class="price-compare">${formatOMR(p.compare_at_price_omr)} ${t.currency}</span>`
@@ -421,7 +420,9 @@ function buildProductCardHTML(p, catObj) {
             </div>
           </div>
           <div class="product-card-actions">
-            <button class="btn-details-icon" onclick="openProductModal(${p.id})" title="${t.customize}">⚙️</button>
+            <button class="btn-details-icon" onclick="openProductModal(${p.id})" title="${t.customize}" aria-label="${t.customize}">
+              <svg class="ico-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </button>
             <button class="btn-quick-add" onclick="quickAddToCart(${p.id})" ${!p.in_stock ? 'disabled' : ''}>
               ${p.in_stock ? t.quickAdd : t.outOfStock}
             </button>
@@ -450,8 +451,14 @@ function renderTestimonials() {
       <div class="stars-row">${'★'.repeat(item.rating || 5)}</div>
       <p style="font-size:0.94rem;margin-bottom:1rem;color:var(--text-heading);">"${isAr ? item.comment_ar : item.comment_en}"</p>
       <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.84rem;color:var(--brand-accent-dark);font-weight:700;">
-        <span>👤 ${item.customer_name}</span>
-        <span>📍 ${isAr ? item.city_ar : item.city_en}</span>
+        <span style="display:inline-flex;align-items:center;gap:0.35rem;">
+          <svg class="ico-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>${item.customer_name}</span>
+        </span>
+        <span style="display:inline-flex;align-items:center;gap:0.35rem;">
+          <svg class="ico-svg" viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+          <span>${isAr ? item.city_ar : item.city_en}</span>
+        </span>
       </div>
     </div>
   `
@@ -632,7 +639,8 @@ function renderProductModalContent() {
             <button type="button" class="qty-btn" onclick="changeModalQty(1)">+</button>
           </div>
           <button type="button" class="btn-royal-gold" style="flex:1;" onclick="addModalProductToCart()">
-            🛒 ${t.quickAdd} — ${formatPriceWithCurrency(totalModalPrice)}
+            <svg class="ico-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            <span>${t.quickAdd} — ${formatPriceWithCurrency(totalModalPrice)}</span>
           </button>
         </div>
       </div>
@@ -729,6 +737,13 @@ function addItemToCart(product, quantity, selectedOptions, specialNotes) {
     });
   }
   saveCartState();
+  const cartBtn = document.getElementById('floating-cart-trigger');
+  if (cartBtn) {
+    cartBtn.classList.add('visible');
+    cartBtn.classList.remove('pulse');
+    void cartBtn.offsetWidth;
+    cartBtn.classList.add('pulse');
+  }
 }
 
 function saveCartState() {
@@ -746,8 +761,19 @@ function updateCartUI() {
   const isAr = STATE.lang === 'ar';
   const t = UI_TEXT[STATE.lang];
 
-  document.getElementById('header-cart-count').textContent = totalCount;
-  document.getElementById('header-cart-total').textContent = formatPriceWithCurrency(subtotal);
+  const countEl = document.getElementById('header-cart-count');
+  if (countEl) countEl.textContent = totalCount;
+  const totalEl = document.getElementById('header-cart-total');
+  if (totalEl) totalEl.textContent = formatPriceWithCurrency(subtotal);
+
+  const cartBtn = document.getElementById('floating-cart-trigger');
+  if (cartBtn) {
+    if (totalCount > 0 || window.scrollY > 120) {
+      cartBtn.classList.add('visible');
+    } else {
+      cartBtn.classList.remove('visible');
+    }
+  }
 
   // Free delivery progress bar
   const threshold = parseFloat(STATE.store?.settings?.free_delivery_threshold || 20.0);
@@ -778,13 +804,15 @@ function updateCartUI() {
           <div>
             <div style="font-weight:700;color:var(--brand-primary);font-size:0.95rem;">${name}</div>
             ${optsText ? `<div style="font-size:0.78rem;color:var(--text-muted);">${optsText}</div>` : ''}
-            ${item.special_notes ? `<div style="font-size:0.76rem;color:#8A6634;">📝 ${item.special_notes}</div>` : ''}
+            ${item.special_notes ? `<div style="font-size:0.76rem;color:#8A6634;display:flex;align-items:center;gap:0.3rem;"><svg class="ico-svg" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg><span>${item.special_notes}</span></div>` : ''}
             <div style="font-weight:800;color:var(--brand-primary-dark);font-size:0.88rem;margin-top:0.25rem;">
               ${formatPriceWithCurrency(lineTotal)}
             </div>
           </div>
           <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.35rem;">
-            <button onclick="removeCartItem(${idx})" style="background:none;border:none;color:#B91C1C;cursor:pointer;font-size:0.85rem;">🗑️</button>
+            <button onclick="removeCartItem(${idx})" style="background:none;border:none;color:#B91C1C;cursor:pointer;padding:4px;display:flex;align-items:center;" title="حذف" aria-label="حذف">
+              <svg class="ico-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+            </button>
             <div class="qty-control" style="transform:scale(0.85);transform-origin:center;">
               <button class="qty-btn" onclick="updateCartQty(${idx}, -1)">−</button>
               <span class="qty-val">${item.quantity}</span>
@@ -856,12 +884,12 @@ async function applyCouponCode() {
     if (data.valid) {
       STATE.appliedDiscount = data;
       feedback.style.color = '#15803D';
-      feedback.textContent = `✅ تم تطبيق كود الخصم (${data.code}) بنجاح! (-${formatPriceWithCurrency(data.discount_amount_omr)})`;
+      feedback.textContent = `تم تطبيق كود الخصم (${data.code}) بنجاح! (-${formatPriceWithCurrency(data.discount_amount_omr)})`;
       updateCartUI();
     } else {
       STATE.appliedDiscount = null;
       feedback.style.color = '#B91C1C';
-      feedback.textContent = `❌ ${STATE.lang === 'ar' ? data.error_ar : data.error_en}`;
+      feedback.textContent = `${STATE.lang === 'ar' ? data.error_ar : data.error_en}`;
       updateCartUI();
     }
   } catch (e) {
@@ -1020,26 +1048,28 @@ async function submitWhatsAppOrder(e) {
       <!-- Visual WhatsApp Order Lifecycle Status Bar -->
       <div style="background:#FAF5EC;border:1.5px solid var(--border-gold);border-radius:14px;padding:1rem;margin-bottom:1.15rem;text-align:right;">
         <div style="font-weight:700;color:var(--brand-primary);margin-bottom:0.5rem;font-size:0.9rem;">
-          🔄 حالة طلب واتساب الحالية (Order Status Workflow):
+          مراحل متابعة طلب واتساب (Order Status Workflow):
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:0.4rem;font-size:0.78rem;">
-          <span style="background:#15803D;color:#FFF;padding:0.25rem 0.65rem;border-radius:999px;font-weight:700;">1. New (جديد - تم الحفظ) ✓</span>
-          <span style="background:#E5DAC3;color:#5A463F;padding:0.25rem 0.65rem;border-radius:999px;">2. Contacted (التواصل عبر واتساب)</span>
-          <span style="background:#E5DAC3;color:#5A463F;padding:0.25rem 0.65rem;border-radius:999px;">3. Confirmed (مؤكد)</span>
-          <span style="background:#E5DAC3;color:#5A463F;padding:0.25rem 0.65rem;border-radius:999px;">4. Preparing (قيد التجهيز)</span>
-          <span style="background:#E5DAC3;color:#5A463F;padding:0.25rem 0.65rem;border-radius:999px;">5. Ready (جاهز)</span>
-          <span style="background:#E5DAC3;color:#5A463F;padding:0.25rem 0.65rem;border-radius:999px;">6. Completed (+${data.loyalty_points_pending} نقطة ولاء)</span>
+          <span style="background:#15803D;color:#FFF;padding:0.25rem 0.65rem;border-radius:999px;font-weight:700;">1. تم حفظ الطلب</span>
+          <span style="background:#E5DAC3;color:#5A463F;padding:0.25rem 0.65rem;border-radius:999px;">2. التواصل عبر واتساب</span>
+          <span style="background:#E5DAC3;color:#5A463F;padding:0.25rem 0.65rem;border-radius:999px;">3. تأكيد الطلب</span>
+          <span style="background:#E5DAC3;color:#5A463F;padding:0.25rem 0.65rem;border-radius:999px;">4. قيد التجهيز</span>
+          <span style="background:#E5DAC3;color:#5A463F;padding:0.25rem 0.65rem;border-radius:999px;">5. جاهز</span>
+          <span style="background:#E5DAC3;color:#5A463F;padding:0.25rem 0.65rem;border-radius:999px;">6. مكتمل (+${data.loyalty_points_pending} نقطة ولاء)</span>
         </div>
       </div>
 
       <textarea id="generated-wa-text" readonly class="form-control" rows="7" style="width:100%;font-size:0.84rem;margin-bottom:1rem;background:#FFFDF9;">${data.whatsapp_message}</textarea>
 
       <div style="display:flex;gap:0.75rem;flex-wrap:wrap;justify-content:center;">
-        <a href="${data.whatsapp_url}" target="_blank" rel="noopener" class="whatsapp-btn-big" style="text-decoration:none;flex:1;">
-          📲 فتح واتساب وإرسال الطلب الآن (+968 91247722)
+        <a href="${data.whatsapp_url}" target="_blank" rel="noopener" class="whatsapp-btn-big" style="text-decoration:none;flex:1;display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;">
+          <svg class="ico-svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          <span>فتح واتساب وإرسال الطلب الآن (+968 91247722)</span>
         </a>
-        <button type="button" class="btn-royal-gold" onclick="copyOrderWhatsAppText()">
-          📋 نسخ نص الرسالة
+        <button type="button" class="btn-royal-gold" onclick="copyOrderWhatsAppText()" style="display:inline-flex;align-items:center;gap:0.45rem;">
+          <svg class="ico-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span>نسخ نص الرسالة</span>
         </button>
       </div>
     `;
@@ -1057,13 +1087,13 @@ function copyOrderWhatsAppText() {
   const el = document.getElementById('generated-wa-text');
   if (!el) return;
   navigator.clipboard.writeText(el.value);
-  showToast('تم نسخ تفاصيل الطلب بنجاح! 📋');
+  showToast('تم نسخ تفاصيل الطلب بنجاح!');
 }
 
 function openSpecialEventWhatsApp() {
   const num = STATE.store?.brand?.whatsapp_number || '96891247722';
   const msg = encodeURIComponent(
-    'السلام عليكم تاج الملك (حلا الملوك) 👑\nأود الاستفسار عن طلب خاص (محاشي / ورق عنب يالنجي / كبة شامية / صواني مناسبات وأعراس) في صحار:'
+    'السلام عليكم تاج الملك (حلا الملوك)\nأود الاستفسار عن طلب خاص (محاشي / ورق عنب يالنجي / كبة شامية / صواني مناسبات وأعراس) في صحار:'
   );
   window.open(`https://wa.me/${num}?text=${msg}`, '_blank');
 }
@@ -1086,12 +1116,12 @@ async function checkLoyaltyPoints() {
   const res = await fetch(`/api/loyalty/lookup?phone=${encodeURIComponent(phone)}`);
   const data = await res.json();
   if (!data.found) {
-    box.innerHTML = `<div style="padding:1rem;background:#FAF5EC;border-radius:12px;color:var(--text-body);">لم يتم العثور على سجل سابق لهذا الرقم. سيبدأ احتساب نقاطك تلقائياً مع أول طلب لك! 👑</div>`;
+    box.innerHTML = `<div style="padding:1rem;background:#FAF5EC;border-radius:12px;color:var(--text-body);">لم يتم العثور على سجل سابق لهذا الرقم. سيبدأ احتساب نقاطك تلقائياً مع أول طلب لك!</div>`;
     return;
   }
   box.innerHTML = `
     <div style="padding:1.15rem;background:var(--brand-primary);color:#FAF3E6;border:2px solid var(--brand-accent);border-radius:14px;">
-      <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.35rem;">مرحباً بك، ${data.customer_name} 👑</div>
+      <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.35rem;">مرحباً بك، ${data.customer_name}</div>
       <div style="font-size:1.6rem;font-weight:800;color:var(--brand-accent-light);margin-bottom:0.35rem;">
         ${data.points_balance} نقطة ملكية
       </div>
@@ -1110,7 +1140,7 @@ async function submitNewsletter(e) {
     body: JSON.stringify({ email, language: STATE.lang }),
   });
   if (res.ok) {
-    msg.textContent = '✨ شكراً لاشتراكك في النشرة الملكية لمتجر تاج الملك!';
+    msg.textContent = 'شكراً لاشتراكك في النشرة الملكية لمتجر تاج الملك!';
     document.getElementById('newsletter-email').value = '';
   }
 }
