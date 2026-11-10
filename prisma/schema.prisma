@@ -1,0 +1,404 @@
+// ============================================================================
+// TAJ AL MALIK (تاج الملك - حلا الملوك) — Enterprise E-Commerce Database Schema
+// Sultanate of Oman (Sohar) | Bilingual (AR/EN) | OMR 3-Decimal Precision
+// ============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 1. RBAC: Roles, Permissions & Admin/Staff Users
+model Role {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique // ADMIN, STAFF, ORDER_MANAGER
+  description String?
+  permissions Permission[]
+  users       User[]
+  createdAt   DateTime     @default(now()) @map("created_at")
+
+  @@map("roles")
+}
+
+model Permission {
+  id          Int    @id @default(autoincrement())
+  code        String @unique // manage_orders, view_products, manage_products, view_analytics, manage_settings
+  description String
+  roles       Role[]
+
+  @@map("permissions")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  fullName     String   @map("full_name")
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  roleId       Int      @map("role_id")
+  role         Role     @relation(fields: [roleId], references: [id])
+  isActive     Boolean  @default(true) @map("is_active")
+  lastLoginAt  DateTime? @map("last_login_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("users")
+}
+
+// 2. Customers & Future-Ready Account / Loyalty Architecture
+model Customer {
+  id             Int             @id @default(autoincrement())
+  fullName       String          @map("full_name")
+  phone          String          @unique
+  email          String?
+  governorate    String?
+  wilayat        String?
+  savedAddresses Json?           @map("saved_addresses")
+  totalOrders    Int             @default(0) @map("total_orders")
+  totalSpentOmr  Decimal         @default(0.000) @db.Decimal(10, 3) @map("total_spent_omr")
+  orders         Order[]
+  loyaltyAccount LoyaltyAccount?
+  createdAt      DateTime        @default(now()) @map("created_at")
+  updatedAt      DateTime        @updatedAt @map("updated_at")
+
+  @@map("customers")
+}
+
+// 3. Multilingual Categories
+model Category {
+  id           Int                   @id @default(autoincrement())
+  code         String                @unique
+  imageUrl     String?               @map("image_url")
+  displayOrder Int                   @default(0) @map("display_order")
+  isActive     Boolean               @default(true) @map("is_active")
+  isFeatured   Boolean               @default(true) @map("is_featured")
+  translations CategoryTranslation[]
+  products     Product[]
+  createdAt    DateTime              @default(now()) @map("created_at")
+
+  @@map("categories")
+}
+
+model CategoryTranslation {
+  id          Int      @id @default(autoincrement())
+  categoryId  Int      @map("category_id")
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  language    String   // 'ar' | 'en'
+  name        String
+  description String?
+  slug        String
+
+  @@unique([categoryId, language])
+  @@unique([language, slug])
+  @@map("category_translations")
+}
+
+// 4. Multilingual Products, Images & Configurable Options
+model Product {
+  id                Int                  @id @default(autoincrement())
+  sku               String               @unique
+  categoryId        Int                  @map("category_id")
+  category          Category             @relation(fields: [categoryId], references: [id])
+  basePriceOmr      Decimal              @db.Decimal(10, 3) @map("base_price_omr")
+  compareAtPriceOmr Decimal?             @db.Decimal(10, 3) @map("compare_at_price_omr")
+  unitType          String               @default("KG") @map("unit_type") // KG, PLATE, PIECE, BOX, CUSTOM
+  weightLabelAr     String?              @map("weight_label_ar")
+  weightLabelEn     String?              @map("weight_label_en")
+  status            String               @default("ACTIVE") // ACTIVE, HIDDEN, OUT_OF_STOCK
+  inStock           Boolean              @default(true) @map("in_stock")
+  stockQuantity     Int                  @default(100) @map("stock_quantity")
+  lowStockThreshold Int                  @default(10) @map("low_stock_threshold")
+  isFeatured        Boolean              @default(false) @map("is_featured")
+  isBestSeller      Boolean              @default(false) @map("is_best_seller")
+  isSpecialOffer    Boolean              @default(false) @map("is_special_offer")
+  viewsCount        Int                  @default(0) @map("views_count")
+  salesCount        Int                  @default(0) @map("sales_count")
+  seoMetaTitleAr    String?              @map("seo_meta_title_ar")
+  seoMetaTitleEn    String?              @map("seo_meta_title_en")
+  seoMetaDescAr     String?              @map("seo_meta_desc_ar")
+  seoMetaDescEn     String?              @map("seo_meta_desc_en")
+  translations      ProductTranslation[]
+  images            ProductImage[]
+  options           ProductOption[]
+  orderItems        OrderItem[]
+  createdAt         DateTime             @default(now()) @map("created_at")
+  updatedAt         DateTime             @updatedAt @map("updated_at")
+
+  @@map("products")
+}
+
+model ProductTranslation {
+  id               Int     @id @default(autoincrement())
+  productId        Int     @map("product_id")
+  product          Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  language         String  // 'ar' | 'en'
+  name             String
+  shortDescription String? @map("short_description")
+  description      String?
+  slug             String
+
+  @@unique([productId, language])
+  @@unique([language, slug])
+  @@map("product_translations")
+}
+
+model ProductImage {
+  id           Int     @id @default(autoincrement())
+  productId    Int     @map("product_id")
+  product      Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  imageUrl     String  @map("image_url")
+  altTextAr    String? @map("alt_text_ar")
+  altTextEn    String? @map("alt_text_en")
+  isPrimary    Boolean @default(false) @map("is_primary")
+  displayOrder Int     @default(0) @map("display_order")
+
+  @@map("product_images")
+}
+
+model ProductOption {
+  id         Int                  @id @default(autoincrement())
+  productId  Int                  @map("product_id")
+  product    Product              @relation(fields: [productId], references: [id], onDelete: Cascade)
+  nameAr     String               @map("name_ar")
+  nameEn     String               @map("name_en")
+  optionType String               @default("SINGLE") @map("option_type") // WEIGHT, SIZE, PACKAGING, GIFT_CARD
+  isRequired Boolean              @default(true) @map("is_required")
+  values     ProductOptionValue[]
+
+  @@map("product_options")
+}
+
+model ProductOptionValue {
+  id            Int           @id @default(autoincrement())
+  optionId      Int           @map("option_id")
+  option        ProductOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  labelAr       String        @map("label_ar")
+  labelEn       String        @map("label_en")
+  priceDeltaOmr Decimal       @default(0.000) @db.Decimal(10, 3) @map("price_delta_omr")
+  isDefault     Boolean       @default(false) @map("is_default")
+
+  @@map("product_option_values")
+}
+
+// 5. Oman Delivery Zones & Branch Pickup
+model DeliveryZone {
+  id                Int     @id @default(autoincrement())
+  governorateAr     String  @map("governorate_ar")
+  governorateEn     String  @map("governorate_en")
+  wilayatsAr        String  @map("wilayats_ar")
+  wilayatsEn        String  @map("wilayats_en")
+  deliveryFeeOmr    Decimal @db.Decimal(10, 3) @map("delivery_fee_omr")
+  freeThresholdOmr  Decimal @default(25.000) @db.Decimal(10, 3) @map("free_threshold_omr")
+  estimatedTimeAr   String  @map("estimated_time_ar")
+  estimatedTimeEn   String  @map("estimated_time_en")
+  isActive          Boolean @default(true) @map("is_active")
+
+  @@map("delivery_zones")
+}
+
+// 6. Orders & WhatsApp Checkout Tracking
+model Order {
+  id                  Int         @id @default(autoincrement())
+  orderNumber         String      @unique @map("order_number") // e.g., TM-10025
+  customerId          Int?        @map("customer_id")
+  customer            Customer?   @relation(fields: [customerId], references: [id])
+  customerName        String      @map("customer_name")
+  customerPhone       String      @map("customer_phone")
+  customerEmail       String?     @map("customer_email")
+  fulfillmentType     String      @default("DELIVERY") @map("fulfillment_type") // DELIVERY | PICKUP
+  governorate         String?
+  wilayat             String?
+  addressDetails      String?     @map("address_details")
+  googleMapsLink      String?     @map("google_maps_link")
+  pickupBranch        String?     @default("Sohar Main Branch - فرع صحار الرئيسي") @map("pickup_branch")
+  scheduledDate       String?     @map("scheduled_date")
+  scheduledSlot       String?     @map("scheduled_slot")
+  isGift              Boolean     @default(false) @map("is_gift")
+  giftRecipientName   String?     @map("gift_recipient_name")
+  giftRecipientPhone  String?     @map("gift_recipient_phone")
+  giftCardMessage     String?     @map("gift_card_message")
+  customerNotes       String?     @map("customer_notes")
+  subtotalOmr         Decimal     @db.Decimal(10, 3) @map("subtotal_omr")
+  discountCode        String?     @map("discount_code")
+  discountAmountOmr   Decimal     @default(0.000) @db.Decimal(10, 3) @map("discount_amount_omr")
+  deliveryFeeOmr      Decimal     @default(0.000) @db.Decimal(10, 3) @map("delivery_fee_omr")
+  totalAmountOmr      Decimal     @db.Decimal(10, 3) @map("total_amount_omr")
+  status              String      @default("NEW") // NEW, CONTACTED, CONFIRMED, PREPARING, READY, COMPLETED, CANCELLED
+  paymentStatus       String      @default("PENDING_WHATSAPP") @map("payment_status") // Future payment gateway ready
+  paymentMethod       String      @default("WHATSAPP_COORDINATION") @map("payment_method")
+  whatsappMessageText String      @map("whatsapp_message_text")
+  loyaltyPointsEarned Int         @default(0) @map("loyalty_points_earned")
+  items               OrderItem[]
+  createdAt           DateTime    @default(now()) @map("created_at")
+  updatedAt           DateTime    @updatedAt @map("updated_at")
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id            Int               @id @default(autoincrement())
+  orderId       Int               @map("order_id")
+  order         Order             @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId     Int               @map("product_id")
+  product       Product           @relation(fields: [productId], references: [id])
+  productNameAr String            @map("product_name_ar")
+  productNameEn String            @map("product_name_en")
+  quantity      Int
+  unitPriceOmr  Decimal           @db.Decimal(10, 3) @map("unit_price_omr")
+  totalPriceOmr Decimal           @db.Decimal(10, 3) @map("total_price_omr")
+  specialNotes  String?           @map("special_notes")
+  options       OrderItemOption[]
+
+  @@map("order_items")
+}
+
+model OrderItemOption {
+  id            Int       @id @default(autoincrement())
+  orderItemId   Int       @map("order_item_id")
+  orderItem     OrderItem @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+  optionNameAr  String    @map("option_name_ar")
+  optionNameEn  String    @map("option_name_en")
+  valueLabelAr  String    @map("value_label_ar")
+  valueLabelEn  String    @map("value_label_en")
+  priceDeltaOmr Decimal   @default(0.000) @db.Decimal(10, 3) @map("price_delta_omr")
+
+  @@map("order_item_options")
+}
+
+// 7. Discounts & Promotional Codes
+model DiscountCode {
+  id               Int      @id @default(autoincrement())
+  code             String   @unique
+  descriptionAr    String?  @map("description_ar")
+  descriptionEn    String?  @map("description_en")
+  discountType     String   @map("discount_type") // PERCENTAGE | FIXED
+  discountValue    Decimal  @db.Decimal(10, 3) @map("discount_value")
+  minOrderOmr      Decimal  @default(0.000) @db.Decimal(10, 3) @map("min_order_omr")
+  maxUsageLimit    Int      @default(100) @map("max_usage_limit")
+  usedCount        Int      @default(0) @map("used_count")
+  startDate        DateTime @map("start_date")
+  expiryDate       DateTime @map("expiry_date")
+  isActive         Boolean  @default(true) @map("is_active")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  @@map("discount_codes")
+}
+
+// 8. Modular Digital Loyalty System
+model LoyaltyAccount {
+  id            Int                  @id @default(autoincrement())
+  customerId    Int                  @unique @map("customer_id")
+  customer      Customer             @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  pointsBalance Int                  @default(0) @map("points_balance")
+  lifetimePoints Int                 @default(0) @map("lifetime_points")
+  tier          String               @default("ROYAL_GOLD") // ROYAL_SILVER, ROYAL_GOLD, IMPERIAL_CROWN
+  transactions  LoyaltyTransaction[]
+  updatedAt     DateTime             @updatedAt @map("updated_at")
+
+  @@map("loyalty_accounts")
+}
+
+model LoyaltyTransaction {
+  id               Int            @id @default(autoincrement())
+  loyaltyAccountId Int            @map("loyalty_account_id")
+  loyaltyAccount   LoyaltyAccount @relation(fields: [loyaltyAccountId], references: [id], onDelete: Cascade)
+  orderNumber      String?        @map("order_number")
+  pointsDelta      Int            @map("points_delta")
+  reasonAr         String         @map("reason_ar")
+  reasonEn         String         @map("reason_en")
+  createdAt        DateTime       @default(now()) @map("created_at")
+
+  @@map("loyalty_transactions")
+}
+
+// 9. Store Appearance, Branding, Homepage CMS, Testimonials, Newsletter & Analytics
+model BrandSettings {
+  id              Int      @id @default(1)
+  storeNameAr     String   @default("تاج الملك - حلا الملوك") @map("store_name_ar")
+  storeNameEn     String   @default("Taj Al Malik — Royal Sweets") @map("store_name_en")
+  taglineAr       String   @default("تاج الملك - حلا الملوك") @map("tagline_ar")
+  taglineEn       String   @default("Sweets of Kings • Crafted with Royal Heritage") @map("tagline_en")
+  primaryColor    String   @default("#4A0E13") @map("primary_color")
+  secondaryColor  String   @default("#2D070A") @map("secondary_color")
+  accentColor     String   @default("#C6A365") @map("accent_color")
+  surfaceColor    String   @default("#FAF7F2") @map("surface_color")
+  themePreset     String   @default("ROYAL_BURGUNDY_GOLD") @map("theme_preset")
+  logoUrl         String   @default("/assets/logo-gold.svg") @map("logo_url")
+  whatsappNumber  String   @default("96891247722") @map("whatsapp_number")
+  phoneDisplay    String   @default("+968 91247722") @map("phone_display")
+  instagramHandle String   @default("Tajalamlik.om") @map("instagram_handle")
+  instagramUrl    String   @default("https://instagram.com/Tajalamlik.om") @map("instagram_url")
+  locationAr      String   @default("سلطنة عُمان، صحار") @map("location_ar")
+  locationEn      String   @default("Sultanate of Oman, Sohar") @map("location_en")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("brand_settings")
+}
+
+model StoreSettings {
+  id                     Int     @id @default(1)
+  currencyCode           String  @default("OMR") @map("currency_code")
+  currencyDecimals       Int     @default(3) @map("currency_decimals")
+  freeDeliveryThreshold  Decimal @default(20.000) @db.Decimal(10, 3) @map("free_delivery_threshold")
+  enableLoyalty          Boolean @default(true) @map("enable_loyalty")
+  loyaltyPointsPerOmr    Int     @default(10) @map("loyalty_points_per_omr")
+  loyaltyRewardThreshold Int     @default(200) @map("loyalty_reward_threshold")
+  enableNewsletter       Boolean @default(true) @map("enable_newsletter")
+  enableTestimonials     Boolean @default(true) @map("enable_testimonials")
+  bestSellersMode        String  @default("AUTOMATIC") @map("best_sellers_mode") // AUTOMATIC | MANUAL
+
+  @@map("store_settings")
+}
+
+model HomepageSection {
+  id          Int     @id @default(autoincrement())
+  sectionKey  String  @unique @map("section_key") // HERO, ABOUT, WHY_US, CATERING_BANNER
+  titleAr     String  @map("title_ar")
+  titleEn     String  @map("title_en")
+  subtitleAr  String? @map("subtitle_ar")
+  subtitleEn  String? @map("subtitle_en")
+  contentAr   String? @map("content_ar")
+  contentEn   String? @map("content_en")
+  buttonAr    String? @map("button_ar")
+  buttonEn    String? @map("button_en")
+  imageUrl    String? @map("image_url")
+  isActive    Boolean @default(true) @map("is_active")
+
+  @@map("homepage_sections")
+}
+
+model Testimonial {
+  id           Int      @id @default(autoincrement())
+  customerName String   @map("customer_name")
+  cityAr       String   @map("city_ar")
+  cityEn       String   @map("city_en")
+  commentAr    String   @map("comment_ar")
+  commentEn    String   @map("comment_en")
+  rating       Int      @default(5)
+  isApproved   Boolean  @default(true) @map("is_approved")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("testimonials")
+}
+
+model NewsletterSubscriber {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  language  String   @default("ar")
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("newsletter_subscribers")
+}
+
+model AnalyticsEvent {
+  id        Int      @id @default(autoincrement())
+  eventType String   @map("event_type") // PRODUCT_VIEW, ADD_TO_CART, WHATSAPP_CHECKOUT, STORE_VISIT
+  productId Int?     @map("product_id")
+  metadata  String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("analytics_events")
+}

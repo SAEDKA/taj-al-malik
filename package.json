@@ -1,0 +1,22 @@
+{
+  "name": "taj-al-malik-royal-sweets-oman",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Bilingual Luxury E-Commerce Storefront & Centralized Admin Dashboard for Taj Al Malik (تاج الملك - حلا الملوك) in Sohar, Sultanate of Oman",
+  "scripts": {
+    "start": "py backend/server.py",
+    "seed": "py -c \"from backend.seed import seed_database; seed_database()\"",
+    "prisma:generate": "npx prisma generate",
+    "prisma:migrate": "npx prisma migrate dev"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.20.0",
+    "next": "^14.2.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.20.0",
+    "typescript": "^5.5.0"
+  }
+}

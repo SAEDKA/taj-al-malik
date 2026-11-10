@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لوحة تحكم الإدارة | تاج الملك — حلا الملوك (Taj Al Malik Admin)</title>
+  <link rel="icon" type="image/svg+xml" href="/assets/crown-emblem.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body>
+
+  <div class="admin-layout">
+    <!-- Left / Right Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-brand">
+        <img src="/assets/logo-gold.svg" alt="تاج الملك" />
+        <div>
+          <div style="font-weight:800;font-size:1.1rem;color:#FFFDF9;">تاج الملك</div>
+          <div style="font-size:0.75rem;color:#C6A365;">نظام الإدارة المركزية • عُمان</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="sidebar-item active" onclick="switchAdminTab('overview', this)">
+          <span>📊 نظرة عامة والتحليلات</span>
+        </button>
+        <button class="sidebar-item" onclick="switchAdminTab('orders', this)">
+          <span>🛍️ إدارة طلبات واتساب</span>
+          <span class="sidebar-badge" id="nav-new-orders-badge">0</span>
+        </button>
+        <button class="sidebar-item" onclick="switchAdminTab('products', this)">
+          <span>🍯 المنتجات والمخزون (30)</span>
+        </button>
+        <button class="sidebar-item" onclick="switchAdminTab('categories', this)">
+          <span>🗂️ إدارة التصنيفات</span>
+        </button>
+        <button class="sidebar-item" onclick="switchAdminTab('csv', this)">
+          <span>📥 استيراد وتصدير CSV</span>
+        </button>
+        <button class="sidebar-item" onclick="switchAdminTab('marketing', this)">
+          <span>🎟️ الخصومات ونقاط الولاء</span>
+        </button>
+        <button class="sidebar-item" onclick="switchAdminTab('appearance', this)">
+          <span>🎨 الهوية ومحتوى المتجر</span>
+        </button>
+        <button class="sidebar-item" onclick="switchAdminTab('staff', this)">
+          <span>🔐 الموظفون والصلاحيات</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div style="margin-bottom:0.5rem;">📍 سلطنة عُمان، صحار</div>
+        <a href="/" target="_blank" class="adm-btn adm-btn-gold" style="width:100%;justify-content:center;text-decoration:none;">
+          🌐 فتح المتجر العام للعملاء
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Area -->
+    <div class="admin-main">
+      <!-- Top Bar with Global Search & Role Switcher -->
+      <header class="admin-topbar">
+        <div class="global-search-wrap">
+          <input
+            type="text"
+            id="admin-global-search"
+            class="global-search-input"
+            placeholder="🔍 بحث شامل: رقم الطلب (#TM-1005)، اسم العميل، الهاتف، أو اسم المنتج..."
+            oninput="handleGlobalAdminSearch(this.value)"
+          />
+        </div>
+        <div class="topbar-actions">
+          <span class="role-pill" id="current-role-indicator">👑 المدير العام (Admin - صلاحيات كاملة)</span>
+          <button class="adm-btn adm-btn-outline" onclick="openLoginSwitchModal()">🔄 تبديل الحساب / الدخول</button>
+          <button class="adm-btn adm-btn-primary" onclick="loadAdminData()">تحديث البيانات ↻</button>
+        </div>
+      </header>
+
+      <!-- Global Search Results Dropdown Box -->
+      <div id="global-search-results" style="display:none;margin:0 1.75rem;margin-top:0.75rem;" class="panel-card"></div>
+
+      <main class="admin-content">
+
+        <!-- ==================================================================
+             TAB 1: OVERVIEW & ANALYTICS
+             ================================================================== -->
+        <section id="tab-overview" class="tab-pane active">
+          <div class="kpi-grid" id="overview-kpis"></div>
+
+          <div style="display:grid;grid-template-columns:1.35fr 0.65fr;gap:1.5rem;margin-bottom:1.5rem;">
+            <div class="panel-card" style="margin-bottom:0;">
+              <div class="panel-header">
+                <h3 class="panel-title">📈 المبيعات والطلبات عبر الزمن (بالريال العُماني OMR)</h3>
+                <span style="font-size:0.8rem;color:var(--adm-muted);">تحديث تلقائي من قاعدة البيانات</span>
+              </div>
+              <div class="chart-bars" id="sales-chart-bars"></div>
+            </div>
+
+            <div class="panel-card" style="margin-bottom:0;">
+              <div class="panel-header">
+                <h3 class="panel-title">🔔 أحدث التنبيهات الإدارية</h3>
+              </div>
+              <div id="admin-notifications-list" style="display:flex;flex-direction:column;gap:0.65rem;max-height:210px;overflow-y:auto;"></div>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">
+            <div class="panel-card" style="margin-bottom:0;">
+              <div class="panel-header">
+                <h3 class="panel-title">🏆 الأصناف الأكثر مبيعاً (Best Sellers)</h3>
+              </div>
+              <div class="data-table-wrap">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>الصنف</th>
+                      <th>السعر (OMR)</th>
+                      <th>المبيعات</th>
+                      <th>المشاهدات</th>
+                    </tr>
+                  </thead>
+                  <tbody id="overview-bestsellers-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="panel-card" style="margin-bottom:0;">
+              <div class="panel-header">
+                <h3 class="panel-title">👁️ الأصناف الأكثر مشاهدة (Most Viewed)</h3>
+              </div>
+              <div class="data-table-wrap">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>الصنف</th>
+                      <th>الرمز SKU</th>
+                      <th>المشاهدات</th>
+                      <th>المبيعات</th>
+                    </tr>
+                  </thead>
+                  <tbody id="overview-mostviewed-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-header">
+              <h3 class="panel-title">🕒 أحدث طلبات واتساب المسجلة</h3>
+              <button class="adm-btn adm-btn-outline" onclick="switchAdminTab('orders', document.querySelectorAll('.sidebar-item')[1])">
+                عرض كل الطلبات ←
+              </button>
+            </div>
+            <div class="data-table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>رقم الطلب</th>
+                    <th>العميل</th>
+                    <th>الاستلام / الولاية</th>
+                    <th>الإجمالي (OMR)</th>
+                    <th>الحالة</th>
+                    <th>إجراء سريع</th>
+                  </tr>
+                </thead>
+                <tbody id="overview-recent-orders-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================================
+             TAB 2: ORDER MANAGEMENT SYSTEM & WHATSAPP WORKFLOW
+             ================================================================== -->
+        <section id="tab-orders" class="tab-pane">
+          <div class="panel-card">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">🛍️ إدارة الطلبات وتتبع حالات واتساب</h3>
+                <p style="font-size:0.84rem;color:var(--adm-muted);">
+                  جميع الطلبات تُحفظ تلقائياً في قاعدة البيانات قبل فتح واتساب. عند تحويل الحالة إلى Completed تُضاف نقاط الولاء للعميل.
+                </p>
+              </div>
+              <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+                <select id="orders-status-filter" class="adm-select" style="width:190px;" onchange="filterOrdersTable()">
+                  <option value="ALL">جميع الحالات (All Statuses)</option>
+                  <option value="NEW">New — طلب جديد</option>
+                  <option value="CONTACTED">Contacted — تم التواصل</option>
+                  <option value="CONFIRMED">Confirmed — مؤكد</option>
+                  <option value="PREPARING">Preparing — قيد التجهيز</option>
+                  <option value="READY">Ready — جاهز للتسليم</option>
+                  <option value="COMPLETED">Completed — مكتمل</option>
+                  <option value="CANCELLED">Cancelled — ملغي</option>
+                </select>
+                <input type="text" id="orders-search-filter" class="adm-input" style="width:230px;" placeholder="بحث برقم الطلب أو الهاتف..." oninput="filterOrdersTable()" />
+                <a href="/api/admin/csv/export?entity=orders" class="adm-btn adm-btn-outline">📥 تصدير الطلبات CSV</a>
+              </div>
+            </div>
+
+            <div class="data-table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>رقم الطلب</th>
+                    <th>التاريخ</th>
+                    <th>العميل والهاتف</th>
+                    <th>الاستلام / المنطقة</th>
+                    <th>الأصناف</th>
+                    <th>الإجمالي (OMR)</th>
+                    <th>حالة الطلب (Workflow)</th>
+                    <th>تحديث الحالة / واتساب</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-orders-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================================
+             TAB 3: PRODUCT & INVENTORY MANAGEMENT
+             ================================================================== -->
+        <section id="tab-products" class="tab-pane">
+          <div class="panel-card">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">🍯 إدارة المنتجات والمنيو والمخزون</h3>
+                <p style="font-size:0.84rem;color:var(--adm-muted);">إضافة وتعديل وحذف وتكرار المنتجات باللغتين العربية والإنجليزية مع التحكم بالتوفر والأسعار (OMR)</p>
+              </div>
+              <button class="adm-btn adm-btn-primary" onclick="openProductEditor()">+ إضافة منتج جديد</button>
+            </div>
+
+            <div class="data-table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>الصورة</th>
+                    <th>الاسم (عربي / EN)</th>
+                    <th>القسم</th>
+                    <th>السعر (OMR)</th>
+                    <th>الوحدة</th>
+                    <th>المخزون</th>
+                    <th>الشارات</th>
+                    <th>إجراءات</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-products-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================================
+             TAB 4: CATEGORY MANAGEMENT
+             ================================================================== -->
+        <section id="tab-categories" class="tab-pane">
+          <div class="panel-card">
+            <div class="panel-header">
+              <h3 class="panel-title">🗂️ إدارة التصنيفات (عربي / إنجليزي)</h3>
+              <button class="adm-btn adm-btn-primary" onclick="openCategoryEditor()">+ إضافة قسم جديد</button>
+            </div>
+            <div class="data-table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>الترتيب</th>
+                    <th>الرمز (Slug)</th>
+                    <th>الاسم بالعربية</th>
+                    <th>الاسم بالإنجليزية</th>
+                    <th>الحالة</th>
+                    <th>إجراءات</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-categories-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================================
+             TAB 5: BULK CSV IMPORT & EXPORT
+             ================================================================== -->
+        <section id="tab-csv" class="tab-pane">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+            <div class="panel-card">
+              <div class="panel-header">
+                <h3 class="panel-title">📤 تصدير بيانات المتجر (Export CSV)</h3>
+              </div>
+              <p style="font-size:0.9rem;color:var(--adm-muted);margin-bottom:1.25rem;">
+                بيانات متجر تاج الملك ملكك بالكامل. يمكنك تصدير المنتجات والتصنيفات والطلبات بصيغة CSV متوافقة مع Excel باللغة العربية والإنجليزية:
+              </p>
+              <div style="display:flex;flex-direction:column;gap:0.75rem;">
+                <a href="/api/admin/csv/export?entity=products" class="adm-btn adm-btn-primary" style="justify-content:center;text-decoration:none;">
+                  📥 تصدير جميع المنتجات (Products CSV)
+                </a>
+                <a href="/api/admin/csv/export?entity=categories" class="adm-btn adm-btn-outline" style="justify-content:center;text-decoration:none;">
+                  📥 تصدير جميع التصنيفات (Categories CSV)
+                </a>
+                <a href="/api/admin/csv/export?entity=orders" class="adm-btn adm-btn-outline" style="justify-content:center;text-decoration:none;">
+                  📥 تصدير سجل الطلبات والمبيعات (Orders CSV)
+                </a>
+                <a href="/api/admin/csv/export?entity=template" class="adm-btn adm-btn-gold" style="justify-content:center;text-decoration:none;">
+                  📄 تحميل قالب الاستيراد الجاهز (Download CSV Template)
+                </a>
+              </div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-header">
+                <h3 class="panel-title">📥 الاستيراد الجماعي للمنتجات (Bulk CSV Import)</h3>
+              </div>
+              <p style="font-size:0.86rem;color:var(--adm-muted);margin-bottom:0.85rem;">
+                ارفع ملف CSV أو الصق محتواه ليقوم النظام بالتحقق من صحة كل سطر (الأسعار، الرموز، الأسماء) قبل الحفظ:
+              </p>
+              <input type="file" accept=".csv" class="adm-input" style="margin-bottom:0.75rem;" onchange="loadCsvFileToTextarea(this)" />
+              <textarea id="csv-import-textarea" class="adm-textarea" rows="6" placeholder="sku,category_code,name_ar,name_en,short_description_ar,short_description_en,base_price_omr,unit_type,weight_label_ar,weight_label_en,in_stock,image_url&#10;TM-NEW-101,royal-baklava,بقلاوة ملكية خاصة,Special Royal Baklava,بقلاوة فاخرة,Luxury Baklava,15.000,KG,1 كيلو,1 Kg,1,/assets/products/baklava-pistachio.svg"></textarea>
+              <button class="adm-btn adm-btn-primary" style="margin-top:0.85rem;width:100%;justify-content:center;" onclick="runCsvImport()">
+                ✅ التحقق واستيراد المنتجات الآن
+              </button>
+              <div id="csv-import-report" style="margin-top:1rem;"></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================================
+             TAB 6: DISCOUNTS & LOYALTY SYSTEM
+             ================================================================== -->
+        <section id="tab-marketing" class="tab-pane">
+          <div style="display:grid;grid-template-columns:1.1fr 0.9fr;gap:1.5rem;">
+            <div class="panel-card">
+              <div class="panel-header">
+                <h3 class="panel-title">🎟️ أكواد الخصم والعروض الترويجية</h3>
+                <button class="adm-btn adm-btn-primary" onclick="openDiscountCreator()">+ إنشاء كود خصم</button>
+              </div>
+              <div class="data-table-wrap">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>الكود</th>
+                      <th>النوع والقيمة</th>
+                      <th>الحد الأدنى</th>
+                      <th>الاستخدام</th>
+                      <th>الصلاحية</th>
+                      <th>الحالة</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-discounts-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-header">
+                <h3 class="panel-title">👑 سجل ولاء العملاء (Royal Loyalty)</h3>
+              </div>
+              <div class="data-table-wrap">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>العميل</th>
+                      <th>الهاتف</th>
+                      <th>إجمالي المشتريات</th>
+                      <th>النقاط</th>
+                      <th>الفئة</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-loyalty-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================================
+             TAB 7: BRANDING, STORE APPEARANCE & HOMEPAGE CMS
+             ================================================================== -->
+        <section id="tab-appearance" class="tab-pane">
+          <form onsubmit="saveAppearanceSettings(event)">
+            <div class="panel-card">
+              <div class="panel-header">
+                <h3 class="panel-title">🎨 الهوية البصرية وألوان تاج الملك وأرقام التواصل</h3>
+                <button type="submit" class="adm-btn adm-btn-primary">💾 حفظ وتطبيق التعديلات فوراً</button>
+              </div>
+
+              <div class="form-row-3">
+                <div>
+                  <label class="adm-label">اسم المتجر (عربي)</label>
+                  <input type="text" id="set-name-ar" class="adm-input" />
+                </div>
+                <div>
+                  <label class="adm-label">Store Name (English)</label>
+                  <input type="text" id="set-name-en" class="adm-input" />
+                </div>
+                <div>
+                  <label class="adm-label">الشعار اللفظي (Tagline AR)</label>
+                  <input type="text" id="set-tagline-ar" class="adm-input" />
+                </div>
+              </div>
+
+              <div class="form-row-3">
+                <div>
+                  <label class="adm-label">رقم واتساب لاستقبال الطلبات (بدون +)</label>
+                  <input type="text" id="set-wa-num" class="adm-input" dir="ltr" />
+                </div>
+                <div>
+                  <label class="adm-label">رقم الهاتف المعروض</label>
+                  <input type="text" id="set-phone-disp" class="adm-input" dir="ltr" />
+                </div>
+                <div>
+                  <label class="adm-label">حساب إنستغرام</label>
+                  <input type="text" id="set-insta" class="adm-input" dir="ltr" />
+                </div>
+              </div>
+
+              <div class="form-row-3">
+                <div>
+                  <label class="adm-label">اللون الملكي الأساسي (Primary Burgundy)</label>
+                  <input type="color" id="set-color-primary" class="adm-input" style="height:44px;padding:4px;" />
+                </div>
+                <div>
+                  <label class="adm-label">اللون الذهبي المميز (Champagne Gold)</label>
+                  <input type="color" id="set-color-accent" class="adm-input" style="height:44px;padding:4px;" />
+                </div>
+                <div>
+                  <label class="adm-label">حد التوصيل المجاني (OMR)</label>
+                  <input type="number" step="0.500" id="set-free-thresh" class="adm-input" />
+                </div>
+              </div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-header">
+                <h3 class="panel-title">🏠 إدارة محتوى الصفحة الرئيسية وقصة «حلا الملوك»</h3>
+              </div>
+              <div class="form-row-2">
+                <div>
+                  <label class="adm-label">عنوان البانر الرئيسي (Hero Title AR)</label>
+                  <input type="text" id="set-hero-title-ar" class="adm-input" />
+                </div>
+                <div>
+                  <label class="adm-label">Hero Title (English)</label>
+                  <input type="text" id="set-hero-title-en" class="adm-input" />
+                </div>
+              </div>
+              <div class="form-row-2">
+                <div>
+                  <label class="adm-label">الوصف الفرعي للبانر (Hero Subtitle AR)</label>
+                  <textarea id="set-hero-sub-ar" class="adm-textarea" rows="2"></textarea>
+                </div>
+                <div>
+                  <label class="adm-label">Hero Subtitle (English)</label>
+                  <textarea id="set-hero-sub-en" class="adm-textarea" rows="2"></textarea>
+                </div>
+              </div>
+              <div class="form-row-2">
+                <div>
+                  <label class="adm-label">رسالة بطاقة «تاج الملك - حلا الملوك» (About Story AR)</label>
+                  <textarea id="set-about-ar" class="adm-textarea" rows="3"></textarea>
+                </div>
+                <div>
+                  <label class="adm-label">About Brand Story (English)</label>
+                  <textarea id="set-about-en" class="adm-textarea" rows="3"></textarea>
+                </div>
+              </div>
+            </div>
+          </form>
+        </section>
+
+        <!-- ==================================================================
+             TAB 8: STAFF ROLES & RBAC SECURITY
+             ================================================================== -->
+        <section id="tab-staff" class="tab-pane">
+          <div class="panel-card">
+            <div class="panel-header">
+              <div>
+                <h3 class="panel-title">🔐 إدارة الموظفين والصلاحيات (Role-Based Access Control)</h3>
+                <p style="font-size:0.84rem;color:var(--adm-muted);">
+                  حساب المدير (Admin) يملك صلاحيات كاملة، بينما حساب الموظف (Staff) يملك صلاحيات متابعة وتجهيز الطلبات والمنتجات دون تعديل إعدادات المتجر الحساسة.
+                </p>
+              </div>
+            </div>
+            <div class="data-table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>الاسم</th>
+                    <th>البريد الإلكتروني</th>
+                    <th>الدور الوظيفي (Role)</th>
+                    <th>الصلاحيات الممنوحة</th>
+                    <th>الحالة</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-staff-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- MODAL: PRODUCT CREATE / EDIT -->
+  <div id="admin-product-modal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.65);z-index:200;align-items:center;justify-content:center;padding:1rem;">
+    <div class="panel-card" style="width:100%;max-width:720px;max-height:90vh;overflow-y:auto;margin:0;">
+      <div class="panel-header">
+        <h3 class="panel-title" id="prod-modal-heading">إضافة / تعديل منتج</h3>
+        <button class="adm-btn adm-btn-outline" onclick="closeProductEditor()">✕</button>
+      </div>
+      <form onsubmit="submitProductEditor(event)">
+        <input type="hidden" id="edit-prod-id" />
+        <div class="form-row-3">
+          <div>
+            <label class="adm-label">الاسم بالعربية *</label>
+            <input type="text" id="edit-prod-name-ar" class="adm-input" required />
+          </div>
+          <div>
+            <label class="adm-label">English Name *</label>
+            <input type="text" id="edit-prod-name-en" class="adm-input" required />
+          </div>
+          <div>
+            <label class="adm-label">رمز الصنف (SKU)</label>
+            <input type="text" id="edit-prod-sku" class="adm-input" required />
+          </div>
+        </div>
+        <div class="form-row-3">
+          <div>
+            <label class="adm-label">التصنيف *</label>
+            <select id="edit-prod-cat" class="adm-select"></select>
+          </div>
+          <div>
+            <label class="adm-label">السعر بالريال العُماني (OMR) *</label>
+            <input type="number" step="0.100" id="edit-prod-price" class="adm-input" required />
+          </div>
+          <div>
+            <label class="adm-label">وحدة البيع (مثال: 1 كيلو / 5 قطع / صحن)</label>
+            <input type="text" id="edit-prod-weight-ar" class="adm-input" />
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div>
+            <label class="adm-label">وصف مختصر (عربي)</label>
+            <textarea id="edit-prod-short-ar" class="adm-textarea" rows="2"></textarea>
+          </div>
+          <div>
+            <label class="adm-label">Short Description (English)</label>
+            <textarea id="edit-prod-short-en" class="adm-textarea" rows="2"></textarea>
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div>
+            <label class="adm-label">رابط صورة المنتج</label>
+            <input type="text" id="edit-prod-img" class="adm-input" dir="ltr" />
+          </div>
+          <div style="display:flex;align-items:center;gap:1rem;padding-top:1.4rem;">
+            <label><input type="checkbox" id="edit-prod-instock" checked /> متوفر بالمخزون</label>
+            <label><input type="checkbox" id="edit-prod-featured" /> مميز</label>
+            <label><input type="checkbox" id="edit-prod-bestseller" /> الأكثر مبيعاً</label>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:flex-end;gap:0.75rem;margin-top:1rem;">
+          <button type="button" class="adm-btn adm-btn-outline" onclick="closeProductEditor()">إلغاء</button>
+          <button type="submit" class="adm-btn adm-btn-primary">💾 حفظ المنتج</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: LOGIN / SWITCH ROLE -->
+  <div id="admin-login-modal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.65);z-index:210;align-items:center;justify-content:center;padding:1rem;">
+    <div class="panel-card" style="width:100%;max-width:440px;margin:0;">
+      <div class="panel-header">
+        <h3 class="panel-title">🔐 تسجيل الدخول / تبديل الصلاحية</h3>
+        <button class="adm-btn adm-btn-outline" onclick="document.getElementById('admin-login-modal').style.display='none'">✕</button>
+      </div>
+      <p style="font-size:0.84rem;color:var(--adm-muted);margin-bottom:1rem;">
+        جرب الصلاحيات الفورية بالضغط السريع أو إدخال البيانات:
+      </p>
+      <div style="display:flex;gap:0.5rem;margin-bottom:1rem;">
+        <button type="button" class="adm-btn adm-btn-gold" style="flex:1;justify-content:center;" onclick="fillDemoLogin('admin@tajalamlik.om','admin123')">
+          👑 دخول كمدير (سعيد)
+        </button>
+        <button type="button" class="adm-btn adm-btn-outline" style="flex:1;justify-content:center;" onclick="fillDemoLogin('staff@tajalamlik.om','staff123')">
+          👨‍🍳 دخول كموظف (قاسم)
+        </button>
+      </div>
+      <form onsubmit="submitAdminLogin(event)">
+        <div style="margin-bottom:0.75rem;">
+          <label class="adm-label">البريد الإلكتروني</label>
+          <input type="email" id="adm-login-email" class="adm-input" value="admin@tajalamlik.om" dir="ltr" required />
+        </div>
+        <div style="margin-bottom:1rem;">
+          <label class="adm-label">كلمة المرور</label>
+          <input type="password" id="adm-login-pass" class="adm-input" value="admin123" dir="ltr" required />
+        </div>
+        <button type="submit" class="adm-btn adm-btn-primary" style="width:100%;justify-content:center;">تسجيل الدخول</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>

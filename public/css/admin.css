@@ -1,0 +1,434 @@
+/* ==========================================================================
+   TAJ AL MALIK — Centralized Admin Dashboard CSS (MenusForge Philosophy)
+   Clean, Efficient, Data-Driven Desktop & Tablet Interface
+   ========================================================================== */
+
+:root {
+  --adm-bg: #F4F5F7;
+  --adm-surface: #FFFFFF;
+  --adm-sidebar: #1F070A;
+  --adm-sidebar-hover: #380C11;
+  --adm-primary: #4A0E13;
+  --adm-accent: #C6A365;
+  --adm-text: #1E293B;
+  --adm-muted: #64748B;
+  --adm-border: #E2E8F0;
+  --adm-success: #15803D;
+  --adm-warning: #B45309;
+  --adm-danger: #B91C1C;
+  --adm-info: #1D4ED8;
+  --adm-radius: 14px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--adm-bg);
+  color: var(--adm-text);
+  font-family: 'Tajawal', 'Plus Jakarta Sans', sans-serif;
+  line-height: 1.55;
+}
+
+.admin-layout {
+  display: grid;
+  grid-template-columns: 270px 1fr;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.admin-sidebar {
+  background: linear-gradient(180deg, #240609 0%, #160305 100%);
+  color: #F8FAFC;
+  border-inline-end: 2px solid var(--adm-accent);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.sidebar-brand {
+  padding: 1.35rem 1.25rem;
+  border-bottom: 1px solid rgba(198, 163, 101, 0.22);
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.sidebar-brand img {
+  height: 44px;
+  width: auto;
+}
+
+.sidebar-nav {
+  padding: 1rem 0.75rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  overflow-y: auto;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.78rem 1rem;
+  border-radius: 10px;
+  color: #CBD5E1;
+  font-weight: 600;
+  font-size: 0.94rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  background: transparent;
+  width: 100%;
+  text-align: start;
+  font-family: inherit;
+}
+
+.sidebar-item:hover {
+  background: var(--adm-sidebar-hover);
+  color: #FFFFFF;
+}
+
+.sidebar-item.active {
+  background: linear-gradient(135deg, #DFC28B 0%, #C6A365 100%);
+  color: #240609;
+  font-weight: 800;
+}
+
+.sidebar-badge {
+  background: #DC2626;
+  color: #FFFFFF;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+}
+
+.sidebar-footer {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid rgba(198, 163, 101, 0.22);
+  font-size: 0.82rem;
+  color: #94A3B8;
+}
+
+/* Main Content Area */
+.admin-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.admin-topbar {
+  background: var(--adm-surface);
+  border-bottom: 1px solid var(--adm-border);
+  padding: 0.9rem 1.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+}
+
+.global-search-wrap {
+  flex: 1;
+  max-width: 460px;
+  position: relative;
+}
+
+.global-search-input {
+  width: 100%;
+  padding: 0.65rem 1rem;
+  border: 1.5px solid var(--adm-border);
+  border-radius: 999px;
+  font-size: 0.9rem;
+  background: #F8FAFC;
+  outline: none;
+  font-family: inherit;
+}
+
+.global-search-input:focus {
+  border-color: var(--adm-primary);
+  background: #FFFFFF;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.role-pill {
+  background: #FEF3C7;
+  color: #92400E;
+  border: 1px solid #F59E0B;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.admin-content {
+  padding: 1.75rem;
+  flex: 1;
+}
+
+.tab-pane {
+  display: none;
+}
+
+.tab-pane.active {
+  display: block;
+}
+
+/* KPI Cards */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1.15rem;
+  margin-bottom: 1.75rem;
+}
+
+.kpi-card {
+  background: var(--adm-surface);
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius);
+  padding: 1.25rem;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  border-top: 4px solid var(--adm-primary);
+}
+
+.kpi-card.gold {
+  border-top-color: var(--adm-accent);
+}
+
+.kpi-card.green {
+  border-top-color: var(--adm-success);
+}
+
+.kpi-card.blue {
+  border-top-color: var(--adm-info);
+}
+
+.kpi-label {
+  font-size: 0.84rem;
+  color: var(--adm-muted);
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.kpi-value {
+  font-size: 1.65rem;
+  font-weight: 800;
+  color: var(--adm-text);
+}
+
+.kpi-sub {
+  font-size: 0.78rem;
+  color: var(--adm-muted);
+  margin-top: 0.25rem;
+}
+
+/* Panels & Tables */
+.panel-card {
+  background: var(--adm-surface);
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius);
+  padding: 1.35rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.15rem;
+  padding-bottom: 0.85rem;
+  border-bottom: 1px solid var(--adm-border);
+}
+
+.panel-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--adm-primary);
+}
+
+.data-table-wrap {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.data-table th {
+  background: #F8FAFC;
+  color: var(--adm-muted);
+  font-weight: 700;
+  text-align: start;
+  padding: 0.8rem 0.9rem;
+  border-bottom: 2px solid var(--adm-border);
+  white-space: nowrap;
+}
+
+.data-table td {
+  padding: 0.85rem 0.9rem;
+  border-bottom: 1px solid var(--adm-border);
+  vertical-align: middle;
+}
+
+.data-table tr:hover td {
+  background: #FCFBF9;
+}
+
+/* Status Badges */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.status-NEW { background: #DBEAFE; color: #1E40AF; }
+.status-CONTACTED { background: #E0E7FF; color: #3730A3; }
+.status-CONFIRMED { background: #FEF3C7; color: #92400E; }
+.status-PREPARING { background: #FFEDD5; color: #9A3412; }
+.status-READY { background: #F3E8FF; color: #6B21A8; }
+.status-COMPLETED { background: #DCFCE7; color: #166534; }
+.status-CANCELLED { background: #FEE2E2; color: #991B1B; }
+
+/* Buttons & Inputs */
+.adm-btn {
+  padding: 0.58rem 1.1rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.86rem;
+  cursor: pointer;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: inherit;
+  transition: all 0.18s ease;
+}
+
+.adm-btn-primary {
+  background: var(--adm-primary);
+  color: #FFFFFF;
+}
+
+.adm-btn-primary:hover {
+  background: #6B1820;
+}
+
+.adm-btn-gold {
+  background: var(--adm-accent);
+  color: #240609;
+}
+
+.adm-btn-outline {
+  background: #FFFFFF;
+  border-color: var(--adm-border);
+  color: var(--adm-text);
+}
+
+.adm-btn-outline:hover {
+  border-color: var(--adm-primary);
+  color: var(--adm-primary);
+}
+
+.adm-btn-danger {
+  background: #FEE2E2;
+  color: #991B1B;
+}
+
+.adm-input, .adm-select, .adm-textarea {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  border: 1.5px solid var(--adm-border);
+  border-radius: 9px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  outline: none;
+}
+
+.adm-input:focus, .adm-select:focus, .adm-textarea:focus {
+  border-color: var(--adm-primary);
+}
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+}
+
+.form-row-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+}
+
+.adm-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--adm-text);
+  margin-bottom: 0.3rem;
+}
+
+/* Charts Bar Visuals */
+.chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.85rem;
+  height: 190px;
+  padding: 1rem 0.5rem 0;
+  border-bottom: 1px solid var(--adm-border);
+}
+
+.chart-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.chart-bar {
+  width: 100%;
+  max-width: 48px;
+  background: linear-gradient(180deg, var(--adm-primary) 0%, var(--adm-accent) 100%);
+  border-radius: 8px 8px 0 0;
+  min-height: 12px;
+  transition: height 0.3s ease;
+}
+
+@media (max-width: 960px) {
+  .admin-layout {
+    grid-template-columns: 1fr;
+  }
+  .admin-sidebar {
+    height: auto;
+    position: relative;
+  }
+  .form-row-2, .form-row-3 {
+    grid-template-columns: 1fr;
+  }
+}

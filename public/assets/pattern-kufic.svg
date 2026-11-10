@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 120 120" fill="none">
+  <g stroke="#C6A365" stroke-width="0.6" stroke-opacity="0.045">
+    <rect x="6" y="6" width="48" height="48" rx="2" />
+    <rect x="18" y="18" width="24" height="24" rx="1" />
+    <path d="M6 30H18M42 30H54M30 6V18M30 42V54" />
+    <rect x="66" y="6" width="48" height="48" rx="2" />
+    <rect x="78" y="18" width="24" height="24" rx="1" />
+    <path d="M66 30H78M102 30H114M90 6V18M90 42V54" />
+    <rect x="6" y="66" width="48" height="48" rx="2" />
+    <rect x="18" y="78" width="24" height="24" rx="1" />
+    <path d="M6 90H18M42 90H114M30 66V78M30 102V114" />
+    <rect x="66" y="66" width="48" height="48" rx="2" />
+    <rect x="78" y="78" width="24" height="24" rx="1" />
+    <path d="M54 30H66M30 54V66M90 54V66M54 90H66" />
+  </g>
+</svg>

@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 640" width="800" height="640">
+  <defs>
+    
+        <radialGradient id="bgGrad" cx="50%" cy="45%" r="65%">
+          <stop offset="0%" stop-color="#63151C"/>
+          <stop offset="65%" stop-color="#3F0B10"/>
+          <stop offset="100%" stop-color="#240508"/>
+        </radialGradient>
+        
+    <linearGradient id="goldRim" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EDD39C"/>
+      <stop offset="50%" stop-color="#C6A365"/>
+      <stop offset="100%" stop-color="#9A7432"/>
+    </linearGradient>
+    <linearGradient id="kataifiGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F3C76B"/>
+      <stop offset="50%" stop-color="#D99B38"/>
+      <stop offset="100%" stop-color="#A86B14"/>
+    </linearGradient>
+    <linearGradient id="pistachioGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#98C948"/>
+      <stop offset="55%" stop-color="#6CA329"/>
+      <stop offset="100%" stop-color="#467314"/>
+    </linearGradient>
+    <linearGradient id="qishtaCream" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="70%" stop-color="#FFF9EC"/>
+      <stop offset="100%" stop-color="#EFE2C8"/>
+    </linearGradient>
+    <linearGradient id="walnutBronze" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#C48845"/>
+      <stop offset="50%" stop-color="#8F5922"/>
+      <stop offset="100%" stop-color="#5E350E"/>
+    </linearGradient>
+    <linearGradient id="chocoRich" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5A311D"/>
+      <stop offset="50%" stop-color="#3B1D0F"/>
+      <stop offset="100%" stop-color="#241007"/>
+    </linearGradient>
+    <filter id="softShadow" x="-15%" y="-15%" width="130%" height="135%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#2B070A" flood-opacity="0.22"/>
+    </filter>
+    <filter id="pieceShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#2B070A" flood-opacity="0.24"/>
+    </filter>
+  </defs>
+
+  <!-- Studio Backdrop -->
+  <rect width="800" height="640" fill="url(#bgGrad)"/>
+
+  <!-- Subtle Oriental Arch & Geometric Border -->
+  <g opacity="0.16" stroke="url(#goldRim)" stroke-width="1.5" fill="none">
+    <rect x="24" y="24" width="752" height="592" rx="22"/>
+    <rect x="34" y="34" width="732" height="572" rx="16"/>
+    <path d="M24 90 L90 24 M776 90 L710 24 M24 550 L90 616 M776 550 L710 616"/>
+  </g>
+
+  <!-- Royal Serving Platter -->
+  <g filter="url(#softShadow)">
+    <ellipse cx="400" cy="340" rx="285" ry="215" fill="url(#goldRim)"/>
+    <ellipse cx="400" cy="336" rx="273" ry="204" fill="#4A0E13" opacity="0.18"/>
+    <ellipse cx="400" cy="336" rx="266" ry="198" fill="#FAF5EC" stroke="#D4B275" stroke-width="3"/>
+    <ellipse cx="400" cy="336" rx="236" ry="172" fill="none" stroke="url(#goldRim)" stroke-width="1.2" stroke-dasharray="6 4" opacity="0.65"/>
+  </g>
+
+  <!-- Custom Culinary Dish Content -->
+  <g filter="url(#pieceShadow)">
+    
+  <g transform="translate(400, 332)">
+    <!-- Open Luxury Burgundy Gift Box with Gold Dividers -->
+    <rect x="-195" y="-135" width="390" height="270" rx="18" fill="#3D0A0E" stroke="url(#goldRim)" stroke-width="5"/>
+    <rect x="-180" y="-120" width="360" height="240" rx="10" fill="#290609" stroke="url(#goldRim)" stroke-width="1.5"/>
+    <line x1="-60" y1="-120" x2="-60" y2="120" stroke="url(#goldRim)" stroke-width="3"/>
+    <line x1="60" y1="-120" x2="60" y2="120" stroke="url(#goldRim)" stroke-width="3"/>
+    <line x1="-180" y1="0" x2="180" y2="0" stroke="url(#goldRim)" stroke-width="3"/>
+    <!-- Compartment 1: Mabrouma -->
+    <circle cx="-120" cy="-60" r="24" fill="url(#kataifiGold)"/><circle cx="-120" cy="-60" r="14" fill="url(#pistachioGreen)"/>
+    <circle cx="-120" cy="60" r="24" fill="url(#kataifiGold)"/><circle cx="-120" cy="60" r="14" fill="url(#pistachioGreen)"/>
+    <!-- Compartment 2: Ballourieh -->
+    <rect x="-42" y="-82" width="84" height="44" rx="6" fill="#FFFDF9"/><rect x="-42" y="-66" width="84" height="12" fill="url(#pistachioGreen)"/>
+    <!-- Compartment 3: Diamond Baklava -->
+    <polygon points="0,32 42,60 0,88 -42,60" fill="url(#kataifiGold)"/><circle cx="0" cy="60" r="10" fill="url(#pistachioGreen)"/>
+    <!-- Compartment 4: Fingers & Nests -->
+    <circle cx="120" cy="-60" r="25" fill="url(#kataifiGold)"/><circle cx="120" cy="-60" r="12" fill="#89C932"/>
+    <rect x="82" y="42" width="76" height="34" rx="10" fill="url(#kataifiGold)"/><circle cx="120" cy="59" r="9" fill="url(#pistachioGreen)"/>
+    <!-- Royal Greeting Card Ribbon -->
+    <rect x="-68" y="-22" width="136" height="44" rx="8" fill="#C6A365" stroke="#FFF8EB" stroke-width="1.5"/>
+    <text x="0" y="6" text-anchor="middle" fill="#2D070A" font-family="Amiri, Tajawal, sans-serif" font-size="18" font-weight="bold">تاج الملك</text>
+  </g>
+
+  </g>
+
+  <!-- Top Brand Pill -->
+  <g transform="translate(46, 46)">
+    <rect x="0" y="0" width="188" height="38" rx="19" fill="#4A0E13" stroke="url(#goldRim)" stroke-width="1.5"/>
+    <text x="94" y="24" text-anchor="middle" fill="#E8CFA0" font-family="Amiri, Tajawal, sans-serif" font-size="16" font-weight="bold">تاج الملك • حلا الملوك</text>
+  </g>
+
+  <!-- Price / Weight Badge -->
+  <g transform="translate(570, 46)">
+    <rect x="0" y="0" width="184" height="38" rx="19" fill="url(#goldRim)"/>
+    <text x="92" y="24" text-anchor="middle" fill="#2D070A" font-family="Tajawal, Plus Jakarta Sans, sans-serif" font-size="15" font-weight="bold">16.000 OMR</text>
+  </g>
+
+  <!-- Bottom Caption Banner -->
+  <g transform="translate(80, 548)">
+    <rect x="0" y="0" width="640" height="62" rx="16" fill="#2D070A" fill-opacity="0.88" stroke="url(#goldRim)" stroke-width="1.2"/>
+    <text x="320" y="28" text-anchor="middle" fill="#F9F2E4" font-family="Tajawal, Amiri, sans-serif" font-size="20" font-weight="bold">بوكس تاج الملك المشكل الفاخر</text>
+    <text x="320" y="50" text-anchor="middle" fill="#D5B475" font-family="Plus Jakarta Sans, sans-serif" font-size="13" letter-spacing="0.8">TAJ AL MALIK ROYAL GIFT BOX</text>
+  </g>
+</svg>
