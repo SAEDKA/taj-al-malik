@@ -138,7 +138,7 @@
   <!-- Price / Weight Badge -->
   <g transform="translate(570, 46)">
     <rect x="0" y="0" width="184" height="38" rx="19" fill="url(#goldRim)"/>
-    <text x="92" y="24" text-anchor="middle" fill="#2D070A" font-family="Tajawal, Plus Jakarta Sans, sans-serif" font-size="15" font-weight="bold">12.000 OMR / Kg</text>
+    <text x="92" y="24" text-anchor="middle" fill="#2D070A" font-family="Tajawal, Plus Jakarta Sans, sans-serif" font-size="12" font-weight="bold">مختارات ملكية فاخرة</text>
   </g>
 
   <!-- Bottom Caption Banner -->

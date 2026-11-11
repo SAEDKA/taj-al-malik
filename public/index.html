@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/storefront.css?v=12" />
+  <link rel="stylesheet" href="/css/storefront.css?v=13" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -157,10 +157,28 @@
         </div>
       </div>
 
-      <div class="hero-visual-card">
-        <img src="/assets/products/mabrouma-pistachio.svg" alt="مبرومة فستق تاج الملك" class="hero-showcase-img" id="hero-main-img" />
+      <div class="hero-visual-card" id="hero-showcase-box" onclick="handleShowcaseClick()" style="cursor:pointer;" title="اضغط لتصفح هذا الصنف الملكي في القائمة">
+        <!-- Progress bar for 3s rotation -->
+        <div class="showcase-progress-bar-wrap">
+          <div class="showcase-progress-bar" id="showcase-progress-bar"></div>
+        </div>
+        
+        <div class="hero-showcase-header">
+          <span class="showcase-badge">✨ إصدارات الضيافة الملكية</span>
+          <div class="showcase-dots" id="showcase-dots"></div>
+        </div>
+
+        <div class="hero-showcase-img-wrap">
+          <img src="/assets/products/mabrouma-pistachio.svg" alt="مبرومة فستق تاج الملك" class="hero-showcase-img" id="hero-main-img" />
+        </div>
+
+        <div class="hero-showcase-info">
+          <div class="hero-showcase-title" id="hero-showcase-title">مبرومة فستق ملكية فاخرة</div>
+          <div class="hero-showcase-subtitle" id="hero-showcase-subtitle">Royal Pistachio Mabrouma • فستق حلبي أول محمص بالسمن البلدي</div>
+        </div>
+
         <img src="/assets/logo-gold.svg" alt="شعار تاج الملك" class="hero-logo-watermark" />
-        <p style="color:#E8CFA0;font-size:0.9rem;font-weight:600;" id="hero-card-caption">
+        <p style="color:#E8CFA0;font-size:0.84rem;font-weight:600;margin:0;" id="hero-card-caption">
           مبرومة فستق ملكية • بلورية • بقلاوة • قشاطي • مأكولات سورية
         </p>
       </div>
@@ -180,8 +198,14 @@
       <h1 class="hero-brand-headline" id="mobile-hero-title">تاج الملك، حلا الملوك</h1>
 
       <!-- Visual Platter Showcase without enclosing card borders -->
-      <div class="hero-showcase-visual">
-        <img src="/assets/products/mabrouma-pistachio.svg" alt="حلويات تاج الملك" class="hero-platter-img" id="mobile-hero-main-img" />
+      <div class="hero-showcase-visual" id="mobile-hero-showcase-box" onclick="handleShowcaseClick()" style="cursor:pointer;" title="اضغط لتصفح هذا الصنف في القائمة">
+        <div class="hero-showcase-img-wrap mobile-showcase-wrap">
+          <img src="/assets/products/mabrouma-pistachio.svg" alt="حلويات تاج الملك" class="hero-platter-img" id="mobile-hero-main-img" />
+        </div>
+        <div class="mobile-showcase-caption" id="mobile-hero-caption">
+          <span class="mobile-showcase-badge">✨ مختارات ملكية حصرية</span>
+          <span class="mobile-showcase-title" id="mobile-showcase-title">مبرومة فستق ملكية فاخرة</span>
+        </div>
       </div>
 
       <!-- Primary CTA Button -->
@@ -697,6 +721,6 @@
     </div>
   </div>
 
-  <script src="/js/storefront.js?v=12"></script>
+  <script src="/js/storefront.js?v=13"></script>
 </body>
 </html>

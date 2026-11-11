@@ -87,6 +87,7 @@ async function initStorefront() {
     STATE.store = await res.json();
     applyBrandTheme(STATE.store.brand);
     renderAllStorefront();
+    initRoyalShowcase();
     updateCartUI();
     fetch('/api/analytics/track', {
       method: 'POST',
@@ -1188,6 +1189,204 @@ function showToast(message) {
   window._toastTimer = setTimeout(() => {
     toast.style.opacity = '0';
   }, 2600);
+}
+
+/* ==========================================================================
+   Royal Showcase Carousel (Desktop & Mobile Auto-Rotation - 3s)
+   ========================================================================== */
+const ROYAL_SHOWCASE_ITEMS = [
+  {
+    name_ar: 'مبرومة فستق ملكية فاخرة',
+    name_en: 'Royal Pistachio Mabrouma',
+    tagline_ar: 'فستق حلبي أول محمص بالسمن البلدي الطبيعي',
+    tagline_en: 'Premium Aleppo Pistachio & Pure Country Ghee',
+    image: '/assets/products/mabrouma-pistachio.svg',
+    category: 'royal-baklava'
+  },
+  {
+    name_ar: 'بلورية بالفستق الحلبي الملكي',
+    name_en: 'Royal Pistachio Ballourieh',
+    tagline_ar: 'بياض ناصع، وسكر موزون بأرقى معايير الضيافة',
+    tagline_en: 'Authentic White Kadaif with Pure Aleppo Pistachios',
+    image: '/assets/products/ballourieh-pistachio.svg',
+    category: 'royal-baklava'
+  },
+  {
+    name_ar: 'بقلاوة بالفستق والسمن البلدي',
+    name_en: 'Royal Assorted Baklava',
+    tagline_ar: 'رقائق ذهبية مقرمشة محشوة بأجود أنواع الفستق',
+    tagline_en: 'Crispy Golden Filo Layers Stuffed with Pistachios',
+    image: '/assets/products/baklava-pistachio.svg',
+    category: 'royal-baklava'
+  },
+  {
+    name_ar: 'حلاوة الجبن الملكية بالقشطة الطازجة',
+    name_en: 'Royal Halawet El Jibn',
+    tagline_ar: 'طازجة يومياً بالقشطة البلدية وماء الزهر الفاخر',
+    tagline_en: 'Fresh Daily with Syrian Qishta & Orange Blossom',
+    image: '/assets/products/halawet-jibn-large.svg',
+    category: 'al-qashati'
+  },
+  {
+    name_ar: 'الهريسة النبكية الملكية بالفستق واللوز',
+    name_en: 'Royal Nabkiyah Harissa',
+    tagline_ar: 'سر النكهة الشامية الأصيلة بالسمن البلدي الفاخر',
+    tagline_en: 'Authentic Syrian Nabkiyah with Almonds & Ghee',
+    image: '/assets/products/harissa-pistachio.svg',
+    category: 'nabkiyah-harissa'
+  },
+  {
+    name_ar: 'عش البلبل الملكي بالفستق الأخضر',
+    name_en: "Royal Bulbul's Nest",
+    tagline_ar: 'خيوط عثمانية ذهبية محشوة بحبات الفستق الكاملة',
+    tagline_en: 'Crisp Golden Bird Nests Filled with Whole Pistachios',
+    image: '/assets/products/bulbul-nest.svg',
+    category: 'royal-baklava'
+  },
+  {
+    name_ar: 'ورق عنب يالنجي ملكي فاخر',
+    name_en: 'Royal Syrian Yalanji',
+    tagline_ar: 'محضر بزيت الزيتون البكر ودبس الرمان الطبيعي',
+    tagline_en: 'Handmade Vine Leaves with Virgin Olive Oil & Pomegranate',
+    image: '/assets/products/yalanji-vine-leaves.svg',
+    category: 'syrian-savory'
+  },
+  {
+    name_ar: 'بوكس الضيافة الملكي الفاخر',
+    name_en: 'Royal VIP Hospitality Gift Box',
+    tagline_ar: 'تشكيلة الملوك الفاخرة لجميع المناسبات السعيدة',
+    tagline_en: 'Exclusive VIP Assortment for Royal Occasions',
+    image: '/assets/products/royal-gift-box.svg',
+    category: 'featured-section'
+  }
+];
+
+let showcaseCurrentIndex = 0;
+let showcaseTimer = null;
+let showcaseIsPaused = false;
+
+function initRoyalShowcase() {
+  const dotsContainer = document.getElementById('showcase-dots');
+  if (dotsContainer) {
+    dotsContainer.innerHTML = ROYAL_SHOWCASE_ITEMS.map((_, i) =>
+      `<span class="showcase-dot ${i === 0 ? 'active' : ''}" onclick="goToShowcaseIndex(${i}); event.stopPropagation();"></span>`
+    ).join('');
+  }
+
+  const deskBox = document.getElementById('hero-showcase-box');
+  if (deskBox) {
+    deskBox.addEventListener('mouseenter', () => { showcaseIsPaused = true; });
+    deskBox.addEventListener('mouseleave', () => { showcaseIsPaused = false; });
+  }
+
+  updateShowcaseDisplay();
+  startShowcaseTimer();
+}
+
+function startShowcaseTimer() {
+  if (showcaseTimer) clearInterval(showcaseTimer);
+  triggerShowcaseProgressBar();
+
+  showcaseTimer = setInterval(() => {
+    if (!showcaseIsPaused) {
+      showcaseNext();
+    }
+  }, 3000);
+}
+
+function triggerShowcaseProgressBar() {
+  const bar = document.getElementById('showcase-progress-bar');
+  if (!bar) return;
+  bar.style.transition = 'none';
+  bar.style.width = '0%';
+  void bar.offsetWidth;
+  bar.style.transition = 'width 3000ms linear';
+  bar.style.width = '100%';
+}
+
+function showcaseNext() {
+  showcaseCurrentIndex = (showcaseCurrentIndex + 1) % ROYAL_SHOWCASE_ITEMS.length;
+  updateShowcaseDisplay();
+  triggerShowcaseProgressBar();
+}
+
+function goToShowcaseIndex(index) {
+  showcaseCurrentIndex = index;
+  updateShowcaseDisplay();
+  startShowcaseTimer();
+}
+
+function updateShowcaseDisplay() {
+  const item = ROYAL_SHOWCASE_ITEMS[showcaseCurrentIndex];
+  if (!item) return;
+
+  const isEn = STATE.lang === 'en';
+  const title = isEn ? item.name_en : item.name_ar;
+  const subtitle = isEn ? item.tagline_en : (item.name_en + ' • ' + item.tagline_ar);
+
+  // Desktop Elements
+  const deskImg = document.getElementById('hero-main-img');
+  const deskTitle = document.getElementById('hero-showcase-title');
+  const deskSubtitle = document.getElementById('hero-showcase-subtitle');
+  const dots = document.querySelectorAll('.showcase-dot');
+
+  // Mobile Elements
+  const mobImg = document.getElementById('mobile-hero-main-img');
+  const mobTitle = document.getElementById('mobile-showcase-title');
+
+  // 1. Fade out
+  if (deskImg) deskImg.classList.add('fade-out');
+  if (mobImg) mobImg.classList.add('fade-out');
+  if (deskTitle) deskTitle.classList.add('text-fade-out');
+  if (deskSubtitle) deskSubtitle.classList.add('text-fade-out');
+  if (mobTitle) mobTitle.classList.add('text-fade-out');
+
+  // 2. Switch content & Fade in after 220ms
+  setTimeout(() => {
+    if (deskImg) {
+      deskImg.src = item.image;
+      deskImg.alt = title;
+      deskImg.classList.remove('fade-out');
+      deskImg.classList.add('fade-in');
+    }
+    if (mobImg) {
+      mobImg.src = item.image;
+      mobImg.alt = title;
+      mobImg.classList.remove('fade-out');
+      mobImg.classList.add('fade-in');
+    }
+    if (deskTitle) {
+      deskTitle.textContent = title;
+      deskTitle.classList.remove('text-fade-out');
+    }
+    if (deskSubtitle) {
+      deskSubtitle.textContent = subtitle;
+      deskSubtitle.classList.remove('text-fade-out');
+    }
+    if (mobTitle) {
+      mobTitle.textContent = title;
+      mobTitle.classList.remove('text-fade-out');
+    }
+
+    dots.forEach((dot, idx) => {
+      dot.classList.toggle('active', idx === showcaseCurrentIndex);
+    });
+
+    setTimeout(() => {
+      if (deskImg) deskImg.classList.remove('fade-in');
+      if (mobImg) mobImg.classList.remove('fade-in');
+    }, 450);
+  }, 220);
+}
+
+function handleShowcaseClick() {
+  const item = ROYAL_SHOWCASE_ITEMS[showcaseCurrentIndex];
+  if (!item) return;
+  if (item.category === 'featured-section') {
+    scrollToSection('featured-section');
+  } else {
+    scrollToSection('catalog-section', item.category);
+  }
 }
 
 document.addEventListener('DOMContentLoaded', initStorefront);
