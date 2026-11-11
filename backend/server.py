@@ -260,9 +260,18 @@ class TajAlMalikRequestHandler(BaseHTTPRequestHandler):
                     else:
                         b64data = data_uri
                     file_bytes = base64.b64decode(b64data)
-                    ext = os.path.splitext(filename)[1].lower() or ".jpg"
-                    if ext not in [".jpg", ".jpeg", ".png", ".webp", ".svg"]:
-                        ext = ".jpg"
+                    ext = os.path.splitext(filename)[1].lower()
+                    if not ext or ext not in [".jpg", ".jpeg", ".png", ".webp", ".svg", ".gif", ".jfif", ".avif"]:
+                        if "image/png" in data_uri:
+                            ext = ".png"
+                        elif "image/webp" in data_uri:
+                            ext = ".webp"
+                        elif "image/svg" in data_uri:
+                            ext = ".svg"
+                        elif "image/gif" in data_uri:
+                            ext = ".gif"
+                        else:
+                            ext = ".jpg"
                     safe_name = f"img_{int(secrets.randbelow(1000000))}_{secrets.token_hex(4)}{ext}"
                     upload_dir = os.path.join(PUBLIC_DIR, "assets", "uploads")
                     os.makedirs(upload_dir, exist_ok=True)

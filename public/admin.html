@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/admin.css?v=2" />
+  <link rel="stylesheet" href="/css/admin.css?v=3" />
 </head>
 <body>
 
@@ -498,26 +498,65 @@
             <textarea id="edit-prod-short-en" class="adm-textarea" rows="2"></textarea>
           </div>
         </div>
-        <div class="form-row-2">
-          <div>
-            <label class="adm-label">طµظˆط±ط© ط§ظ„ظ…ظ†طھط¬ (ط±ط§ط¨ط· ط£ظˆ ط±ظپط¹ ظ…ظ† ط§ظ„ط¬ظ‡ط§ط²)</label>
-            <div style="display:flex;gap:0.5rem;align-items:center;">
-              <input type="text" id="edit-prod-img" class="adm-input" dir="ltr" placeholder="/assets/products/... ط£ظˆ ط§ط±ظپط¹ ظ…ظ„ظپ" style="flex:1;" />
-              <label class="adm-btn adm-btn-secondary" style="cursor:pointer;white-space:nowrap;padding:0.6rem 0.9rem;font-size:0.84rem;">
-                <span>ًں“· ط±ظپط¹ طµظˆط±ط©</span>
-                <input type="file" id="edit-prod-file" accept="image/*" style="display:none;" onchange="handleImageFileUpload(this)" />
+        <div style="margin-bottom:1.25rem;">
+          <label class="adm-label" style="display:flex;justify-content:space-between;align-items:center;">
+            <span>صورة المنتج (JPG, PNG, WEBP, SVG) *</span>
+            <span style="font-size:0.75rem;color:var(--adm-muted);font-weight:normal;">الصيغ المعتمدة: JPG, JPEG, PNG, WEBP, SVG</span>
+          </label>
+          
+          <!-- Hidden input storing the actual image URL for form submission -->
+          <input type="hidden" id="edit-prod-img" />
+
+          <!-- Modern Dedicated Image Uploader / Dropzone -->
+          <div class="prod-image-uploader-box" id="prod-image-dropzone">
+            <!-- State 1: When no image selected or to change -->
+            <div id="prod-upload-prompt" style="text-align:center;padding:1.35rem 1rem;">
+              <div style="font-size:2.2rem;margin-bottom:0.35rem;">📸</div>
+              <div style="font-weight:700;color:var(--adm-text);margin-bottom:0.25rem;font-size:0.95rem;">
+                اضغط لاختيار صورة من جهازك أو اسحبها إلى هنا
+              </div>
+              <div style="font-size:0.8rem;color:var(--adm-muted);margin-bottom:0.85rem;">
+                يدعم كافة صيغ الصور المتعارف عليها: JPG, JPEG, PNG, WEBP, SVG
+              </div>
+              <label class="adm-btn adm-btn-primary" style="cursor:pointer;display:inline-flex;align-items:center;gap:0.4rem;padding:0.6rem 1.35rem;font-size:0.9rem;">
+                <span>📁 رفع واختيار صورة</span>
+                <input type="file" id="edit-prod-file" accept="image/png, image/jpeg, image/jpg, image/webp, image/svg+xml, image/gif" style="display:none;" onchange="handleImageFileUpload(this)" />
               </label>
             </div>
-            <div id="edit-prod-img-preview" style="margin-top:0.5rem;display:none;align-items:center;gap:0.6rem;">
-              <img id="edit-prod-preview-el" src="" style="width:55px;height:50px;border-radius:8px;border:1px solid var(--adm-border);object-fit:cover;" />
-              <small style="color:var(--adm-muted);">ظ…ط¹ط§ظٹظ†ط© ط§ظ„طµظˆط±ط© ط§ظ„ط­ط§ظ„ظٹط©</small>
+
+            <!-- State 2: Active Image Preview Display -->
+            <div id="prod-image-preview-card" style="display:none;padding:0.85rem;align-items:center;justify-content:space-between;gap:1rem;background:rgba(255,255,255,0.85);border-radius:10px;">
+              <div style="display:flex;align-items:center;gap:0.85rem;">
+                <img id="edit-prod-preview-el" src="" alt="معاينة صورة المنتج" style="width:72px;height:72px;border-radius:10px;object-fit:cover;border:1.5px solid var(--adm-border);box-shadow:0 2px 8px rgba(0,0,0,0.08);" />
+                <div>
+                  <div style="font-weight:700;font-size:0.9rem;color:var(--adm-text);margin-bottom:0.2rem;" id="prod-img-name-label">تم تحميل الصورة بنجاح</div>
+                  <div style="font-size:0.78rem;color:#16A34A;display:flex;align-items:center;gap:0.3rem;">
+                    <span>✓ الصورة جاهزة ومعتمدة للمنتج</span>
+                  </div>
+                </div>
+              </div>
+              <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                <label class="adm-btn adm-btn-outline" style="cursor:pointer;padding:0.45rem 0.85rem;font-size:0.82rem;white-space:nowrap;">
+                  <span>🔄 تغيير الصورة</span>
+                  <input type="file" id="edit-prod-file-change" accept="image/png, image/jpeg, image/jpg, image/webp, image/svg+xml, image/gif" style="display:none;" onchange="handleImageFileUpload(this)" />
+                </label>
+                <button type="button" class="adm-btn adm-btn-outline" style="color:#DC2626;border-color:#FCA5A5;padding:0.45rem 0.75rem;font-size:0.82rem;" onclick="removeProductImage()" title="حذف الصورة">
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            <!-- Upload progress spinner / text -->
+            <div id="prod-upload-progress" style="display:none;text-align:center;padding:1.1rem;">
+              <div style="font-size:0.9rem;color:var(--adm-accent);font-weight:600;">⏳ جاري رفع وتجهيز الصورة للمنتج...</div>
             </div>
           </div>
-          <div style="display:flex;align-items:center;gap:1rem;padding-top:1.4rem;flex-wrap:wrap;">
-            <label><input type="checkbox" id="edit-prod-instock" checked /> ظ…طھظˆظپط± ط¨ط§ظ„ظ…ط®ط²ظˆظ†</label>
-            <label><input type="checkbox" id="edit-prod-featured" /> ظ…ظ…ظٹط²</label>
-            <label><input type="checkbox" id="edit-prod-bestseller" /> ط§ظ„ط£ظƒط«ط± ظ…ط¨ظٹط¹ط§ظ‹</label>
-          </div>
+        </div>
+
+        <div style="display:flex;align-items:center;gap:1.5rem;padding:0.75rem 0;flex-wrap:wrap;border-top:1px solid var(--adm-border);margin-top:0.5rem;">
+          <label style="cursor:pointer;display:flex;align-items:center;gap:0.4rem;font-weight:600;"><input type="checkbox" id="edit-prod-instock" checked /> متوفر بالمخزون</label>
+          <label style="cursor:pointer;display:flex;align-items:center;gap:0.4rem;font-weight:600;"><input type="checkbox" id="edit-prod-featured" /> منتج مميز</label>
+          <label style="cursor:pointer;display:flex;align-items:center;gap:0.4rem;font-weight:600;"><input type="checkbox" id="edit-prod-bestseller" /> الأكثر مبيعاً</label>
         </div>
         <div style="display:flex;justify-content:flex-end;gap:0.75rem;margin-top:1rem;">
           <button type="button" class="adm-btn adm-btn-outline" onclick="closeProductEditor()">ط¥ظ„ط؛ط§ط،</button>
@@ -559,6 +598,6 @@
     </div>
   </div>
 
-  <script src="/js/admin.js"></script>
+  <script src="/js/admin.js?v=3"></script>
 </body>
 </html>

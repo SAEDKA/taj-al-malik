@@ -339,15 +339,23 @@ function openProductEditor(productId) {
     document.getElementById('edit-prod-featured').checked = !!p.is_featured;
     document.getElementById('edit-prod-bestseller').checked = !!p.is_best_seller;
 
-    const prev = document.getElementById('edit-prod-img-preview');
-    const prevImg = document.getElementById('edit-prod-preview-el');
-    if (prev && prevImg) {
-      if (p.primary_image) {
-        prevImg.src = p.primary_image;
-        prev.style.display = 'flex';
-      } else {
-        prev.style.display = 'none';
-      }
+    const promptBox = document.getElementById('prod-upload-prompt');
+    const previewCard = document.getElementById('prod-image-preview-card');
+    const previewImg = document.getElementById('edit-prod-preview-el');
+    const progressBox = document.getElementById('prod-upload-progress');
+    if (progressBox) progressBox.style.display = 'none';
+
+    setupDropzone();
+
+    if (p.primary_image) {
+      if (previewImg) previewImg.src = p.primary_image;
+      if (previewCard) previewCard.style.display = 'flex';
+      if (promptBox) promptBox.style.display = 'none';
+      const nameLbl = document.getElementById('prod-img-name-label');
+      if (nameLbl) nameLbl.textContent = 'صورة الصنف الحالية';
+    } else {
+      if (previewCard) previewCard.style.display = 'none';
+      if (promptBox) promptBox.style.display = 'block';
     }
   } else {
     document.getElementById('prod-modal-heading').textContent = 'إضافة منتج ملكي جديد';
@@ -359,52 +367,119 @@ function openProductEditor(productId) {
     document.getElementById('edit-prod-weight-ar').value = '1 كيلو';
     document.getElementById('edit-prod-short-ar').value = '';
     document.getElementById('edit-prod-short-en').value = '';
-    document.getElementById('edit-prod-img').value = '/assets/products/mabrouma-pistachio.svg';
+    document.getElementById('edit-prod-img').value = '';
     document.getElementById('edit-prod-instock').checked = true;
     document.getElementById('edit-prod-featured').checked = true;
     document.getElementById('edit-prod-bestseller').checked = false;
 
-    const prev = document.getElementById('edit-prod-img-preview');
-    const prevImg = document.getElementById('edit-prod-preview-el');
-    if (prev && prevImg) {
-      prevImg.src = '/assets/products/mabrouma-pistachio.svg';
-      prev.style.display = 'flex';
-    }
+    const promptBox = document.getElementById('prod-upload-prompt');
+    const previewCard = document.getElementById('prod-image-preview-card');
+    const progressBox = document.getElementById('prod-upload-progress');
+    if (progressBox) progressBox.style.display = 'none';
+
+    setupDropzone();
+
+    if (previewCard) previewCard.style.display = 'none';
+    if (promptBox) promptBox.style.display = 'block';
   }
   modal.style.display = 'flex';
 }
 
-async function handleImageFileUpload(fileInput) {
-  const file = fileInput.files && fileInput.files[0];
+function removeProductImage() {
+  document.getElementById('edit-prod-img').value = '';
+  const previewCard = document.getElementById('prod-image-preview-card');
+  const promptBox = document.getElementById('prod-upload-prompt');
+  if (previewCard) previewCard.style.display = 'none';
+  if (promptBox) promptBox.style.display = 'block';
+  const fileInput = document.getElementById('edit-prod-file');
+  if (fileInput) fileInput.value = '';
+  const fileChange = document.getElementById('edit-prod-file-change');
+  if (fileChange) fileChange.value = '';
+}
+
+async function handleImageFileUpload(fileInput, droppedFile = null) {
+  const file = droppedFile || (fileInput && fileInput.files && fileInput.files[0]);
   if (!file) return;
+
+  const allowedExts = /\.(jpg|jpeg|png|webp|svg|gif|jfif)$/i;
+  const isImageMime = file.type && file.type.startsWith('image/');
+  if (!isImageMime && !allowedExts.test(file.name)) {
+    alert('يرجى اختيار ملف صورة بالصيغ المعتمدة: JPG, JPEG, PNG, WEBP, SVG');
+    return;
+  }
+
+  const promptBox = document.getElementById('prod-upload-prompt');
+  const previewCard = document.getElementById('prod-image-preview-card');
+  const previewImg = document.getElementById('edit-prod-preview-el');
+  const progressBox = document.getElementById('prod-upload-progress');
+
+  if (promptBox) promptBox.style.display = 'none';
+  if (previewCard) previewCard.style.display = 'none';
+  if (progressBox) progressBox.style.display = 'block';
+
   const reader = new FileReader();
   reader.onload = async (e) => {
     const dataUri = e.target.result;
     try {
-      showToast('جاري رفع الصورة للمخدم...');
+      showToast('جاري رفع الصورة...');
       const res = await fetch('/api/admin/upload-image', {
         method: 'POST',
         headers: getAuthHeaders(),
         body: JSON.stringify({ filename: file.name, data: dataUri }),
       });
       const data = await res.json();
+      if (progressBox) progressBox.style.display = 'none';
+
       if (data.ok && data.url) {
         document.getElementById('edit-prod-img').value = data.url;
-        const prev = document.getElementById('edit-prod-img-preview');
-        const prevImg = document.getElementById('edit-prod-preview-el');
-        if (prev && prevImg) {
-          prevImg.src = data.url;
-          prev.style.display = 'flex';
+        if (previewImg && previewCard) {
+          previewImg.src = data.url;
+          const nameLbl = document.getElementById('prod-img-name-label');
+          if (nameLbl) nameLbl.textContent = file.name || 'تم تحميل الصورة بنجاح';
+          previewCard.style.display = 'flex';
         }
         showToast('تم رفع الصورة بنجاح!');
       } else {
         alert(data.error || 'فشل رفع الصورة');
+        if (promptBox) promptBox.style.display = 'block';
       }
     } catch (err) {
+      if (progressBox) progressBox.style.display = 'none';
+      if (promptBox) promptBox.style.display = 'block';
       alert('حدث خطأ أثناء رفع الصورة: ' + err.message);
     }
   };
   reader.readAsDataURL(file);
+}
+
+function setupDropzone() {
+  const dropzone = document.getElementById('prod-image-dropzone');
+  if (!dropzone || dropzone.dataset.hasDrop) return;
+  dropzone.dataset.hasDrop = 'true';
+
+  ['dragenter', 'dragover'].forEach((eventName) => {
+    dropzone.addEventListener(eventName, (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropzone.classList.add('dragover');
+    }, false);
+  });
+
+  ['dragleave', 'drop'].forEach((eventName) => {
+    dropzone.addEventListener(eventName, (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      dropzone.classList.remove('dragover');
+    }, false);
+  });
+
+  dropzone.addEventListener('drop', (e) => {
+    const dt = e.dataTransfer;
+    const files = dt && dt.files;
+    if (files && files.length > 0) {
+      handleImageFileUpload(null, files[0]);
+    }
+  }, false);
 }
 
 function closeProductEditor() {

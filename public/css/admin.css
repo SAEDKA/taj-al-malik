@@ -420,6 +420,22 @@ body {
   transition: height 0.3s ease;
 }
 
+/* Product Image Dedicated Uploader Dropzone */
+.prod-image-uploader-box {
+  background: #FDFBF7;
+  border: 2px dashed rgba(198, 163, 101, 0.45);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.prod-image-uploader-box:hover,
+.prod-image-uploader-box.dragover {
+  border-color: var(--adm-accent);
+  background: #FAF5EB;
+}
+
 @media (max-width: 960px) {
   .admin-layout {
     grid-template-columns: 1fr;

@@ -318,6 +318,36 @@ function renderCategories() {
       .join('');
 }
 
+function royalSnappyScroll(targetY, duration = 340, onComplete = null) {
+  const startY = window.pageYOffset;
+  const distance = targetY - startY;
+  if (Math.abs(distance) < 6) {
+    if (onComplete) onComplete();
+    return;
+  }
+  const startTime = performance.now();
+
+  function easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
+  }
+
+  function step(currentTime) {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const easeProgress = easeOutCubic(progress);
+    window.scrollTo(0, Math.round(startY + (distance * easeProgress)));
+
+    if (progress < 1) {
+      requestAnimationFrame(step);
+    } else {
+      window.scrollTo(0, targetY);
+      if (onComplete) onComplete();
+    }
+  }
+
+  requestAnimationFrame(step);
+}
+
 function selectCategory(catCode, autoScroll = false) {
   STATE.selectedCategory = catCode;
   renderCategories();
@@ -341,10 +371,7 @@ function selectCategory(catCode, autoScroll = false) {
       const header = document.querySelector('.site-header.desktop-only');
       const headerHeight = (header && window.innerWidth > 768) ? header.offsetHeight : 0;
       const targetY = Math.max(0, catalogEl.getBoundingClientRect().top + window.pageYOffset - headerHeight - 12);
-      window.scrollTo({
-        top: targetY,
-        behavior: 'smooth'
-      });
+      royalSnappyScroll(targetY, 320);
     }
   }
 }
@@ -364,15 +391,12 @@ function scrollToSection(sectionId, catCode) {
   const headerHeight = (header && window.innerWidth > 768) ? header.offsetHeight : 0;
   const targetY = Math.max(0, el.getBoundingClientRect().top + window.pageYOffset - headerHeight - 12);
 
-  window.scrollTo({
-    top: targetY,
-    behavior: 'smooth'
+  royalSnappyScroll(targetY, 340, () => {
+    el.classList.remove('section-glided');
+    void el.offsetWidth;
+    el.classList.add('section-glided');
+    setTimeout(() => el.classList.remove('section-glided'), 550);
   });
-
-  el.classList.remove('section-glided');
-  void el.offsetWidth;
-  el.classList.add('section-glided');
-  setTimeout(() => el.classList.remove('section-glided'), 600);
 }
 
 function openMobileNavDrawer() {
