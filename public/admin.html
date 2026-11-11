@@ -552,10 +552,20 @@
         </div>
         <div class="form-row-2">
           <div>
-            <label class="adm-label">رابط صورة المنتج</label>
-            <input type="text" id="edit-prod-img" class="adm-input" dir="ltr" />
+            <label class="adm-label">صورة المنتج (رابط أو رفع من الجهاز)</label>
+            <div style="display:flex;gap:0.5rem;align-items:center;">
+              <input type="text" id="edit-prod-img" class="adm-input" dir="ltr" placeholder="/assets/products/... أو ارفع ملف" style="flex:1;" />
+              <label class="adm-btn adm-btn-secondary" style="cursor:pointer;white-space:nowrap;padding:0.6rem 0.9rem;font-size:0.84rem;">
+                <span>📷 رفع صورة</span>
+                <input type="file" id="edit-prod-file" accept="image/*" style="display:none;" onchange="handleImageFileUpload(this)" />
+              </label>
+            </div>
+            <div id="edit-prod-img-preview" style="margin-top:0.5rem;display:none;align-items:center;gap:0.6rem;">
+              <img id="edit-prod-preview-el" src="" style="width:55px;height:50px;border-radius:8px;border:1px solid var(--adm-border);object-fit:cover;" />
+              <small style="color:var(--adm-muted);">معاينة الصورة الحالية</small>
+            </div>
           </div>
-          <div style="display:flex;align-items:center;gap:1rem;padding-top:1.4rem;">
+          <div style="display:flex;align-items:center;gap:1rem;padding-top:1.4rem;flex-wrap:wrap;">
             <label><input type="checkbox" id="edit-prod-instock" checked /> متوفر بالمخزون</label>
             <label><input type="checkbox" id="edit-prod-featured" /> مميز</label>
             <label><input type="checkbox" id="edit-prod-bestseller" /> الأكثر مبيعاً</label>

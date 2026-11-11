@@ -340,6 +340,17 @@ function openProductEditor(productId) {
     document.getElementById('edit-prod-instock').checked = !!p.in_stock;
     document.getElementById('edit-prod-featured').checked = !!p.is_featured;
     document.getElementById('edit-prod-bestseller').checked = !!p.is_best_seller;
+
+    const prev = document.getElementById('edit-prod-img-preview');
+    const prevImg = document.getElementById('edit-prod-preview-el');
+    if (prev && prevImg) {
+      if (p.primary_image) {
+        prevImg.src = p.primary_image;
+        prev.style.display = 'flex';
+      } else {
+        prev.style.display = 'none';
+      }
+    }
   } else {
     document.getElementById('prod-modal-heading').textContent = 'إضافة منتج ملكي جديد';
     document.getElementById('edit-prod-id').value = '';
@@ -354,8 +365,48 @@ function openProductEditor(productId) {
     document.getElementById('edit-prod-instock').checked = true;
     document.getElementById('edit-prod-featured').checked = true;
     document.getElementById('edit-prod-bestseller').checked = false;
+
+    const prev = document.getElementById('edit-prod-img-preview');
+    const prevImg = document.getElementById('edit-prod-preview-el');
+    if (prev && prevImg) {
+      prevImg.src = '/assets/products/mabrouma-pistachio.svg';
+      prev.style.display = 'flex';
+    }
   }
   modal.style.display = 'flex';
+}
+
+async function handleImageFileUpload(fileInput) {
+  const file = fileInput.files && fileInput.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const dataUri = e.target.result;
+    try {
+      showToast('جاري رفع الصورة للمخدم...');
+      const res = await fetch('/api/admin/upload-image', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ filename: file.name, data: dataUri }),
+      });
+      const data = await res.json();
+      if (data.ok && data.url) {
+        document.getElementById('edit-prod-img').value = data.url;
+        const prev = document.getElementById('edit-prod-img-preview');
+        const prevImg = document.getElementById('edit-prod-preview-el');
+        if (prev && prevImg) {
+          prevImg.src = data.url;
+          prev.style.display = 'flex';
+        }
+        showToast('تم رفع الصورة بنجاح!');
+      } else {
+        alert(data.error || 'فشل رفع الصورة');
+      }
+    } catch (err) {
+      alert('حدث خطأ أثناء رفع الصورة: ' + err.message);
+    }
+  };
+  reader.readAsDataURL(file);
 }
 
 function closeProductEditor() {

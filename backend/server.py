@@ -1,3 +1,4 @@
+import base64
 import json
 import mimetypes
 import os
@@ -268,6 +269,29 @@ class TajAlMalikRequestHandler(BaseHTTPRequestHandler):
                     return
                 res = save_admin_product(body)
                 self._send_json({"ok": True, "product": res})
+                return
+
+            if path == "/api/admin/upload-image":
+                try:
+                    data_uri = body.get("data", "")
+                    filename = body.get("filename", "product.jpg")
+                    if "," in data_uri:
+                        _, b64data = data_uri.split(",", 1)
+                    else:
+                        b64data = data_uri
+                    file_bytes = base64.b64decode(b64data)
+                    ext = os.path.splitext(filename)[1].lower() or ".jpg"
+                    if ext not in [".jpg", ".jpeg", ".png", ".webp", ".svg"]:
+                        ext = ".jpg"
+                    safe_name = f"img_{int(secrets.randbelow(1000000))}_{secrets.token_hex(4)}{ext}"
+                    upload_dir = os.path.join(PUBLIC_DIR, "assets", "uploads")
+                    os.makedirs(upload_dir, exist_ok=True)
+                    dest_file = os.path.join(upload_dir, safe_name)
+                    with open(dest_file, "wb") as f:
+                        f.write(file_bytes)
+                    self._send_json({"ok": True, "url": f"/assets/uploads/{safe_name}"})
+                except Exception as ex:
+                    self._send_json({"ok": False, "error": str(ex)}, 500)
                 return
 
             if path == "/api/admin/products/duplicate":
