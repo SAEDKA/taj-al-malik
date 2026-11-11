@@ -2,21 +2,20 @@ import subprocess
 import time
 import sys
 
-print("Starting Taj Al Malik Tunnel Supervisor...")
+print("Starting Taj Al Malik Tunnel Supervisor (Serveo)...")
 
 cmd = [
     "ssh",
     "-o", "StrictHostKeyChecking=no",
     "-o", "ServerAliveInterval=30",
     "-o", "ServerAliveCountMax=5",
-    "-p", "443",
-    "-R0:localhost:8000",
-    "a.pinggy.io"
+    "-R", "80:127.0.0.1:8000",
+    "serveo.net"
 ]
 
 while True:
     try:
-        print("[Supervisor] Launching SSH tunnel to a.pinggy.io...")
+        print("[Supervisor] Launching SSH tunnel to serveo.net...")
         proc = subprocess.Popen(
             cmd,
             stdout=subprocess.PIPE,
