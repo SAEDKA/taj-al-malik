@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/storefront.css?v=8" />
+  <link rel="stylesheet" href="/css/storefront.css?v=9" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -32,30 +32,11 @@
 </head>
 <body>
 
-  <!-- 1. Top Royal Announcement Bar (Desktop Only) -->
-  <div class="top-bar desktop-only">
-    <div class="container top-bar-inner">
-      <div class="top-bar-items">
-        <span class="top-pill" id="top-promo-pill">👑 كود خصم الافتتاح 10%: ROYAL10</span>
-        <span id="top-location-text">📍 سلطنة عُمان، صحار — توصيل لكافة ولايات السلطنة أو استلام من الفرع</span>
-        <a href="https://wa.me/96891247722" target="_blank" rel="noopener" id="top-phone-link" style="color:#E5CB96;font-weight:700;">📞 +968 91247722</a>
-      </div>
-      <div class="top-bar-actions">
-        <button class="top-link-btn" onclick="openLoyaltyModal()" id="btn-loyalty-top">✨ نقاط الولاء الملكية</button>
-        <a href="/admin" class="top-link-btn" id="btn-admin-top">⚙️ لوحة تحكم الإدارة</a>
-      </div>
-    </div>
-  </div>
-
-  <!-- 2. Main Sticky Header (Desktop Only) -->
+  <!-- Main Sticky Header (Desktop) -->
   <header class="site-header desktop-only">
     <div class="container header-inner">
       <div class="brand-logo-wrap" onclick="window.scrollTo({top:0,behavior:'smooth'})">
         <img src="/assets/logo-gold.svg" alt="تاج الملك - حلا الملوك" class="brand-logo-img" id="header-logo" />
-        <div class="brand-title-block">
-          <span class="brand-name-main" id="header-brand-name">تاج الملك</span>
-          <span class="brand-tagline-sub" id="header-brand-tagline">تاج الملك - حلا الملوك • عُمان</span>
-        </div>
       </div>
 
       <nav class="main-nav">
@@ -69,12 +50,6 @@
 
       <div class="header-controls">
         <button class="lang-btn" onclick="toggleLanguage()" id="lang-switch-btn">English 🇬🇧</button>
-        <button class="cart-trigger-btn" onclick="openCartDrawer()">
-          <span>🛒</span>
-          <span id="cart-btn-label">السلة</span>
-          <span class="cart-count-badge" id="header-cart-count">0</span>
-          <span id="header-cart-total" style="font-size:0.84rem;">0.000 ر.ع</span>
-        </button>
       </div>
     </div>
   </header>
@@ -145,17 +120,9 @@
       </div>
 
       <div class="mobile-drawer-footer">
-        <button class="mobile-drawer-action-btn" onclick="closeMobileNavDrawer(); openLoyaltyModal();">
-          <svg class="ico-svg" viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
-          <span>نقاط الولاء الملكية</span>
-        </button>
         <a href="https://wa.me/96891247722" target="_blank" rel="noopener" class="mobile-drawer-wa-btn">
           <svg class="ico-svg" viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           <span>تواصل واتساب: +968 91247722</span>
-        </a>
-        <a href="/admin" class="mobile-drawer-admin-link">
-          <svg class="ico-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-          <span>لوحة تحكم الإدارة</span>
         </a>
       </div>
     </aside>
@@ -457,8 +424,6 @@
           <h4 class="footer-title" id="f-links-title">روابط سريعة</h4>
           <ul class="footer-links">
             <li><a href="javascript:void(0)" onclick="openCartDrawer()">سلة التسوق وإتمام الطلب</a></li>
-            <li><a href="javascript:void(0)" onclick="openLoyaltyModal()">استعلام نقاط الولاء</a></li>
-            <li><a href="/admin">لوحة تحكم الإدارة (Admin)</a></li>
             <li><a href="/sitemap.xml" target="_blank">خريطة الموقع (Sitemap)</a></li>
           </ul>
         </div>
@@ -486,17 +451,17 @@
     </div>
   </footer>
 
-  <!-- Floating Luxury Cart Button on the Bottom-Left (Mobile Only) -->
-  <button class="floating-cart-btn mobile-only" onclick="openCartDrawer()" id="floating-cart-trigger" aria-label="سلة المشتريات">
+  <!-- Floating Luxury Cart Button on the Bottom-Left (Desktop & Mobile) -->
+  <button class="floating-cart-btn" onclick="openCartDrawer()" id="floating-cart-trigger" aria-label="سلة المشتريات">
     <div class="cart-btn-icon-wrap">
       <svg class="ico-svg" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
       </svg>
-      <span class="cart-count-badge" id="mobile-cart-count">0</span>
+      <span class="cart-count-badge" id="floating-cart-count">0</span>
     </div>
     <div class="cart-btn-info-wrap">
-      <span class="cart-btn-label" id="mobile-cart-btn-label">السلة</span>
-      <span class="cart-btn-total" id="mobile-cart-total">0.000 ر.ع</span>
+      <span class="cart-btn-label" id="floating-cart-btn-label">السلة</span>
+      <span class="cart-btn-total" id="floating-cart-total">0.000 ر.ع</span>
     </div>
   </button>
 
@@ -727,32 +692,6 @@
     </div>
   </div>
 
-  <!-- ========================================================================
-       MODAL 4: CUSTOMER LOYALTY POINTS CHECKER
-       ======================================================================== -->
-  <div class="modal-backdrop" id="loyalty-modal" onclick="if(event.target===this)closeLoyaltyModal()">
-    <div class="modal-card" style="max-width:520px;">
-      <div class="modal-header">
-        <h3 style="color:#FFFDF9;font-size:1.2rem;display:flex;align-items:center;gap:0.5rem;">
-          <svg class="ico-svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .6-.4 1-1 1H6c-.6 0-1-.4-1-1v-1h14v1z"/></svg>
-          <span>برنامج ولاء «تاج الملك - حلا الملوك»</span>
-        </h3>
-        <button class="modal-close-btn" onclick="closeLoyaltyModal()">✕</button>
-      </div>
-      <div class="modal-body" style="text-align:center;">
-        <img src="/assets/crown-emblem.svg" alt="Crown" style="height:44px;margin-bottom:0.5rem;" />
-        <p style="font-size:0.92rem;color:var(--text-muted);margin-bottom:1.15rem;">
-          اكسب <strong>10 نقاط ملكية</strong> مقابل كل <strong>1.000 ر.ع</strong> تنفقه في متجر تاج الملك! استعلم عن رصيدك برقم الهاتف:
-        </p>
-        <div style="display:flex;gap:0.5rem;margin-bottom:1rem;">
-          <input type="tel" id="loyalty-phone-input" class="form-control" placeholder="أدخل رقم الهاتف (مثال: 99112233)" style="flex:1;" dir="ltr" />
-          <button class="btn-royal-gold" style="padding:0.65rem 1.25rem;" onclick="checkLoyaltyPoints()">استعلام</button>
-        </div>
-        <div id="loyalty-result-box"></div>
-      </div>
-    </div>
-  </div>
-
-  <script src="/js/storefront.js?v=8"></script>
+  <script src="/js/storefront.js?v=9"></script>
 </body>
 </html>

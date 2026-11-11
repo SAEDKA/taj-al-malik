@@ -172,10 +172,8 @@ function renderAllStorefront() {
   const drawerLangLbl = document.getElementById('drawer-lang-label');
   if (drawerLangLbl) drawerLangLbl.textContent = isAr ? 'English' : 'العربية';
 
-  const cartLbl = document.getElementById('cart-btn-label');
-  if (cartLbl) cartLbl.textContent = t.cartLabel;
-  const mobileCartLbl = document.getElementById('mobile-cart-btn-label');
-  if (mobileCartLbl) mobileCartLbl.textContent = t.cartLabel;
+  const floatingCartLbl = document.getElementById('floating-cart-btn-label') || document.getElementById('mobile-cart-btn-label');
+  if (floatingCartLbl) floatingCartLbl.textContent = t.cartLabel;
 
   // Corner Nav Button Label (Mobile)
   const cornerNavLbl = document.getElementById('corner-nav-label');
@@ -815,17 +813,11 @@ function updateCartUI() {
   const isAr = STATE.lang === 'ar';
   const t = UI_TEXT[STATE.lang];
 
-  // Update Desktop Header Cart
-  const desktopCountEl = document.getElementById('header-cart-count');
-  if (desktopCountEl) desktopCountEl.textContent = totalCount;
-  const desktopTotalEl = document.getElementById('header-cart-total');
-  if (desktopTotalEl) desktopTotalEl.textContent = formatPriceWithCurrency(subtotal);
-
-  // Update Mobile Floating Cart
-  const mobileCountEl = document.getElementById('mobile-cart-count');
-  if (mobileCountEl) mobileCountEl.textContent = totalCount;
-  const mobileTotalEl = document.getElementById('mobile-cart-total');
-  if (mobileTotalEl) mobileTotalEl.textContent = formatPriceWithCurrency(subtotal);
+  // Update Floating Cart (Desktop & Mobile)
+  const cartCountEl = document.getElementById('floating-cart-count') || document.getElementById('mobile-cart-count');
+  if (cartCountEl) cartCountEl.textContent = totalCount;
+  const cartTotalEl = document.getElementById('floating-cart-total') || document.getElementById('mobile-cart-total');
+  if (cartTotalEl) cartTotalEl.textContent = formatPriceWithCurrency(subtotal);
 
   const cartBtn = document.getElementById('floating-cart-trigger');
   if (cartBtn) {
@@ -1117,7 +1109,7 @@ async function submitWhatsAppOrder(e) {
           <span style="background:#E5DAC3;color:#5A463F;padding:0.25rem 0.65rem;border-radius:999px;">3. تأكيد الطلب</span>
           <span style="background:#E5DAC3;color:#5A463F;padding:0.25rem 0.65rem;border-radius:999px;">4. قيد التجهيز</span>
           <span style="background:#E5DAC3;color:#5A463F;padding:0.25rem 0.65rem;border-radius:999px;">5. جاهز</span>
-          <span style="background:#E5DAC3;color:#5A463F;padding:0.25rem 0.65rem;border-radius:999px;">6. مكتمل (+${data.loyalty_points_pending} نقطة ولاء)</span>
+          <span style="background:#E5DAC3;color:#5A463F;padding:0.25rem 0.65rem;border-radius:999px;">6. مكتمل</span>
         </div>
       </div>
 
@@ -1160,36 +1152,11 @@ function openSpecialEventWhatsApp() {
 }
 
 /* ==========================================================================
-   LOYALTY MODAL & NEWSLETTER
+   LOYALTY MODAL (DISABLED PER USER REQUEST) & NEWSLETTER
    ========================================================================== */
-function openLoyaltyModal() {
-  document.getElementById('loyalty-modal').classList.add('open');
-}
-
-function closeLoyaltyModal() {
-  document.getElementById('loyalty-modal').classList.remove('open');
-}
-
-async function checkLoyaltyPoints() {
-  const phone = document.getElementById('loyalty-phone-input').value.trim();
-  const box = document.getElementById('loyalty-result-box');
-  if (!phone) return;
-  const res = await fetch(`/api/loyalty/lookup?phone=${encodeURIComponent(phone)}`);
-  const data = await res.json();
-  if (!data.found) {
-    box.innerHTML = `<div style="padding:1rem;background:#FAF5EC;border-radius:12px;color:var(--text-body);">لم يتم العثور على سجل سابق لهذا الرقم. سيبدأ احتساب نقاطك تلقائياً مع أول طلب لك!</div>`;
-    return;
-  }
-  box.innerHTML = `
-    <div style="padding:1.15rem;background:var(--brand-primary);color:#FAF3E6;border:2px solid var(--brand-accent);border-radius:14px;">
-      <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.35rem;">مرحباً بك، ${data.customer_name}</div>
-      <div style="font-size:1.6rem;font-weight:800;color:var(--brand-accent-light);margin-bottom:0.35rem;">
-        ${data.points_balance} نقطة ملكية
-      </div>
-      <div style="font-size:0.84rem;">الفئة: <strong>${data.tier}</strong> | إجمالي الطلبات: ${data.total_orders} (${formatOMR(data.total_spent_omr)} ر.ع)</div>
-    </div>
-  `;
-}
+function openLoyaltyModal() {}
+function closeLoyaltyModal() {}
+async function checkLoyaltyPoints() {}
 
 async function submitNewsletter(e) {
   e.preventDefault();

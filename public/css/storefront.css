@@ -1615,16 +1615,10 @@ img, svg {
   .site-header.desktop-only {
     display: block !important;
   }
-  .top-bar.desktop-only {
-    display: block !important;
-  }
   .hero-grid.desktop-only {
     display: grid !important;
   }
   .corner-nav-btn {
-    display: none !important;
-  }
-  .floating-cart-btn {
     display: none !important;
   }
   .hero-content-center {
@@ -1635,6 +1629,15 @@ img, svg {
     text-align: start;
     min-height: auto;
     display: block;
+  }
+  .brand-logo-img {
+    height: 60px;
+  }
+  .floating-cart-btn {
+    bottom: 28px;
+    left: 28px;
+    padding: 0.72rem 1.35rem;
+    font-size: 0.95rem;
   }
 }
 
