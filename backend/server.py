@@ -23,14 +23,11 @@ from backend.services import (
     get_storefront_payload,
     import_products_csv,
     list_admin_orders,
-    lookup_customer_loyalty,
     save_admin_category,
     save_admin_product,
     save_brand_and_store_settings,
-    save_discount_code,
     track_analytics_event,
     update_order_status,
-    validate_discount_code,
 )
 
 PUBLIC_DIR = os.path.join(ROOT_DIR, "public")
@@ -97,11 +94,6 @@ class TajAlMalikRequestHandler(BaseHTTPRequestHandler):
                 self._send_json(get_storefront_payload())
                 return
 
-            if path == "/api/loyalty/lookup":
-                phone = (query.get("phone") or [""])[0]
-                self._send_json(lookup_customer_loyalty(phone))
-                return
-
             if path == "/api/admin/overview":
                 summary = get_admin_dashboard_summary()
                 store = get_storefront_payload()
@@ -109,16 +101,10 @@ class TajAlMalikRequestHandler(BaseHTTPRequestHandler):
                     all_prods = conn.execute("SELECT * FROM products ORDER BY id DESC").fetchall()
                     from backend.services import _hydrate_product
                     hydrated_all = [_hydrate_product(conn, p) for p in all_prods]
-                    discounts = [dict(d) for d in conn.execute("SELECT * FROM discount_codes ORDER BY id DESC").fetchall()]
                     customers = [
                         dict(c)
                         for c in conn.execute(
-                            """
-                            SELECT c.*, COALESCE(l.points_balance, 0) as points_balance, COALESCE(l.tier, 'ROYAL_SILVER') as tier
-                            FROM customers c
-                            LEFT JOIN loyalty_accounts l ON l.customer_id = c.id
-                            ORDER BY c.total_spent_omr DESC
-                            """
+                            "SELECT * FROM customers ORDER BY total_spent_omr DESC"
                         ).fetchall()
                     ]
                     subscribers = [dict(s) for s in conn.execute("SELECT * FROM newsletter_subscribers ORDER BY id DESC").fetchall()]
@@ -134,7 +120,6 @@ class TajAlMalikRequestHandler(BaseHTTPRequestHandler):
                 summary["settings"] = store["settings"]
                 summary["sections"] = store["sections"]
                 summary["delivery_zones"] = store["delivery_zones"]
-                summary["discounts"] = discounts
                 summary["customers"] = customers
                 summary["testimonials"] = store["testimonials"]
                 summary["subscribers"] = subscribers
@@ -222,11 +207,6 @@ class TajAlMalikRequestHandler(BaseHTTPRequestHandler):
                 self._send_json(res)
                 return
 
-            if path == "/api/discounts/validate":
-                res = validate_discount_code(body.get("code", ""), float(body.get("subtotal_omr", 0.0)))
-                self._send_json(res)
-                return
-
             if path == "/api/orders":
                 res = create_whatsapp_order(body)
                 self._send_json(res, 201)
@@ -310,15 +290,6 @@ class TajAlMalikRequestHandler(BaseHTTPRequestHandler):
 
             if path == "/api/admin/categories":
                 res = save_admin_category(body)
-                self._send_json(res)
-                return
-
-            if path == "/api/admin/discounts":
-                ok, err = self._require_permission("manage_marketing")
-                if not ok and self._get_session_user() is not None:
-                    self._send_json({"error": err}, 403)
-                    return
-                res = save_discount_code(body)
                 self._send_json(res)
                 return
 

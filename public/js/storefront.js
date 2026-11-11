@@ -8,7 +8,6 @@ const STATE = {
   store: null,
   selectedCategory: 'ALL',
   cart: JSON.parse(localStorage.getItem('taj_al_malik_cart_v1') || '[]'),
-  appliedDiscount: null,
   fulfillmentType: 'DELIVERY',
   activeProductModal: null,
   modalSelectedOptions: {},
@@ -31,7 +30,6 @@ const UI_TEXT = {
     quickAdd: '+ أضف للسلة',
     customize: 'التفاصيل والخيارات',
     bestsellerBadge: 'الأكثر مبيعاً',
-    offerBadge: '',
     featuredBadge: 'مختارات الملك',
     outOfStock: 'غير متوفر حالياً',
     inStock: 'متوفر — يحضر طازجاً',
@@ -58,7 +56,6 @@ const UI_TEXT = {
     quickAdd: '+ Add to Cart',
     customize: 'Options & Details',
     bestsellerBadge: 'Best Seller',
-    offerBadge: '',
     featuredBadge: 'Royal Choice',
     outOfStock: 'Out of Stock',
     inStock: 'In Stock — Freshly Prepared',
@@ -917,25 +914,8 @@ function updateCartUI() {
       .join('');
   }
 
-  let discountAmt = 0;
-  if (STATE.appliedDiscount) {
-    if (STATE.appliedDiscount.discount_type === 'PERCENTAGE') {
-      discountAmt = (subtotal * STATE.appliedDiscount.discount_value) / 100.0;
-    } else {
-      discountAmt = Math.min(subtotal, STATE.appliedDiscount.discount_value);
-    }
-  }
-  const finalTotal = Math.max(0, subtotal - discountAmt);
-
   document.getElementById('cart-subtotal-val').textContent = formatPriceWithCurrency(subtotal);
-  const discRow = document.getElementById('cart-discount-row');
-  if (discountAmt > 0) {
-    discRow.style.display = 'flex';
-    document.getElementById('cart-discount-val').textContent = `-${formatPriceWithCurrency(discountAmt)}`;
-  } else {
-    discRow.style.display = 'none';
-  }
-  document.getElementById('cart-final-val').textContent = formatPriceWithCurrency(finalTotal);
+  document.getElementById('cart-final-val').textContent = formatPriceWithCurrency(subtotal);
 }
 
 function updateCartQty(idx, delta) {
@@ -958,35 +938,6 @@ function openCartDrawer() {
 
 function closeCartDrawer() {
   document.getElementById('cart-drawer-backdrop').classList.remove('open');
-}
-
-async function applyCouponCode() {
-  const code = document.getElementById('cart-coupon-input').value.trim();
-  const feedback = document.getElementById('coupon-feedback');
-  const subtotal = getCartSubtotal();
-  if (!code) return;
-
-  try {
-    const res = await fetch('/api/discounts/validate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code, subtotal_omr: subtotal }),
-    });
-    const data = await res.json();
-    if (data.valid) {
-      STATE.appliedDiscount = data;
-      feedback.style.color = '#15803D';
-      feedback.textContent = `تم تطبيق كود الخصم (${data.code}) بنجاح! (-${formatPriceWithCurrency(data.discount_amount_omr)})`;
-      updateCartUI();
-    } else {
-      STATE.appliedDiscount = null;
-      feedback.style.color = '#B91C1C';
-      feedback.textContent = `${STATE.lang === 'ar' ? data.error_ar : data.error_en}`;
-      updateCartUI();
-    }
-  } catch (e) {
-    feedback.textContent = 'حدث خطأ أثناء التحقق من الكود';
-  }
 }
 
 /* ==========================================================================
@@ -1040,13 +991,6 @@ function closeCheckoutModal() {
 function updateCheckoutTotals() {
   const isAr = STATE.lang === 'ar';
   const subtotal = getCartSubtotal();
-  let discountAmt = 0;
-  if (STATE.appliedDiscount) {
-    discountAmt =
-      STATE.appliedDiscount.discount_type === 'PERCENTAGE'
-        ? (subtotal * STATE.appliedDiscount.discount_value) / 100.0
-        : Math.min(subtotal, STATE.appliedDiscount.discount_value);
-  }
 
   let deliveryFee = 0;
   if (STATE.fulfillmentType === 'DELIVERY') {
@@ -1054,12 +998,12 @@ function updateCheckoutTotals() {
     const opt = sel && sel.selectedOptions[0];
     const zoneFee = opt ? parseFloat(opt.getAttribute('data-fee') || 1.0) : 1.0;
     const zoneFree = opt ? parseFloat(opt.getAttribute('data-free') || 20.0) : 20.0;
-    if (subtotal - discountAmt < zoneFree) {
+    if (subtotal < zoneFree) {
       deliveryFee = zoneFee;
     }
   }
 
-  const total = Math.max(0, subtotal - discountAmt + deliveryFee);
+  const total = Math.max(0, subtotal + deliveryFee);
 
   const itemsRev = document.getElementById('chk-items-review');
   itemsRev.innerHTML = STATE.cart
@@ -1076,7 +1020,6 @@ function updateCheckoutTotals() {
     .join('');
 
   document.getElementById('chk-rev-subtotal').textContent = formatPriceWithCurrency(subtotal);
-  document.getElementById('chk-rev-discount').textContent = `-${formatPriceWithCurrency(discountAmt)}`;
   document.getElementById('chk-rev-delivery').textContent =
     deliveryFee === 0 ? (isAr ? 'مجاني (0.000 ر.ع)' : 'FREE (0.000 OMR)') : formatPriceWithCurrency(deliveryFee);
   document.getElementById('chk-rev-total').textContent = `${formatPriceWithCurrency(total)}`;
@@ -1104,7 +1047,6 @@ async function submitWhatsAppOrder(e) {
     gift_recipient_phone: document.getElementById('chk-gift-phone').value.trim(),
     gift_card_message: document.getElementById('chk-gift-msg').value.trim(),
     customer_notes: document.getElementById('chk-notes').value.trim(),
-    discount_code: STATE.appliedDiscount ? STATE.appliedDiscount.code : '',
     items: STATE.cart,
   };
 
@@ -1121,7 +1063,6 @@ async function submitWhatsAppOrder(e) {
 
     // Clear cart
     STATE.cart = [];
-    STATE.appliedDiscount = null;
     saveCartState();
 
     // Show Order Confirmation & Lifecycle Screen
@@ -1191,12 +1132,8 @@ function openSpecialEventWhatsApp() {
 }
 
 /* ==========================================================================
-   LOYALTY MODAL (DISABLED PER USER REQUEST) & NEWSLETTER
+   NEWSLETTER & TOAST NOTIFICATIONS
    ========================================================================== */
-function openLoyaltyModal() {}
-function closeLoyaltyModal() {}
-async function checkLoyaltyPoints() {}
-
 async function submitNewsletter(e) {
   e.preventDefault();
   const email = document.getElementById('newsletter-email').value.trim();

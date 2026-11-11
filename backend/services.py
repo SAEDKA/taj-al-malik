@@ -49,12 +49,6 @@ def get_storefront_payload():
                 "SELECT * FROM testimonials WHERE is_approved = 1 ORDER BY id DESC"
             ).fetchall()
         ]
-        discounts = [
-            dict(d)
-            for d in conn.execute(
-                "SELECT code, description_ar, description_en, discount_type, discount_value, min_order_omr FROM discount_codes WHERE is_active = 1"
-            ).fetchall()
-        ]
 
         return {
             "brand": brand,
@@ -64,7 +58,6 @@ def get_storefront_payload():
             "products": products,
             "delivery_zones": zones,
             "testimonials": testimonials,
-            "public_offers": discounts,
         }
 
 
@@ -115,86 +108,6 @@ def track_analytics_event(event_type: str, product_id=None, metadata=None):
     return {"ok": True}
 
 
-def validate_discount_code(code: str, subtotal_omr: float):
-    clean_code = (code or "").strip().upper()
-    if not clean_code:
-        return {"valid": False, "error_ar": "يرجى إدخال كود الخصم", "error_en": "Please enter a discount code"}
-
-    with get_db() as conn:
-        row = conn.execute(
-            "SELECT * FROM discount_codes WHERE UPPER(code) = ? AND is_active = 1",
-            (clean_code,),
-        ).fetchone()
-        if not row:
-            return {
-                "valid": False,
-                "error_ar": "كود الخصم غير صحيح أو غير مفعل",
-                "error_en": "Invalid or inactive discount code",
-            }
-
-        today = datetime.now().strftime("%Y-%m-%d")
-        if row["start_date"] > today or row["expiry_date"] < today:
-            return {
-                "valid": False,
-                "error_ar": "انتهت صلاحية كود الخصم",
-                "error_en": "This discount code has expired",
-            }
-
-        if row["used_count"] >= row["max_usage_limit"]:
-            return {
-                "valid": False,
-                "error_ar": "تم الوصول للحد الأقصى لاستخدام هذا الكود",
-                "error_en": "Discount code usage limit reached",
-            }
-
-        min_order = float(row["min_order_omr"] or 0.0)
-        if float(subtotal_omr) < min_order:
-            return {
-                "valid": False,
-                "error_ar": f"الحد الأدنى للطلب لاستخدام هذا الكود هو {format_omr(min_order)} ر.ع",
-                "error_en": f"Minimum order for this code is {format_omr(min_order)} OMR",
-            }
-
-        if row["discount_type"] == "PERCENTAGE":
-            disc_amt = round(float(subtotal_omr) * (float(row["discount_value"]) / 100.0), 3)
-        else:
-            disc_amt = round(min(float(row["discount_value"]), float(subtotal_omr)), 3)
-
-        return {
-            "valid": True,
-            "code": row["code"],
-            "discount_type": row["discount_type"],
-            "discount_value": float(row["discount_value"]),
-            "discount_amount_omr": disc_amt,
-            "description_ar": row["description_ar"],
-            "description_en": row["description_en"],
-        }
-
-
-def lookup_customer_loyalty(phone: str):
-    clean_phone = (phone or "").strip()
-    with get_db() as conn:
-        cust = conn.execute(
-            "SELECT * FROM customers WHERE REPLACE(phone, ' ', '') LIKE ?",
-            (f"%{clean_phone.replace(' ', '')[-8:]}%",),
-        ).fetchone()
-        if not cust:
-            return {"found": False, "points_balance": 0, "tier": "ROYAL_SILVER"}
-        loy = conn.execute(
-            "SELECT * FROM loyalty_accounts WHERE customer_id = ?", (cust["id"],)
-        ).fetchone()
-        return {
-            "found": True,
-            "customer_name": cust["full_name"],
-            "phone": cust["phone"],
-            "total_orders": cust["total_orders"],
-            "total_spent_omr": cust["total_spent_omr"],
-            "points_balance": loy["points_balance"] if loy else 0,
-            "lifetime_points": loy["lifetime_points"] if loy else 0,
-            "tier": loy["tier"] if loy else "ROYAL_SILVER",
-        }
-
-
 def create_whatsapp_order(payload: dict):
     customer_name = (payload.get("customer_name") or "").strip()
     customer_phone = (payload.get("customer_phone") or "").strip()
@@ -212,7 +125,6 @@ def create_whatsapp_order(payload: dict):
     gift_recipient_phone = (payload.get("gift_recipient_phone") or "").strip()
     gift_card_message = (payload.get("gift_card_message") or "").strip()
     customer_notes = (payload.get("customer_notes") or "").strip()
-    discount_code_input = (payload.get("discount_code") or "").strip()
     lang = payload.get("language") or "ar"
     cart_items = payload.get("items") or []
 
@@ -286,19 +198,6 @@ def create_whatsapp_order(payload: dict):
                 }
             )
 
-        # Discount validation
-        discount_amount_omr = 0.0
-        applied_code = None
-        if discount_code_input:
-            disc_res = validate_discount_code(discount_code_input, subtotal_omr)
-            if disc_res.get("valid"):
-                discount_amount_omr = float(disc_res["discount_amount_omr"])
-                applied_code = disc_res["code"]
-                conn.execute(
-                    "UPDATE discount_codes SET used_count = used_count + 1 WHERE code = ?",
-                    (applied_code,),
-                )
-
         # Delivery Fee calculation
         delivery_fee_omr = 0.0
         free_threshold = float(settings.get("free_delivery_threshold") or 20.000)
@@ -308,13 +207,13 @@ def create_whatsapp_order(payload: dict):
                 if z_row:
                     governorate = z_row["governorate_ar"] if lang == "ar" else z_row["governorate_en"]
                     free_threshold = float(z_row["free_threshold_omr"] or free_threshold)
-                    if (subtotal_omr - discount_amount_omr) < free_threshold:
+                    if subtotal_omr < free_threshold:
                         delivery_fee_omr = float(z_row["delivery_fee_omr"])
             else:
-                if (subtotal_omr - discount_amount_omr) < free_threshold:
+                if subtotal_omr < free_threshold:
                     delivery_fee_omr = 1.000
 
-        total_amount_omr = round(max(0.0, subtotal_omr - discount_amount_omr + delivery_fee_omr), 3)
+        total_amount_omr = round(max(0.0, subtotal_omr + delivery_fee_omr), 3)
 
         # Upsert Customer
         cust = conn.execute("SELECT * FROM customers WHERE phone = ?", (customer_phone,)).fetchone()
@@ -342,17 +241,11 @@ def create_whatsapp_order(payload: dict):
                 (customer_name, customer_phone, customer_email, governorate, wilayat, total_amount_omr),
             )
             customer_id = cur_c.lastrowid
-            conn.execute(
-                "INSERT INTO loyalty_accounts (customer_id, points_balance, lifetime_points, tier) VALUES (?, 0, 0, 'ROYAL_SILVER')",
-                (customer_id,),
-            )
 
         # Generate Unique Order Number
         last_id_row = conn.execute("SELECT COALESCE(MAX(id), 0) as max_id FROM orders").fetchone()
         next_num = 1001 + int(last_id_row["max_id"])
         order_number = f"TM-{next_num}"
-
-        loyalty_pts = int(total_amount_omr * int(settings.get("loyalty_points_per_omr") or 10))
 
         # Format Professional WhatsApp Message
         wa_message = _build_whatsapp_message(
@@ -360,8 +253,6 @@ def create_whatsapp_order(payload: dict):
             order_number=order_number,
             items=validated_items,
             subtotal_omr=subtotal_omr,
-            discount_code=applied_code,
-            discount_amount_omr=discount_amount_omr,
             delivery_fee_omr=delivery_fee_omr,
             total_amount_omr=total_amount_omr,
             fulfillment_type=fulfillment_type,
@@ -388,7 +279,7 @@ def create_whatsapp_order(payload: dict):
                 scheduled_date, scheduled_slot, is_gift, gift_recipient_name, gift_recipient_phone,
                 gift_card_message, customer_notes, subtotal_omr, discount_code, discount_amount_omr,
                 delivery_fee_omr, total_amount_omr, status, whatsapp_message_text, loyalty_points_earned
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'NEW', ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, 0.000, ?, ?, 'NEW', ?, 0)
             """,
             (
                 order_number,
@@ -409,12 +300,9 @@ def create_whatsapp_order(payload: dict):
                 gift_card_message,
                 customer_notes,
                 subtotal_omr,
-                applied_code,
-                discount_amount_omr,
                 delivery_fee_omr,
                 total_amount_omr,
                 wa_message,
-                loyalty_pts,
             ),
         )
         order_id = cur_o.lastrowid
@@ -484,10 +372,8 @@ def create_whatsapp_order(payload: dict):
             "order_number": order_number,
             "status": "NEW",
             "subtotal_omr": format_omr(subtotal_omr),
-            "discount_amount_omr": format_omr(discount_amount_omr),
             "delivery_fee_omr": format_omr(delivery_fee_omr),
             "total_amount_omr": format_omr(total_amount_omr),
-            "loyalty_points_pending": loyalty_pts,
             "whatsapp_message": wa_message,
             "whatsapp_url": wa_url,
         }
@@ -498,8 +384,6 @@ def _build_whatsapp_message(
     order_number: str,
     items: list,
     subtotal_omr: float,
-    discount_code: str,
-    discount_amount_omr: float,
     delivery_fee_omr: float,
     total_amount_omr: float,
     fulfillment_type: str,
@@ -533,9 +417,6 @@ def _build_whatsapp_message(
                 lines.append(f"   ◦ Note: {it['special_notes']}")
         lines.append("━━━━━━━━━━━━━━━━━━━━")
         lines.append(f"*Subtotal:* {format_omr(subtotal_omr)} OMR")
-        if discount_amount_omr > 0:
-            code_lbl = f" ({discount_code})" if discount_code else ""
-            lines.append(f"*Discount{code_lbl}:* -{format_omr(discount_amount_omr)} OMR")
         if fulfillment_type == "DELIVERY":
             lines.append(
                 f"*Delivery Fee:* {'FREE (0.000 OMR)' if delivery_fee_omr == 0 else format_omr(delivery_fee_omr) + ' OMR'}"
@@ -581,9 +462,6 @@ def _build_whatsapp_message(
             lines.append(f"   ◦ ملاحظة الصنف: {it['special_notes']}")
     lines.append("━━━━━━━━━━━━━━━━━━━━")
     lines.append(f"*المجموع الفرعي:* {format_omr(subtotal_omr)} ر.ع")
-    if discount_amount_omr > 0:
-        code_lbl = f" ({discount_code})" if discount_code else ""
-        lines.append(f"*الخصم{code_lbl}:* -{format_omr(discount_amount_omr)} ر.ع")
     if fulfillment_type == "DELIVERY":
         lines.append(
             f"*رسوم التوصيل:* {'مجاني (0.000 ر.ع)' if delivery_fee_omr == 0 else format_omr(delivery_fee_omr) + ' ر.ع'}"
@@ -806,40 +684,6 @@ def update_order_status(order_id: int, new_status: str):
             (new_status, int(order_id)),
         )
 
-        # Credit loyalty points when transitioning to COMPLETED
-        if new_status == "COMPLETED" and old_status != "COMPLETED" and order["customer_id"]:
-            pts = int(order["loyalty_points_earned"] or int(float(order["total_amount_omr"]) * 10))
-            loy = conn.execute(
-                "SELECT * FROM loyalty_accounts WHERE customer_id = ?", (order["customer_id"],)
-            ).fetchone()
-            if loy:
-                new_life = int(loy["lifetime_points"]) + pts
-                new_tier = "IMPERIAL_CROWN" if new_life >= 400 else ("ROYAL_GOLD" if new_life >= 200 else "ROYAL_SILVER")
-                conn.execute(
-                    """
-                    UPDATE loyalty_accounts
-                    SET points_balance = points_balance + ?,
-                        lifetime_points = ?,
-                        tier = ?,
-                        updated_at = CURRENT_TIMESTAMP
-                    WHERE id = ?
-                    """,
-                    (pts, new_life, new_tier, loy["id"]),
-                )
-                conn.execute(
-                    """
-                    INSERT INTO loyalty_transactions (loyalty_account_id, order_number, points_delta, reason_ar, reason_en)
-                    VALUES (?, ?, ?, ?, ?)
-                    """,
-                    (
-                        loy["id"],
-                        order["order_number"],
-                        pts,
-                        f"نقاط مكتسبة من إتمام الطلب #{order['order_number']}",
-                        f"Points earned from completed order #{order['order_number']}",
-                    ),
-                )
-
         conn.execute(
             """
             INSERT INTO admin_notifications (notif_type, title_ar, title_en, message_ar, message_en)
@@ -1060,45 +904,6 @@ def save_admin_category(data: dict):
     return {"ok": True, "id": cid}
 
 
-def save_discount_code(data: dict):
-    with get_db() as conn:
-        code = (data.get("code") or "").strip().upper()
-        if not code:
-            raise ValueError("Discount code is required")
-        dtype = data.get("discount_type") or "PERCENTAGE"
-        dval = float(data.get("discount_value") or 10.0)
-        min_ord = float(data.get("min_order_omr") or 0.0)
-        max_lim = int(data.get("max_usage_limit") or 100)
-        s_date = data.get("start_date") or "2026-01-01"
-        e_date = data.get("expiry_date") or "2027-12-31"
-        desc_ar = data.get("description_ar") or ""
-        desc_en = data.get("description_en") or desc_ar
-        is_active = 1 if data.get("is_active", True) else 0
-
-        existing = conn.execute("SELECT id FROM discount_codes WHERE code = ?", (code,)).fetchone()
-        if existing:
-            conn.execute(
-                """
-                UPDATE discount_codes
-                SET description_ar = ?, description_en = ?, discount_type = ?, discount_value = ?,
-                    min_order_omr = ?, max_usage_limit = ?, start_date = ?, expiry_date = ?, is_active = ?
-                WHERE id = ?
-                """,
-                (desc_ar, desc_en, dtype, dval, min_ord, max_lim, s_date, e_date, is_active, existing["id"]),
-            )
-        else:
-            conn.execute(
-                """
-                INSERT INTO discount_codes (
-                    code, description_ar, description_en, discount_type, discount_value,
-                    min_order_omr, max_usage_limit, start_date, expiry_date, is_active
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                (code, desc_ar, desc_en, dtype, dval, min_ord, max_lim, s_date, e_date, is_active),
-            )
-    return {"ok": True}
-
-
 def save_brand_and_store_settings(data: dict):
     with get_db() as conn:
         if "brand" in data:
@@ -1232,14 +1037,14 @@ def export_csv_entity(entity: str) -> str:
             writer.writerow([
                 "order_number", "created_at", "status", "customer_name", "customer_phone",
                 "fulfillment_type", "governorate", "wilayat", "subtotal_omr",
-                "discount_amount_omr", "delivery_fee_omr", "total_amount_omr"
+                "delivery_fee_omr", "total_amount_omr"
             ])
             rows = conn.execute("SELECT * FROM orders ORDER BY id DESC").fetchall()
             for r in rows:
                 writer.writerow([
                     r["order_number"], r["created_at"], r["status"], r["customer_name"],
                     r["customer_phone"], r["fulfillment_type"], r["governorate"], r["wilayat"],
-                    format_omr(r["subtotal_omr"]), format_omr(r["discount_amount_omr"]),
+                    format_omr(r["subtotal_omr"]),
                     format_omr(r["delivery_fee_omr"]), format_omr(r["total_amount_omr"])
                 ])
 

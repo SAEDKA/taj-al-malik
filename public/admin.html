@@ -40,9 +40,6 @@
         <button class="sidebar-item" onclick="switchAdminTab('csv', this)">
           <span>📥 استيراد وتصدير CSV</span>
         </button>
-        <button class="sidebar-item" onclick="switchAdminTab('marketing', this)">
-          <span>🎟️ الخصومات ونقاط الولاء</span>
-        </button>
         <button class="sidebar-item" onclick="switchAdminTab('appearance', this)">
           <span>🎨 الهوية ومحتوى المتجر</span>
         </button>
@@ -181,7 +178,7 @@
               <div>
                 <h3 class="panel-title">🛍️ إدارة الطلبات وتتبع حالات واتساب</h3>
                 <p style="font-size:0.84rem;color:var(--adm-muted);">
-                  جميع الطلبات تُحفظ تلقائياً في قاعدة البيانات قبل فتح واتساب. عند تحويل الحالة إلى Completed تُضاف نقاط الولاء للعميل.
+                  جميع الطلبات تُحفظ تلقائياً في قاعدة البيانات قبل فتح واتساب.
                 </p>
               </div>
               <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
@@ -326,56 +323,7 @@
         </section>
 
         <!-- ==================================================================
-             TAB 6: DISCOUNTS & LOYALTY SYSTEM
-             ================================================================== -->
-        <section id="tab-marketing" class="tab-pane">
-          <div style="display:grid;grid-template-columns:1.1fr 0.9fr;gap:1.5rem;">
-            <div class="panel-card">
-              <div class="panel-header">
-                <h3 class="panel-title">🎟️ أكواد الخصم والعروض الترويجية</h3>
-                <button class="adm-btn adm-btn-primary" onclick="openDiscountCreator()">+ إنشاء كود خصم</button>
-              </div>
-              <div class="data-table-wrap">
-                <table class="data-table">
-                  <thead>
-                    <tr>
-                      <th>الكود</th>
-                      <th>النوع والقيمة</th>
-                      <th>الحد الأدنى</th>
-                      <th>الاستخدام</th>
-                      <th>الصلاحية</th>
-                      <th>الحالة</th>
-                    </tr>
-                  </thead>
-                  <tbody id="admin-discounts-tbody"></tbody>
-                </table>
-              </div>
-            </div>
-
-            <div class="panel-card">
-              <div class="panel-header">
-                <h3 class="panel-title">👑 سجل ولاء العملاء (Royal Loyalty)</h3>
-              </div>
-              <div class="data-table-wrap">
-                <table class="data-table">
-                  <thead>
-                    <tr>
-                      <th>العميل</th>
-                      <th>الهاتف</th>
-                      <th>إجمالي المشتريات</th>
-                      <th>النقاط</th>
-                      <th>الفئة</th>
-                    </tr>
-                  </thead>
-                  <tbody id="admin-loyalty-tbody"></tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ==================================================================
-             TAB 7: BRANDING, STORE APPEARANCE & HOMEPAGE CMS
+             TAB 6: BRANDING, STORE APPEARANCE & HOMEPAGE CMS
              ================================================================== -->
         <section id="tab-appearance" class="tab-pane">
           <form onsubmit="saveAppearanceSettings(event)">

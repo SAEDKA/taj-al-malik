@@ -101,32 +101,8 @@ img, svg {
 }
 
 /* ==========================================================================
-   1. TOP ANNOUNCEMENT BAR (DESKTOP)
+   1. PILL BADGE UTILITY
    ========================================================================== */
-.top-bar {
-  background: var(--brand-primary-dark);
-  color: #F4E9D8;
-  font-size: 0.85rem;
-  border-bottom: 1px solid rgba(198, 163, 101, 0.25);
-  padding: 0.5rem 0;
-  width: 100%;
-}
-
-.top-bar-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-}
-
-.top-bar-items {
-  display: flex;
-  align-items: center;
-  gap: 1.15rem;
-  flex-wrap: wrap;
-}
-
 .top-pill {
   display: inline-flex;
   align-items: center;
@@ -139,33 +115,6 @@ img, svg {
   font-weight: 600;
   font-size: 0.78rem;
   white-space: nowrap;
-}
-
-.top-bar-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-}
-
-.top-link-btn {
-  background: transparent;
-  border: 1px solid rgba(198, 163, 101, 0.3);
-  color: #F4E9D8;
-  padding: 0.22rem 0.7rem;
-  border-radius: 999px;
-  font-size: 0.78rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  white-space: nowrap;
-}
-
-.top-link-btn:hover {
-  background: var(--brand-accent);
-  color: var(--brand-primary-dark);
-  border-color: var(--brand-accent);
 }
 
 /* ==========================================================================
@@ -207,28 +156,6 @@ img, svg {
 
 .brand-logo-wrap:hover .brand-logo-img {
   transform: scale(1.04);
-}
-
-.brand-title-block {
-  display: flex;
-  flex-direction: column;
-}
-
-.brand-name-main {
-  color: #FAF3E6;
-  font-size: 1.3rem;
-  font-weight: 700;
-  font-family: var(--font-ar-heading);
-  line-height: 1.15;
-  white-space: nowrap;
-}
-
-.brand-tagline-sub {
-  color: var(--brand-accent-light);
-  font-size: 0.76rem;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
 }
 
 .main-nav {
@@ -292,28 +219,6 @@ img, svg {
 .lang-btn:hover {
   background: var(--brand-accent);
   color: var(--brand-primary-dark);
-}
-
-.cart-trigger-btn {
-  background: linear-gradient(135deg, #DFC28B 0%, #C6A365 55%, #A88244 100%);
-  color: var(--brand-primary-dark);
-  border: none;
-  padding: 0.52rem 1.05rem;
-  border-radius: 999px;
-  font-weight: 700;
-  font-size: 0.9rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-  box-shadow: var(--shadow-gold);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  white-space: nowrap;
-}
-
-.cart-trigger-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 28px -4px rgba(198, 163, 101, 0.5);
 }
 
 .cart-count-badge {
@@ -474,12 +379,7 @@ img, svg {
   white-space: nowrap;
 }
 
-/* Badge Offer Removal (Directive ة) */
-.badge-offer {
-  display: none !important;
-}
-
-/* Monochrome SVG Helpers (Directive ز) */
+/* Monochrome SVG Helpers */
 .ico-svg {
   display: inline-block;
   vertical-align: middle;
@@ -1671,10 +1571,9 @@ html {
   transform: scale(1.08);
 }
 
-/* Desktop Defaults: Hide Mobile-Only Hamburger, Side Drawer & Mobile Hook Ad */
+/* Desktop Defaults: Hide Mobile-Only Hamburger & Side Drawer */
 .mobile-menu-btn,
-.mobile-nav-backdrop,
-.mobile-hook-ad {
+.mobile-nav-backdrop {
   display: none;
 }
 
@@ -1722,7 +1621,6 @@ html {
    ========================================================================== */
 @media (max-width: 768px) {
   .desktop-only,
-  .top-bar,
   .site-header,
   .hero-grid {
     display: none !important;
@@ -1929,36 +1827,6 @@ html {
     gap: 0.55rem;
   }
 
-  .mobile-drawer-promo {
-    background: rgba(198, 163, 101, 0.14);
-    border: 1px dashed var(--brand-accent);
-    border-radius: 10px;
-    padding: 0.5rem 0.75rem;
-    font-size: 0.76rem;
-    color: #F4E9D8;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .mobile-drawer-promo strong {
-    color: var(--brand-accent-light);
-    letter-spacing: 0.05em;
-  }
-
-  .mobile-drawer-action-btn {
-    width: 100%;
-    padding: 0.62rem 0.85rem;
-    border-radius: 10px;
-    border: 1px solid var(--brand-accent);
-    background: rgba(198, 163, 101, 0.16);
-    color: var(--brand-accent-light);
-    font-weight: 700;
-    font-size: 0.8rem;
-    cursor: pointer;
-    text-align: center;
-  }
-
   .mobile-drawer-wa-btn {
     width: 100%;
     padding: 0.65rem 0.85rem;
@@ -1969,13 +1837,6 @@ html {
     font-size: 0.8rem;
     text-align: center;
     display: block;
-  }
-
-  .mobile-drawer-admin-link {
-    font-size: 0.74rem;
-    color: #C7B299;
-    text-align: center;
-    padding-top: 0.2rem;
   }
 
   /* 3. Mobile Responsive Full-Screen Hero & Floating Controls (Directives ب, ج, د, ي) */

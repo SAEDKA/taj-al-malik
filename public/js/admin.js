@@ -54,7 +54,6 @@ async function loadAdminData() {
     renderOrdersTab();
     renderProductsTab();
     renderCategoriesTab();
-    renderMarketingTab();
     populateAppearanceForm();
     renderStaffTab();
   } catch (err) {
@@ -96,7 +95,7 @@ function renderOverviewTab() {
       <div class="kpi-sub">العملة: الريال العُماني (3 خانات عشرية)</div>
     </div>
     <div class="kpi-card blue">
-      <div class="kpi-label">العملاء والولاء (Customers)</div>
+      <div class="kpi-label">إجمالي العملاء (Customers)</div>
       <div class="kpi-value">${kpis.total_customers}</div>
       <div class="kpi-sub">عملاء متكررون: <strong>${kpis.returning_customers}</strong> | مكتمل: <strong>${kpis.completed_orders}</strong></div>
     </div>
@@ -238,7 +237,6 @@ function renderOrdersTab() {
         <td style="font-size:0.82rem;max-width:250px;">${itemsSummary}</td>
         <td>
           <strong style="color:var(--adm-primary);font-size:1rem;">${fmtOMR(o.total_amount_omr)}</strong>
-          ${o.discount_code ? `<br/><small style="color:#15803D;">خصم: ${o.discount_code}</small>` : ''}
         </td>
         <td><span class="status-badge status-${o.status}">${o.status}</span></td>
         <td>
@@ -545,65 +543,7 @@ async function runCsvImport() {
 }
 
 /* ==========================================================================
-   6. DISCOUNTS & LOYALTY TAB
-   ========================================================================== */
-function renderMarketingTab() {
-  document.getElementById('admin-discounts-tbody').innerHTML = (ADMIN_STATE.data.discounts || [])
-    .map(
-      (d) => `
-      <tr>
-        <td><strong style="color:var(--adm-primary);">${d.code}</strong><br/><small>${d.description_ar || ''}</small></td>
-        <td>${d.discount_type === 'PERCENTAGE' ? `${d.discount_value}%` : fmtOMR(d.discount_value)}</td>
-        <td>${fmtOMR(d.min_order_omr)}</td>
-        <td>${d.used_count} / ${d.max_usage_limit}</td>
-        <td style="font-size:0.78rem;">${d.expiry_date}</td>
-        <td><span class="status-badge ${d.is_active ? 'status-COMPLETED' : 'status-CANCELLED'}">${d.is_active ? 'نشط' : 'متوقف'}</span></td>
-      </tr>
-    `
-    )
-    .join('');
-
-  document.getElementById('admin-loyalty-tbody').innerHTML = (ADMIN_STATE.data.customers || [])
-    .map(
-      (c) => `
-      <tr>
-        <td><strong>${c.full_name}</strong><br/><small>${c.wilayat || c.governorate || ''}</small></td>
-        <td dir="ltr">${c.phone}</td>
-        <td><strong>${fmtOMR(c.total_spent_omr)}</strong> (${c.total_orders} طلبات)</td>
-        <td><strong style="color:var(--adm-primary);">${c.points_balance} نقطة</strong></td>
-        <td><span class="status-badge status-CONFIRMED">${c.tier}</span></td>
-      </tr>
-    `
-    )
-    .join('');
-}
-
-async function openDiscountCreator() {
-  const code = prompt('أدخل رمز كود الخصم الجديد (مثال: EID15):');
-  if (!code) return;
-  const val = prompt('أدخل نسبة الخصم المئوية (مثال: 15):', '15');
-  if (!val) return;
-  const res = await fetch('/api/admin/discounts', {
-    method: 'POST',
-    headers: getAuthHeaders(),
-    body: JSON.stringify({
-      code: code.toUpperCase(),
-      discount_type: 'PERCENTAGE',
-      discount_value: parseFloat(val),
-      min_order_omr: 10.0,
-      description_ar: `كود خصم ${val}% من تاج الملك`,
-    }),
-  });
-  if (!res.ok) {
-    const err = await res.json();
-    alert(err.error || 'ليس لديك صلاحية');
-    return;
-  }
-  await loadAdminData();
-}
-
-/* ==========================================================================
-   7. BRANDING & APPEARANCE CMS TAB
+   6. BRANDING & APPEARANCE CMS TAB
    ========================================================================== */
 function populateAppearanceForm() {
   const { brand, settings, sections } = ADMIN_STATE.data;
@@ -758,6 +698,23 @@ function handleGlobalAdminSearch(query) {
         .join(' ')}</div>
     </div>
   `;
+}
+
+function showToast(message) {
+  let toast = document.getElementById('adm-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'adm-toast';
+    toast.style.cssText =
+      'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#2D070A;color:#E5CB96;border:1.5px solid #C6A365;padding:0.7rem 1.4rem;border-radius:999px;font-weight:700;z-index:999;box-shadow:0 12px 30px rgba(0,0,0,0.4);transition:opacity 0.3s ease;';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = message;
+  toast.style.opacity = '1';
+  clearTimeout(window._admToastTimer);
+  window._admToastTimer = setTimeout(() => {
+    toast.style.opacity = '0';
+  }, 2600);
 }
 
 document.addEventListener('DOMContentLoaded', initAdminDashboard);

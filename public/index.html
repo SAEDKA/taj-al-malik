@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cormorant+Garamond:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/storefront.css?v=10" />
+  <link rel="stylesheet" href="/css/storefront.css?v=11" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -528,21 +528,11 @@
       <!-- Cart Items -->
       <div class="cart-items-list" id="cart-items-container"></div>
 
-      <!-- Discount Code & Totals Footer -->
+      <!-- Totals Footer -->
       <div class="cart-footer">
-        <div style="display:flex;gap:0.45rem;margin-bottom:0.85rem;">
-          <input type="text" id="cart-coupon-input" class="form-control" placeholder="كود الخصم (مثال: ROYAL10)" style="flex:1;padding:0.55rem 0.8rem;" />
-          <button class="btn-quick-add" onclick="applyCouponCode()" id="btn-apply-coupon">تطبيق</button>
-        </div>
-        <div id="coupon-feedback" style="font-size:0.8rem;margin-bottom:0.65rem;"></div>
-
         <div class="summary-row">
           <span id="lbl-subtotal">المجموع الفرعي:</span>
           <strong id="cart-subtotal-val">0.000 ر.ع</strong>
-        </div>
-        <div class="summary-row" id="cart-discount-row" style="display:none;color:#15803D;">
-          <span id="lbl-discount">قيمة الخصم:</span>
-          <strong id="cart-discount-val">-0.000 ر.ع</strong>
         </div>
         <div class="summary-row total">
           <span id="lbl-total">الإجمالي المبدئي:</span>
@@ -685,10 +675,6 @@
               <span>المجموع الفرعي للمنتجات:</span>
               <strong id="chk-rev-subtotal">0.000 ر.ع</strong>
             </div>
-            <div class="summary-row" style="color:#15803D;">
-              <span>الخصم المطبق:</span>
-              <strong id="chk-rev-discount">-0.000 ر.ع</strong>
-            </div>
             <div class="summary-row">
               <span>رسوم التوصيل:</span>
               <strong id="chk-rev-delivery">0.000 ر.ع</strong>
@@ -711,6 +697,6 @@
     </div>
   </div>
 
-  <script src="/js/storefront.js?v=10"></script>
+  <script src="/js/storefront.js?v=11"></script>
 </body>
 </html>
