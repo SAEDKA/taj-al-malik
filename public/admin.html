@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ظ„ظˆط­ط© طھط­ظƒظ… ط§ظ„ط¥ط¯ط§ط±ط© | طھط§ط¬ ط§ظ„ظ…ظ„ظƒ â€” ط­ظ„ط§ ط§ظ„ظ…ظ„ظˆظƒ (Taj Al Malik Admin)</title>
+  <title>لوحة تحكم الإدارة | تاج الملك — حلا الملوك (Taj Al Malik Admin)</title>
   <link rel="icon" type="image/svg+xml" href="/assets/crown-emblem.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -16,63 +16,65 @@
     <!-- Left / Right Sidebar -->
     <aside class="admin-sidebar">
       <div class="sidebar-brand">
-        <img src="/assets/logo-gold.svg" alt="طھط§ط¬ ط§ظ„ظ…ظ„ظƒ" />
+        <img src="/assets/logo-gold.svg" alt="تاج الملك" />
         <div>
-          <div style="font-weight:800;font-size:1.1rem;color:#FFFDF9;">طھط§ط¬ ط§ظ„ظ…ظ„ظƒ</div>
-          <div style="font-size:0.75rem;color:#C6A365;">ظ†ط¸ط§ظ… ط§ظ„ط¥ط¯ط§ط±ط© ط§ظ„ظ…ط±ظƒط²ظٹط© â€¢ ط¹ظڈظ…ط§ظ†</div>
+          <div style="font-weight:800;font-size:1.1rem;color:#FFFDF9;">تاج الملك</div>
+          <div style="font-size:0.75rem;color:#C6A365;">نظام الإدارة المركزية • عُمان</div>
         </div>
       </div>
 
       <nav class="sidebar-nav">
         <button class="sidebar-item active" onclick="switchAdminTab('overview', this)">
-          <span>ًں“ٹ ظ†ط¸ط±ط© ط¹ط§ظ…ط© ظˆط§ظ„طھط­ظ„ظٹظ„ط§طھ</span>
+          <span>📊 نظرة عامة والتحليلات</span>
         </button>
         <button class="sidebar-item" onclick="switchAdminTab('orders', this)">
-          <span>ًں›چï¸ڈ ط¥ط¯ط§ط±ط© ط·ظ„ط¨ط§طھ ظˆط§طھط³ط§ط¨</span>
+          <span>🛍️ إدارة طلبات واتساب</span>
           <span class="sidebar-badge" id="nav-new-orders-badge">0</span>
         </button>
         <button class="sidebar-item" onclick="switchAdminTab('products', this)">
-          <span>ًںچ¯ ط§ظ„ظ…ظ†طھط¬ط§طھ ظˆط§ظ„ظ…ط®ط²ظˆظ† (30)</span>
+          <span>🍯 المنتجات والمخزون (30)</span>
         </button>
         <button class="sidebar-item" onclick="switchAdminTab('categories', this)">
-          <span>ًں—‚ï¸ڈ ط¥ط¯ط§ط±ط© ط§ظ„طھطµظ†ظٹظپط§طھ</span>
+          <span>🗂️ إدارة التصنيفات</span>
         </button>
         <button class="sidebar-item" onclick="switchAdminTab('csv', this)">
-          <span>ًں“¥ ط§ط³طھظٹط±ط§ط¯ ظˆطھطµط¯ظٹط± CSV</span>
+          <span>📥 استيراد وتصدير CSV</span>
         </button>
         <button class="sidebar-item" onclick="switchAdminTab('appearance', this)">
-          <span>ًںژ¨ ط§ظ„ظ‡ظˆظٹط© ظˆظ…ط­طھظˆظ‰ ط§ظ„ظ…طھط¬ط±</span>
+          <span>🎨 الهوية ومحتوى المتجر</span>
         </button>
         <button class="sidebar-item" onclick="switchAdminTab('staff', this)">
-          <span>ًں”گ ط§ظ„ظ…ظˆط¸ظپظˆظ† ظˆط§ظ„طµظ„ط§ط­ظٹط§طھ</span>
+          <span>🔐 الموظفون والصلاحيات</span>
         </button>
       </nav>
 
       <div class="sidebar-footer">
-        <div style="margin-bottom:0.5rem;">ًں“چ ط³ظ„ط·ظ†ط© ط¹ظڈظ…ط§ظ†طŒ طµط­ط§ط±</div>
+        <div style="margin-bottom:0.5rem;">📍 سلطنة عُمان، صحار</div>
         <a href="/" target="_blank" class="adm-btn adm-btn-gold" style="width:100%;justify-content:center;text-decoration:none;">
-          ًںŒگ ظپطھط­ ط§ظ„ظ…طھط¬ط± ط§ظ„ط¹ط§ظ… ظ„ظ„ط¹ظ…ظ„ط§ط،
+          🌐 فتح المتجر العام للعملاء
         </a>
       </div>
     </aside>
+    <div id="admin-sidebar-backdrop" onclick="toggleAdminSidebar()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:90;"></div>
 
     <!-- Main Area -->
     <div class="admin-main">
       <!-- Top Bar with Global Search & Role Switcher -->
       <header class="admin-topbar">
+        <button class="adm-btn adm-btn-outline mobile-only-inline" id="admin-mobile-toggle-btn" onclick="toggleAdminSidebar()" style="display:none;padding:0.4rem 0.65rem;">☰</button>
         <div class="global-search-wrap">
           <input
             type="text"
             id="admin-global-search"
             class="global-search-input"
-            placeholder="ًں”چ ط¨ط­ط« ط´ط§ظ…ظ„: ط±ظ‚ظ… ط§ظ„ط·ظ„ط¨ (#TM-1005)طŒ ط§ط³ظ… ط§ظ„ط¹ظ…ظٹظ„طŒ ط§ظ„ظ‡ط§طھظپطŒ ط£ظˆ ط§ط³ظ… ط§ظ„ظ…ظ†طھط¬..."
+            placeholder="🔍 بحث شامل: رقم الطلب (#TM-1005)، اسم العميل، الهاتف، أو اسم المنتج..."
             oninput="handleGlobalAdminSearch(this.value)"
           />
         </div>
         <div class="topbar-actions">
-          <span class="role-pill" id="current-role-indicator">ًں‘‘ ط§ظ„ظ…ط¯ظٹط± ط§ظ„ط¹ط§ظ… (Admin - طµظ„ط§ط­ظٹط§طھ ظƒط§ظ…ظ„ط©)</span>
-          <button class="adm-btn adm-btn-outline" onclick="openLoginSwitchModal()">ًں”„ طھط¨ط¯ظٹظ„ ط§ظ„ط­ط³ط§ط¨ / ط§ظ„ط¯ط®ظˆظ„</button>
-          <button class="adm-btn adm-btn-primary" onclick="loadAdminData()">طھط­ط¯ظٹط« ط§ظ„ط¨ظٹط§ظ†ط§طھ â†»</button>
+          <span class="role-pill" id="current-role-indicator">👑 المدير العام (Admin - صلاحيات كاملة)</span>
+          <button class="adm-btn adm-btn-outline" onclick="openLoginSwitchModal()">🔄 تبديل الحساب / الدخول</button>
+          <button class="adm-btn adm-btn-primary" onclick="loadAdminData()">تحديث البيانات ↻</button>
         </div>
       </header>
 
@@ -90,15 +92,15 @@
           <div style="display:grid;grid-template-columns:1.35fr 0.65fr;gap:1.5rem;margin-bottom:1.5rem;">
             <div class="panel-card" style="margin-bottom:0;">
               <div class="panel-header">
-                <h3 class="panel-title">ًں“ˆ ط§ظ„ظ…ط¨ظٹط¹ط§طھ ظˆط§ظ„ط·ظ„ط¨ط§طھ ط¹ط¨ط± ط§ظ„ط²ظ…ظ† (ط¨ط§ظ„ط±ظٹط§ظ„ ط§ظ„ط¹ظڈظ…ط§ظ†ظٹ OMR)</h3>
-                <span style="font-size:0.8rem;color:var(--adm-muted);">طھط­ط¯ظٹط« طھظ„ظ‚ط§ط¦ظٹ ظ…ظ† ظ‚ط§ط¹ط¯ط© ط§ظ„ط¨ظٹط§ظ†ط§طھ</span>
+                <h3 class="panel-title">📈 المبيعات والطلبات عبر الزمن (بالريال العُماني OMR)</h3>
+                <span style="font-size:0.8rem;color:var(--adm-muted);">تحديث تلقائي من قاعدة البيانات</span>
               </div>
               <div class="chart-bars" id="sales-chart-bars"></div>
             </div>
 
             <div class="panel-card" style="margin-bottom:0;">
               <div class="panel-header">
-                <h3 class="panel-title">ًں”” ط£ط­ط¯ط« ط§ظ„طھظ†ط¨ظٹظ‡ط§طھ ط§ظ„ط¥ط¯ط§ط±ظٹط©</h3>
+                <h3 class="panel-title">🔔 أحدث التنبيهات الإدارية</h3>
               </div>
               <div id="admin-notifications-list" style="display:flex;flex-direction:column;gap:0.65rem;max-height:210px;overflow-y:auto;"></div>
             </div>
@@ -107,16 +109,16 @@
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;">
             <div class="panel-card" style="margin-bottom:0;">
               <div class="panel-header">
-                <h3 class="panel-title">ًںڈ† ط§ظ„ط£طµظ†ط§ظپ ط§ظ„ط£ظƒط«ط± ظ…ط¨ظٹط¹ط§ظ‹ (Best Sellers)</h3>
+                <h3 class="panel-title">🏆 الأصناف الأكثر مبيعاً (Best Sellers)</h3>
               </div>
               <div class="data-table-wrap">
                 <table class="data-table">
                   <thead>
                     <tr>
-                      <th>ط§ظ„طµظ†ظپ</th>
-                      <th>ط§ظ„ط³ط¹ط± (OMR)</th>
-                      <th>ط§ظ„ظ…ط¨ظٹط¹ط§طھ</th>
-                      <th>ط§ظ„ظ…ط´ط§ظ‡ط¯ط§طھ</th>
+                      <th>الصنف</th>
+                      <th>السعر (OMR)</th>
+                      <th>المبيعات</th>
+                      <th>المشاهدات</th>
                     </tr>
                   </thead>
                   <tbody id="overview-bestsellers-tbody"></tbody>
@@ -126,16 +128,16 @@
 
             <div class="panel-card" style="margin-bottom:0;">
               <div class="panel-header">
-                <h3 class="panel-title">ًں‘پï¸ڈ ط§ظ„ط£طµظ†ط§ظپ ط§ظ„ط£ظƒط«ط± ظ…ط´ط§ظ‡ط¯ط© (Most Viewed)</h3>
+                <h3 class="panel-title">👁️ الأصناف الأكثر مشاهدة (Most Viewed)</h3>
               </div>
               <div class="data-table-wrap">
                 <table class="data-table">
                   <thead>
                     <tr>
-                      <th>ط§ظ„طµظ†ظپ</th>
-                      <th>ط§ظ„ط±ظ…ط² SKU</th>
-                      <th>ط§ظ„ظ…ط´ط§ظ‡ط¯ط§طھ</th>
-                      <th>ط§ظ„ظ…ط¨ظٹط¹ط§طھ</th>
+                      <th>الصنف</th>
+                      <th>الرمز SKU</th>
+                      <th>المشاهدات</th>
+                      <th>المبيعات</th>
                     </tr>
                   </thead>
                   <tbody id="overview-mostviewed-tbody"></tbody>
@@ -146,21 +148,21 @@
 
           <div class="panel-card">
             <div class="panel-header">
-              <h3 class="panel-title">ًں•’ ط£ط­ط¯ط« ط·ظ„ط¨ط§طھ ظˆط§طھط³ط§ط¨ ط§ظ„ظ…ط³ط¬ظ„ط©</h3>
+              <h3 class="panel-title">🕒 أحدث طلبات واتساب المسجلة</h3>
               <button class="adm-btn adm-btn-outline" onclick="switchAdminTab('orders', document.querySelectorAll('.sidebar-item')[1])">
-                ط¹ط±ط¶ ظƒظ„ ط§ظ„ط·ظ„ط¨ط§طھ â†گ
+                عرض كل الطلبات ←
               </button>
             </div>
             <div class="data-table-wrap">
               <table class="data-table">
                 <thead>
                   <tr>
-                    <th>ط±ظ‚ظ… ط§ظ„ط·ظ„ط¨</th>
-                    <th>ط§ظ„ط¹ظ…ظٹظ„</th>
-                    <th>ط§ظ„ط§ط³طھظ„ط§ظ… / ط§ظ„ظˆظ„ط§ظٹط©</th>
-                    <th>ط§ظ„ط¥ط¬ظ…ط§ظ„ظٹ (OMR)</th>
-                    <th>ط§ظ„ط­ط§ظ„ط©</th>
-                    <th>ط¥ط¬ط±ط§ط، ط³ط±ظٹط¹</th>
+                    <th>رقم الطلب</th>
+                    <th>العميل</th>
+                    <th>الاستلام / الولاية</th>
+                    <th>الإجمالي (OMR)</th>
+                    <th>الحالة</th>
+                    <th>إجراء سريع</th>
                   </tr>
                 </thead>
                 <tbody id="overview-recent-orders-tbody"></tbody>
@@ -176,24 +178,24 @@
           <div class="panel-card">
             <div class="panel-header">
               <div>
-                <h3 class="panel-title">ًں›چï¸ڈ ط¥ط¯ط§ط±ط© ط§ظ„ط·ظ„ط¨ط§طھ ظˆطھطھط¨ط¹ ط­ط§ظ„ط§طھ ظˆط§طھط³ط§ط¨</h3>
+                <h3 class="panel-title">🛍️ إدارة الطلبات وتتبع حالات واتساب</h3>
                 <p style="font-size:0.84rem;color:var(--adm-muted);">
-                  ط¬ظ…ظٹط¹ ط§ظ„ط·ظ„ط¨ط§طھ طھظڈط­ظپط¸ طھظ„ظ‚ط§ط¦ظٹط§ظ‹ ظپظٹ ظ‚ط§ط¹ط¯ط© ط§ظ„ط¨ظٹط§ظ†ط§طھ ظ‚ط¨ظ„ ظپطھط­ ظˆط§طھط³ط§ط¨.
+                  جميع الطلبات تُحفظ تلقائياً في قاعدة البيانات قبل فتح واتساب.
                 </p>
               </div>
               <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
                 <select id="orders-status-filter" class="adm-select" style="width:190px;" onchange="filterOrdersTable()">
-                  <option value="ALL">ط¬ظ…ظٹط¹ ط§ظ„ط­ط§ظ„ط§طھ (All Statuses)</option>
-                  <option value="NEW">New â€” ط·ظ„ط¨ ط¬ط¯ظٹط¯</option>
-                  <option value="CONTACTED">Contacted â€” طھظ… ط§ظ„طھظˆط§طµظ„</option>
-                  <option value="CONFIRMED">Confirmed â€” ظ…ط¤ظƒط¯</option>
-                  <option value="PREPARING">Preparing â€” ظ‚ظٹط¯ ط§ظ„طھط¬ظ‡ظٹط²</option>
-                  <option value="READY">Ready â€” ط¬ط§ظ‡ط² ظ„ظ„طھط³ظ„ظٹظ…</option>
-                  <option value="COMPLETED">Completed â€” ظ…ظƒطھظ…ظ„</option>
-                  <option value="CANCELLED">Cancelled â€” ظ…ظ„ط؛ظٹ</option>
+                  <option value="ALL">جميع الحالات (All Statuses)</option>
+                  <option value="NEW">New — طلب جديد</option>
+                  <option value="CONTACTED">Contacted — تم التواصل</option>
+                  <option value="CONFIRMED">Confirmed — مؤكد</option>
+                  <option value="PREPARING">Preparing — قيد التجهيز</option>
+                  <option value="READY">Ready — جاهز للتسليم</option>
+                  <option value="COMPLETED">Completed — مكتمل</option>
+                  <option value="CANCELLED">Cancelled — ملغي</option>
                 </select>
-                <input type="text" id="orders-search-filter" class="adm-input" style="width:230px;" placeholder="ط¨ط­ط« ط¨ط±ظ‚ظ… ط§ظ„ط·ظ„ط¨ ط£ظˆ ط§ظ„ظ‡ط§طھظپ..." oninput="filterOrdersTable()" />
-                <a href="/api/admin/csv/export?entity=orders" class="adm-btn adm-btn-outline">ًں“¥ طھطµط¯ظٹط± ط§ظ„ط·ظ„ط¨ط§طھ CSV</a>
+                <input type="text" id="orders-search-filter" class="adm-input" style="width:230px;" placeholder="بحث برقم الطلب أو الهاتف..." oninput="filterOrdersTable()" />
+                <a href="/api/admin/csv/export?entity=orders" class="adm-btn adm-btn-outline">📥 تصدير الطلبات CSV</a>
               </div>
             </div>
 
@@ -201,14 +203,14 @@
               <table class="data-table">
                 <thead>
                   <tr>
-                    <th>ط±ظ‚ظ… ط§ظ„ط·ظ„ط¨</th>
-                    <th>ط§ظ„طھط§ط±ظٹط®</th>
-                    <th>ط§ظ„ط¹ظ…ظٹظ„ ظˆط§ظ„ظ‡ط§طھظپ</th>
-                    <th>ط§ظ„ط§ط³طھظ„ط§ظ… / ط§ظ„ظ…ظ†ط·ظ‚ط©</th>
-                    <th>ط§ظ„ط£طµظ†ط§ظپ</th>
-                    <th>ط§ظ„ط¥ط¬ظ…ط§ظ„ظٹ (OMR)</th>
-                    <th>ط­ط§ظ„ط© ط§ظ„ط·ظ„ط¨ (Workflow)</th>
-                    <th>طھط­ط¯ظٹط« ط§ظ„ط­ط§ظ„ط© / ظˆط§طھط³ط§ط¨</th>
+                    <th>رقم الطلب</th>
+                    <th>التاريخ</th>
+                    <th>العميل والهاتف</th>
+                    <th>الاستلام / المنطقة</th>
+                    <th>الأصناف</th>
+                    <th>الإجمالي (OMR)</th>
+                    <th>حالة الطلب (Workflow)</th>
+                    <th>تحديث الحالة / واتساب</th>
                   </tr>
                 </thead>
                 <tbody id="admin-orders-tbody"></tbody>
@@ -224,24 +226,24 @@
           <div class="panel-card">
             <div class="panel-header">
               <div>
-                <h3 class="panel-title">ًںچ¯ ط¥ط¯ط§ط±ط© ط§ظ„ظ…ظ†طھط¬ط§طھ ظˆط§ظ„ظ…ظ†ظٹظˆ ظˆط§ظ„ظ…ط®ط²ظˆظ†</h3>
-                <p style="font-size:0.84rem;color:var(--adm-muted);">ط¥ط¶ط§ظپط© ظˆطھط¹ط¯ظٹظ„ ظˆط­ط°ظپ ظˆطھظƒط±ط§ط± ط§ظ„ظ…ظ†طھط¬ط§طھ ط¨ط§ظ„ظ„ط؛طھظٹظ† ط§ظ„ط¹ط±ط¨ظٹط© ظˆط§ظ„ط¥ظ†ط¬ظ„ظٹط²ظٹط© ظ…ط¹ ط§ظ„طھط­ظƒظ… ط¨ط§ظ„طھظˆظپط± ظˆط§ظ„ط£ط³ط¹ط§ط± (OMR)</p>
+                <h3 class="panel-title">🍯 إدارة المنتجات والمنيو والمخزون</h3>
+                <p style="font-size:0.84rem;color:var(--adm-muted);">إضافة وتعديل وحذف وتكرار المنتجات باللغتين العربية والإنجليزية مع التحكم بالتوفر والأسعار (OMR)</p>
               </div>
-              <button class="adm-btn adm-btn-primary" onclick="openProductEditor()">+ ط¥ط¶ط§ظپط© ظ…ظ†طھط¬ ط¬ط¯ظٹط¯</button>
+              <button class="adm-btn adm-btn-primary" onclick="openProductEditor()">+ إضافة منتج جديد</button>
             </div>
 
             <div class="data-table-wrap">
               <table class="data-table">
                 <thead>
                   <tr>
-                    <th>ط§ظ„طµظˆط±ط©</th>
-                    <th>ط§ظ„ط§ط³ظ… (ط¹ط±ط¨ظٹ / EN)</th>
-                    <th>ط§ظ„ظ‚ط³ظ…</th>
-                    <th>ط§ظ„ط³ط¹ط± (OMR)</th>
-                    <th>ط§ظ„ظˆط­ط¯ط©</th>
-                    <th>ط§ظ„ظ…ط®ط²ظˆظ†</th>
-                    <th>ط§ظ„ط´ط§ط±ط§طھ</th>
-                    <th>ط¥ط¬ط±ط§ط،ط§طھ</th>
+                    <th>الصورة</th>
+                    <th>الاسم (عربي / EN)</th>
+                    <th>القسم</th>
+                    <th>السعر (OMR)</th>
+                    <th>الوحدة</th>
+                    <th>المخزون</th>
+                    <th>الشارات</th>
+                    <th>إجراءات</th>
                   </tr>
                 </thead>
                 <tbody id="admin-products-tbody"></tbody>
@@ -256,19 +258,19 @@
         <section id="tab-categories" class="tab-pane">
           <div class="panel-card">
             <div class="panel-header">
-              <h3 class="panel-title">ًں—‚ï¸ڈ ط¥ط¯ط§ط±ط© ط§ظ„طھطµظ†ظٹظپط§طھ (ط¹ط±ط¨ظٹ / ط¥ظ†ط¬ظ„ظٹط²ظٹ)</h3>
-              <button class="adm-btn adm-btn-primary" onclick="openCategoryEditor()">+ ط¥ط¶ط§ظپط© ظ‚ط³ظ… ط¬ط¯ظٹط¯</button>
+              <h3 class="panel-title">🗂️ إدارة التصنيفات (عربي / إنجليزي)</h3>
+              <button class="adm-btn adm-btn-primary" onclick="openCategoryEditor()">+ إضافة قسم جديد</button>
             </div>
             <div class="data-table-wrap">
               <table class="data-table">
                 <thead>
                   <tr>
-                    <th>ط§ظ„طھط±طھظٹط¨</th>
-                    <th>ط§ظ„ط±ظ…ط² (Slug)</th>
-                    <th>ط§ظ„ط§ط³ظ… ط¨ط§ظ„ط¹ط±ط¨ظٹط©</th>
-                    <th>ط§ظ„ط§ط³ظ… ط¨ط§ظ„ط¥ظ†ط¬ظ„ظٹط²ظٹط©</th>
-                    <th>ط§ظ„ط­ط§ظ„ط©</th>
-                    <th>ط¥ط¬ط±ط§ط،ط§طھ</th>
+                    <th>الترتيب</th>
+                    <th>الرمز (Slug)</th>
+                    <th>الاسم بالعربية</th>
+                    <th>الاسم بالإنجليزية</th>
+                    <th>الحالة</th>
+                    <th>إجراءات</th>
                   </tr>
                 </thead>
                 <tbody id="admin-categories-tbody"></tbody>
@@ -284,38 +286,38 @@
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
             <div class="panel-card">
               <div class="panel-header">
-                <h3 class="panel-title">ًں“¤ طھطµط¯ظٹط± ط¨ظٹط§ظ†ط§طھ ط§ظ„ظ…طھط¬ط± (Export CSV)</h3>
+                <h3 class="panel-title">📤 تصدير بيانات المتجر (Export CSV)</h3>
               </div>
               <p style="font-size:0.9rem;color:var(--adm-muted);margin-bottom:1.25rem;">
-                ط¨ظٹط§ظ†ط§طھ ظ…طھط¬ط± طھط§ط¬ ط§ظ„ظ…ظ„ظƒ ظ…ظ„ظƒظƒ ط¨ط§ظ„ظƒط§ظ…ظ„. ظٹظ…ظƒظ†ظƒ طھطµط¯ظٹط± ط§ظ„ظ…ظ†طھط¬ط§طھ ظˆط§ظ„طھطµظ†ظٹظپط§طھ ظˆط§ظ„ط·ظ„ط¨ط§طھ ط¨طµظٹط؛ط© CSV ظ…طھظˆط§ظپظ‚ط© ظ…ط¹ Excel ط¨ط§ظ„ظ„ط؛ط© ط§ظ„ط¹ط±ط¨ظٹط© ظˆط§ظ„ط¥ظ†ط¬ظ„ظٹط²ظٹط©:
+                بيانات متجر تاج الملك ملكك بالكامل. يمكنك تصدير المنتجات والتصنيفات والطلبات بصيغة CSV متوافقة مع Excel باللغة العربية والإنجليزية:
               </p>
               <div style="display:flex;flex-direction:column;gap:0.75rem;">
                 <a href="/api/admin/csv/export?entity=products" class="adm-btn adm-btn-primary" style="justify-content:center;text-decoration:none;">
-                  ًں“¥ طھطµط¯ظٹط± ط¬ظ…ظٹط¹ ط§ظ„ظ…ظ†طھط¬ط§طھ (Products CSV)
+                  📥 تصدير جميع المنتجات (Products CSV)
                 </a>
                 <a href="/api/admin/csv/export?entity=categories" class="adm-btn adm-btn-outline" style="justify-content:center;text-decoration:none;">
-                  ًں“¥ طھطµط¯ظٹط± ط¬ظ…ظٹط¹ ط§ظ„طھطµظ†ظٹظپط§طھ (Categories CSV)
+                  📥 تصدير جميع التصنيفات (Categories CSV)
                 </a>
                 <a href="/api/admin/csv/export?entity=orders" class="adm-btn adm-btn-outline" style="justify-content:center;text-decoration:none;">
-                  ًں“¥ طھطµط¯ظٹط± ط³ط¬ظ„ ط§ظ„ط·ظ„ط¨ط§طھ ظˆط§ظ„ظ…ط¨ظٹط¹ط§طھ (Orders CSV)
+                  📥 تصدير سجل الطلبات والمبيعات (Orders CSV)
                 </a>
                 <a href="/api/admin/csv/export?entity=template" class="adm-btn adm-btn-gold" style="justify-content:center;text-decoration:none;">
-                  ًں“„ طھط­ظ…ظٹظ„ ظ‚ط§ظ„ط¨ ط§ظ„ط§ط³طھظٹط±ط§ط¯ ط§ظ„ط¬ط§ظ‡ط² (Download CSV Template)
+                  📄 تحميل قالب الاستيراد الجاهز (Download CSV Template)
                 </a>
               </div>
             </div>
 
             <div class="panel-card">
               <div class="panel-header">
-                <h3 class="panel-title">ًں“¥ ط§ظ„ط§ط³طھظٹط±ط§ط¯ ط§ظ„ط¬ظ…ط§ط¹ظٹ ظ„ظ„ظ…ظ†طھط¬ط§طھ (Bulk CSV Import)</h3>
+                <h3 class="panel-title">📥 الاستيراد الجماعي للمنتجات (Bulk CSV Import)</h3>
               </div>
               <p style="font-size:0.86rem;color:var(--adm-muted);margin-bottom:0.85rem;">
-                ط§ط±ظپط¹ ظ…ظ„ظپ CSV ط£ظˆ ط§ظ„طµظ‚ ظ…ط­طھظˆط§ظ‡ ظ„ظٹظ‚ظˆظ… ط§ظ„ظ†ط¸ط§ظ… ط¨ط§ظ„طھط­ظ‚ظ‚ ظ…ظ† طµط­ط© ظƒظ„ ط³ط·ط± (ط§ظ„ط£ط³ط¹ط§ط±طŒ ط§ظ„ط±ظ…ظˆط²طŒ ط§ظ„ط£ط³ظ…ط§ط،) ظ‚ط¨ظ„ ط§ظ„ط­ظپط¸:
+                ارفع ملف CSV أو الصق محتواه ليقوم النظام بالتحقق من صحة كل سطر (الأسعار، الرموز، الأسماء) قبل الحفظ:
               </p>
               <input type="file" accept=".csv" class="adm-input" style="margin-bottom:0.75rem;" onchange="loadCsvFileToTextarea(this)" />
-              <textarea id="csv-import-textarea" class="adm-textarea" rows="6" placeholder="sku,category_code,name_ar,name_en,short_description_ar,short_description_en,base_price_omr,unit_type,weight_label_ar,weight_label_en,in_stock,image_url&#10;TM-NEW-101,royal-baklava,ط¨ظ‚ظ„ط§ظˆط© ظ…ظ„ظƒظٹط© ط®ط§طµط©,Special Royal Baklava,ط¨ظ‚ظ„ط§ظˆط© ظپط§ط®ط±ط©,Luxury Baklava,15.000,KG,1 ظƒظٹظ„ظˆ,1 Kg,1,/assets/products/baklava-pistachio.svg"></textarea>
+              <textarea id="csv-import-textarea" class="adm-textarea" rows="6" placeholder="sku,category_code,name_ar,name_en,short_description_ar,short_description_en,base_price_omr,unit_type,weight_label_ar,weight_label_en,in_stock,image_url&#10;TM-NEW-101,royal-baklava,بقلاوة ملكية خاصة,Special Royal Baklava,بقلاوة فاخرة,Luxury Baklava,15.000,KG,1 كيلو,1 Kg,1,/assets/products/baklava-pistachio.svg"></textarea>
               <button class="adm-btn adm-btn-primary" style="margin-top:0.85rem;width:100%;justify-content:center;" onclick="runCsvImport()">
-                âœ… ط§ظ„طھط­ظ‚ظ‚ ظˆط§ط³طھظٹط±ط§ط¯ ط§ظ„ظ…ظ†طھط¬ط§طھ ط§ظ„ط¢ظ†
+                ✅ التحقق واستيراد المنتجات الآن
               </button>
               <div id="csv-import-report" style="margin-top:1rem;"></div>
             </div>
@@ -329,13 +331,13 @@
           <form onsubmit="saveAppearanceSettings(event)">
             <div class="panel-card">
               <div class="panel-header">
-                <h3 class="panel-title">ًںژ¨ ط§ظ„ظ‡ظˆظٹط© ط§ظ„ط¨طµط±ظٹط© ظˆط£ظ„ظˆط§ظ† طھط§ط¬ ط§ظ„ظ…ظ„ظƒ ظˆط£ط±ظ‚ط§ظ… ط§ظ„طھظˆط§طµظ„</h3>
-                <button type="submit" class="adm-btn adm-btn-primary">ًں’¾ ط­ظپط¸ ظˆطھط·ط¨ظٹظ‚ ط§ظ„طھط¹ط¯ظٹظ„ط§طھ ظپظˆط±ط§ظ‹</button>
+                <h3 class="panel-title">🎨 الهوية البصرية وألوان تاج الملك وأرقام التواصل</h3>
+                <button type="submit" class="adm-btn adm-btn-primary">💾 حفظ وتطبيق التعديلات فوراً</button>
               </div>
 
               <div class="form-row-3">
                 <div>
-                  <label class="adm-label">ط§ط³ظ… ط§ظ„ظ…طھط¬ط± (ط¹ط±ط¨ظٹ)</label>
+                  <label class="adm-label">اسم المتجر (عربي)</label>
                   <input type="text" id="set-name-ar" class="adm-input" />
                 </div>
                 <div>
@@ -343,37 +345,37 @@
                   <input type="text" id="set-name-en" class="adm-input" />
                 </div>
                 <div>
-                  <label class="adm-label">ط§ظ„ط´ط¹ط§ط± ط§ظ„ظ„ظپط¸ظٹ (Tagline AR)</label>
+                  <label class="adm-label">الشعار اللفظي (Tagline AR)</label>
                   <input type="text" id="set-tagline-ar" class="adm-input" />
                 </div>
               </div>
 
               <div class="form-row-3">
                 <div>
-                  <label class="adm-label">ط±ظ‚ظ… ظˆط§طھط³ط§ط¨ ظ„ط§ط³طھظ‚ط¨ط§ظ„ ط§ظ„ط·ظ„ط¨ط§طھ (ط¨ط¯ظˆظ† +)</label>
+                  <label class="adm-label">رقم واتساب لاستقبال الطلبات (بدون +)</label>
                   <input type="text" id="set-wa-num" class="adm-input" dir="ltr" />
                 </div>
                 <div>
-                  <label class="adm-label">ط±ظ‚ظ… ط§ظ„ظ‡ط§طھظپ ط§ظ„ظ…ط¹ط±ظˆط¶</label>
+                  <label class="adm-label">رقم الهاتف المعروض</label>
                   <input type="text" id="set-phone-disp" class="adm-input" dir="ltr" />
                 </div>
                 <div>
-                  <label class="adm-label">ط­ط³ط§ط¨ ط¥ظ†ط³طھط؛ط±ط§ظ…</label>
+                  <label class="adm-label">حساب إنستغرام</label>
                   <input type="text" id="set-insta" class="adm-input" dir="ltr" />
                 </div>
               </div>
 
               <div class="form-row-3">
                 <div>
-                  <label class="adm-label">ط§ظ„ظ„ظˆظ† ط§ظ„ظ…ظ„ظƒظٹ ط§ظ„ط£ط³ط§ط³ظٹ (Primary Burgundy)</label>
+                  <label class="adm-label">اللون الملكي الأساسي (Primary Burgundy)</label>
                   <input type="color" id="set-color-primary" class="adm-input" style="height:44px;padding:4px;" />
                 </div>
                 <div>
-                  <label class="adm-label">ط§ظ„ظ„ظˆظ† ط§ظ„ط°ظ‡ط¨ظٹ ط§ظ„ظ…ظ…ظٹط² (Champagne Gold)</label>
+                  <label class="adm-label">اللون الذهبي المميز (Champagne Gold)</label>
                   <input type="color" id="set-color-accent" class="adm-input" style="height:44px;padding:4px;" />
                 </div>
                 <div>
-                  <label class="adm-label">ط­ط¯ ط§ظ„طھظˆطµظٹظ„ ط§ظ„ظ…ط¬ط§ظ†ظٹ (OMR)</label>
+                  <label class="adm-label">حد التوصيل المجاني (OMR)</label>
                   <input type="number" step="0.500" id="set-free-thresh" class="adm-input" />
                 </div>
               </div>
@@ -381,11 +383,11 @@
 
             <div class="panel-card">
               <div class="panel-header">
-                <h3 class="panel-title">ًںڈ  ط¥ط¯ط§ط±ط© ظ…ط­طھظˆظ‰ ط§ظ„طµظپط­ط© ط§ظ„ط±ط¦ظٹط³ظٹط© ظˆظ‚طµط© آ«ط­ظ„ط§ ط§ظ„ظ…ظ„ظˆظƒآ»</h3>
+                <h3 class="panel-title">🏠 إدارة محتوى الصفحة الرئيسية وقصة «حلا الملوك»</h3>
               </div>
               <div class="form-row-2">
                 <div>
-                  <label class="adm-label">ط¹ظ†ظˆط§ظ† ط§ظ„ط¨ط§ظ†ط± ط§ظ„ط±ط¦ظٹط³ظٹ (Hero Title AR)</label>
+                  <label class="adm-label">عنوان البانر الرئيسي (Hero Title AR)</label>
                   <input type="text" id="set-hero-title-ar" class="adm-input" />
                 </div>
                 <div>
@@ -395,7 +397,7 @@
               </div>
               <div class="form-row-2">
                 <div>
-                  <label class="adm-label">ط§ظ„ظˆطµظپ ط§ظ„ظپط±ط¹ظٹ ظ„ظ„ط¨ط§ظ†ط± (Hero Subtitle AR)</label>
+                  <label class="adm-label">الوصف الفرعي للبانر (Hero Subtitle AR)</label>
                   <textarea id="set-hero-sub-ar" class="adm-textarea" rows="2"></textarea>
                 </div>
                 <div>
@@ -405,7 +407,7 @@
               </div>
               <div class="form-row-2">
                 <div>
-                  <label class="adm-label">ط±ط³ط§ظ„ط© ط¨ط·ط§ظ‚ط© آ«طھط§ط¬ ط§ظ„ظ…ظ„ظƒ - ط­ظ„ط§ ط§ظ„ظ…ظ„ظˆظƒآ» (About Story AR)</label>
+                  <label class="adm-label">رسالة بطاقة «تاج الملك - حلا الملوك» (About Story AR)</label>
                   <textarea id="set-about-ar" class="adm-textarea" rows="3"></textarea>
                 </div>
                 <div>
@@ -424,9 +426,9 @@
           <div class="panel-card">
             <div class="panel-header">
               <div>
-                <h3 class="panel-title">ًں”گ ط¥ط¯ط§ط±ط© ط§ظ„ظ…ظˆط¸ظپظٹظ† ظˆط§ظ„طµظ„ط§ط­ظٹط§طھ (Role-Based Access Control)</h3>
+                <h3 class="panel-title">🔐 إدارة الموظفين والصلاحيات (Role-Based Access Control)</h3>
                 <p style="font-size:0.84rem;color:var(--adm-muted);">
-                  ط­ط³ط§ط¨ ط§ظ„ظ…ط¯ظٹط± (Admin) ظٹظ…ظ„ظƒ طµظ„ط§ط­ظٹط§طھ ظƒط§ظ…ظ„ط©طŒ ط¨ظٹظ†ظ…ط§ ط­ط³ط§ط¨ ط§ظ„ظ…ظˆط¸ظپ (Staff) ظٹظ…ظ„ظƒ طµظ„ط§ط­ظٹط§طھ ظ…طھط§ط¨ط¹ط© ظˆطھط¬ظ‡ظٹط² ط§ظ„ط·ظ„ط¨ط§طھ ظˆط§ظ„ظ…ظ†طھط¬ط§طھ ط¯ظˆظ† طھط¹ط¯ظٹظ„ ط¥ط¹ط¯ط§ط¯ط§طھ ط§ظ„ظ…طھط¬ط± ط§ظ„ط­ط³ط§ط³ط©.
+                  حساب المدير (Admin) يملك صلاحيات كاملة، بينما حساب الموظف (Staff) يملك صلاحيات متابعة وتجهيز الطلبات والمنتجات دون تعديل إعدادات المتجر الحساسة.
                 </p>
               </div>
             </div>
@@ -434,11 +436,11 @@
               <table class="data-table">
                 <thead>
                   <tr>
-                    <th>ط§ظ„ط§ط³ظ…</th>
-                    <th>ط§ظ„ط¨ط±ظٹط¯ ط§ظ„ط¥ظ„ظƒطھط±ظˆظ†ظٹ</th>
-                    <th>ط§ظ„ط¯ظˆط± ط§ظ„ظˆط¸ظٹظپظٹ (Role)</th>
-                    <th>ط§ظ„طµظ„ط§ط­ظٹط§طھ ط§ظ„ظ…ظ…ظ†ظˆط­ط©</th>
-                    <th>ط§ظ„ط­ط§ظ„ط©</th>
+                    <th>الاسم</th>
+                    <th>البريد الإلكتروني</th>
+                    <th>الدور الوظيفي (Role)</th>
+                    <th>الصلاحيات الممنوحة</th>
+                    <th>الحالة</th>
                   </tr>
                 </thead>
                 <tbody id="admin-staff-tbody"></tbody>
@@ -455,14 +457,14 @@
   <div id="admin-product-modal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.65);z-index:200;align-items:center;justify-content:center;padding:1rem;">
     <div class="panel-card" style="width:100%;max-width:720px;max-height:90vh;overflow-y:auto;margin:0;">
       <div class="panel-header">
-        <h3 class="panel-title" id="prod-modal-heading">ط¥ط¶ط§ظپط© / طھط¹ط¯ظٹظ„ ظ…ظ†طھط¬</h3>
-        <button class="adm-btn adm-btn-outline" onclick="closeProductEditor()">âœ•</button>
+        <h3 class="panel-title" id="prod-modal-heading">إضافة / تعديل منتج</h3>
+        <button class="adm-btn adm-btn-outline" onclick="closeProductEditor()">✕</button>
       </div>
       <form onsubmit="submitProductEditor(event)">
         <input type="hidden" id="edit-prod-id" />
         <div class="form-row-3">
           <div>
-            <label class="adm-label">ط§ظ„ط§ط³ظ… ط¨ط§ظ„ط¹ط±ط¨ظٹط© *</label>
+            <label class="adm-label">الاسم بالعربية *</label>
             <input type="text" id="edit-prod-name-ar" class="adm-input" required />
           </div>
           <div>
@@ -470,27 +472,27 @@
             <input type="text" id="edit-prod-name-en" class="adm-input" required />
           </div>
           <div>
-            <label class="adm-label">ط±ظ…ط² ط§ظ„طµظ†ظپ (SKU)</label>
+            <label class="adm-label">رمز الصنف (SKU)</label>
             <input type="text" id="edit-prod-sku" class="adm-input" required />
           </div>
         </div>
         <div class="form-row-3">
           <div>
-            <label class="adm-label">ط§ظ„طھطµظ†ظٹظپ *</label>
+            <label class="adm-label">التصنيف *</label>
             <select id="edit-prod-cat" class="adm-select"></select>
           </div>
           <div>
-            <label class="adm-label">ط§ظ„ط³ط¹ط± ط¨ط§ظ„ط±ظٹط§ظ„ ط§ظ„ط¹ظڈظ…ط§ظ†ظٹ (OMR) *</label>
+            <label class="adm-label">السعر بالريال العُماني (OMR) *</label>
             <input type="number" step="0.100" id="edit-prod-price" class="adm-input" required />
           </div>
           <div>
-            <label class="adm-label">ظˆط­ط¯ط© ط§ظ„ط¨ظٹط¹ (ظ…ط«ط§ظ„: 1 ظƒظٹظ„ظˆ / 5 ظ‚ط·ط¹ / طµط­ظ†)</label>
+            <label class="adm-label">وحدة البيع (مثال: 1 كيلو / 5 قطع / صحن)</label>
             <input type="text" id="edit-prod-weight-ar" class="adm-input" />
           </div>
         </div>
         <div class="form-row-2">
           <div>
-            <label class="adm-label">ظˆطµظپ ظ…ط®طھطµط± (ط¹ط±ط¨ظٹ)</label>
+            <label class="adm-label">وصف مختصر (عربي)</label>
             <textarea id="edit-prod-short-ar" class="adm-textarea" rows="2"></textarea>
           </div>
           <div>
@@ -498,7 +500,7 @@
             <textarea id="edit-prod-short-en" class="adm-textarea" rows="2"></textarea>
           </div>
         </div>
-        <div style="margin-bottom:1.25rem;">
+                <div style="margin-bottom:1.25rem;">
           <label class="adm-label" style="display:flex;justify-content:space-between;align-items:center;">
             <span>صورة المنتج (JPG, PNG, WEBP, SVG) *</span>
             <span style="font-size:0.75rem;color:var(--adm-muted);font-weight:normal;">الصيغ المعتمدة: JPG, JPEG, PNG, WEBP, SVG</span>
@@ -536,19 +538,18 @@
                 </div>
               </div>
               <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
-                <label class="adm-btn adm-btn-outline" style="cursor:pointer;padding:0.45rem 0.85rem;font-size:0.82rem;white-space:nowrap;">
+                <label class="adm-btn adm-btn-secondary" style="cursor:pointer;font-size:0.82rem;padding:0.45rem 0.85rem;">
                   <span>🔄 تغيير الصورة</span>
                   <input type="file" id="edit-prod-file-change" accept="image/png, image/jpeg, image/jpg, image/webp, image/svg+xml, image/gif" style="display:none;" onchange="handleImageFileUpload(this)" />
                 </label>
-                <button type="button" class="adm-btn adm-btn-outline" style="color:#DC2626;border-color:#FCA5A5;padding:0.45rem 0.75rem;font-size:0.82rem;" onclick="removeProductImage()" title="حذف الصورة">
-                  ✕
-                </button>
+                <button type="button" class="adm-btn adm-btn-danger" style="font-size:0.82rem;padding:0.45rem 0.75rem;" onclick="removeProductImage()">✕</button>
               </div>
             </div>
 
-            <!-- Upload progress spinner / text -->
-            <div id="prod-upload-progress" style="display:none;text-align:center;padding:1.1rem;">
-              <div style="font-size:0.9rem;color:var(--adm-accent);font-weight:600;">⏳ جاري رفع وتجهيز الصورة للمنتج...</div>
+            <!-- State 3: Uploading Progress -->
+            <div id="prod-upload-progress" style="display:none;text-align:center;padding:1.5rem;">
+              <div class="adm-spinner" style="margin:0 auto 0.5rem auto;"></div>
+              <div style="font-size:0.85rem;color:var(--adm-muted);">جاري معالجة ورفع الصورة للسيرفر...</div>
             </div>
           </div>
         </div>
@@ -559,8 +560,8 @@
           <label style="cursor:pointer;display:flex;align-items:center;gap:0.4rem;font-weight:600;"><input type="checkbox" id="edit-prod-bestseller" /> الأكثر مبيعاً</label>
         </div>
         <div style="display:flex;justify-content:flex-end;gap:0.75rem;margin-top:1rem;">
-          <button type="button" class="adm-btn adm-btn-outline" onclick="closeProductEditor()">ط¥ظ„ط؛ط§ط،</button>
-          <button type="submit" class="adm-btn adm-btn-primary">ًں’¾ ط­ظپط¸ ط§ظ„ظ…ظ†طھط¬</button>
+          <button type="button" class="adm-btn adm-btn-outline" onclick="closeProductEditor()">إلغاء</button>
+          <button type="submit" class="adm-btn adm-btn-primary">💾 حفظ المنتج</button>
         </div>
       </form>
     </div>
@@ -570,30 +571,30 @@
   <div id="admin-login-modal" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,0.65);z-index:210;align-items:center;justify-content:center;padding:1rem;">
     <div class="panel-card" style="width:100%;max-width:440px;margin:0;">
       <div class="panel-header">
-        <h3 class="panel-title">ًں”گ طھط³ط¬ظٹظ„ ط§ظ„ط¯ط®ظˆظ„ / طھط¨ط¯ظٹظ„ ط§ظ„طµظ„ط§ط­ظٹط©</h3>
-        <button class="adm-btn adm-btn-outline" onclick="document.getElementById('admin-login-modal').style.display='none'">âœ•</button>
+        <h3 class="panel-title">🔐 تسجيل الدخول / تبديل الصلاحية</h3>
+        <button class="adm-btn adm-btn-outline" onclick="document.getElementById('admin-login-modal').style.display='none'">✕</button>
       </div>
       <p style="font-size:0.84rem;color:var(--adm-muted);margin-bottom:1rem;">
-        ط¬ط±ط¨ ط§ظ„طµظ„ط§ط­ظٹط§طھ ط§ظ„ظپظˆط±ظٹط© ط¨ط§ظ„ط¶ط؛ط· ط§ظ„ط³ط±ظٹط¹ ط£ظˆ ط¥ط¯ط®ط§ظ„ ط§ظ„ط¨ظٹط§ظ†ط§طھ:
+        جرب الصلاحيات الفورية بالضغط السريع أو إدخال البيانات:
       </p>
       <div style="display:flex;gap:0.5rem;margin-bottom:1rem;">
         <button type="button" class="adm-btn adm-btn-gold" style="flex:1;justify-content:center;" onclick="fillDemoLogin('admin@tajalamlik.om','admin123')">
-          ًں‘‘ ط¯ط®ظˆظ„ ظƒظ…ط¯ظٹط± (ط³ط¹ظٹط¯)
+          👑 دخول كمدير (سعيد)
         </button>
         <button type="button" class="adm-btn adm-btn-outline" style="flex:1;justify-content:center;" onclick="fillDemoLogin('staff@tajalamlik.om','staff123')">
-          ًں‘¨â€چًںچ³ ط¯ط®ظˆظ„ ظƒظ…ظˆط¸ظپ (ظ‚ط§ط³ظ…)
+          👨‍🍳 دخول كموظف (قاسم)
         </button>
       </div>
       <form onsubmit="submitAdminLogin(event)">
         <div style="margin-bottom:0.75rem;">
-          <label class="adm-label">ط§ظ„ط¨ط±ظٹط¯ ط§ظ„ط¥ظ„ظƒطھط±ظˆظ†ظٹ</label>
+          <label class="adm-label">البريد الإلكتروني</label>
           <input type="email" id="adm-login-email" class="adm-input" value="admin@tajalamlik.om" dir="ltr" required />
         </div>
         <div style="margin-bottom:1rem;">
-          <label class="adm-label">ظƒظ„ظ…ط© ط§ظ„ظ…ط±ظˆط±</label>
+          <label class="adm-label">كلمة المرور</label>
           <input type="password" id="adm-login-pass" class="adm-input" value="admin123" dir="ltr" required />
         </div>
-        <button type="submit" class="adm-btn adm-btn-primary" style="width:100%;justify-content:center;">طھط³ط¬ظٹظ„ ط§ظ„ط¯ط®ظˆظ„</button>
+        <button type="submit" class="adm-btn adm-btn-primary" style="width:100%;justify-content:center;">تسجيل الدخول</button>
       </form>
     </div>
   </div>
