@@ -141,10 +141,297 @@ function toggleLanguage() {
   }
 }
 
+
+function translateAllStaticElements(isAr, t) {
+  // Document Title
+  document.title = isAr
+    ? 'تاج الملك — حلا الملوك | أرقى الحلويات الملكية والمأكولات السورية في سلطنة عُمان'
+    : 'Taj Al Malik | Sweets of Kings — Haute Pâtisserie & Syrian Delicacies';
+
+  // Desktop Navbar Links [data-i18n]
+  const navMap = {
+    nav_menu: isAr ? 'القائمة الكاملة' : 'Full Menu',
+    nav_baklava: isAr ? 'الحلويات الملكية' : 'Royal Sweets',
+    nav_qashati: isAr ? 'ركن القشاطي' : 'Al-Qashati & Cream',
+    nav_syrian: isAr ? 'المأكولات السورية' : 'Syrian Delicacies',
+    nav_bestsellers: isAr ? 'الأكثر مبيعاً' : 'Best Sellers',
+    nav_story: isAr ? 'قصتنا' : 'Our Story',
+  };
+  document.querySelectorAll('.desktop-nav-links [data-i18n]').forEach((el) => {
+    const key = el.getAttribute('data-i18n');
+    if (navMap[key]) el.textContent = navMap[key];
+  });
+
+  // Hero Chips
+  const chipPistachio = document.getElementById('chip-pistachio');
+  if (chipPistachio) chipPistachio.textContent = isAr ? '✨ فستق حلبي أول وسمن بلدي فاخر' : '✨ 100% Pure Ghee & Aleppo Pistachios';
+  const chipFresh = document.getElementById('chip-fresh');
+  if (chipFresh) chipFresh.textContent = isAr ? '🥛 قشطة بلدية وحلاوة جبن طازجة يومياً' : '🥛 Fresh Daily Cream & Halawet El Jibn';
+  const chipSyrian = document.getElementById('chip-syrian');
+  if (chipSyrian) chipSyrian.textContent = isAr ? '🍃 يالنجي وكبة شامية ومحاشي على الطلب' : '🍃 Syrian Yalanji & Kibbeh Made to Order';
+  const chipWa = document.getElementById('chip-whatsapp');
+  if (chipWa) chipWa.textContent = isAr ? '📲 طلب فوري ومباشر عبر واتساب' : '📲 Direct VIP WhatsApp Ordering';
+
+  // Rotating Showcase Badges & Captions
+  const deskBadge = document.getElementById('hero-showcase-badge');
+  if (deskBadge) deskBadge.textContent = isAr ? '✨ مختارات ملكية فاخرة' : '✨ Royal Luxury Selection';
+  const deskCap = document.getElementById('hero-showcase-caption');
+  if (deskCap) deskCap.textContent = isAr ? 'مبرومة فستق ملكية • بلورية • بقلاوة • قشاطي • مأكولات سورية' : 'Pistachio Mabrouma • Ballourieh • Baklava • Qashati • Syrian Specialties';
+  const mobBadge = document.getElementById('mobile-showcase-badge');
+  if (mobBadge) mobBadge.textContent = isAr ? '✨ مختارات ملكية فاخرة' : '✨ Royal Luxury Selection';
+  const mobCap = document.getElementById('mobile-showcase-caption');
+  if (mobCap) mobCap.textContent = isAr ? 'مبرومة فستق ملكية • بلورية • بقلاوة • قشاطي • مأكولات سورية' : 'Pistachio Mabrouma • Ballourieh • Baklava • Qashati • Syrian Specialties';
+
+  // Categories Section
+  const catKicker = document.getElementById('cat-kicker');
+  if (catKicker) catKicker.textContent = isAr ? 'أقسام الضيافة الملكية' : 'Royal Hospitality Categories';
+  const catSecTitle = document.getElementById('cat-section-title');
+  if (catSecTitle) catSecTitle.textContent = isAr ? 'مختارات الضيافة الفاخرة' : 'Finest Royal Confections';
+  const catDesc = document.getElementById('cat-desc');
+  if (catDesc) catDesc.textContent = isAr
+    ? 'اختر القسم المفضل لديك من الحلويات الشرقية بالكيلو، الهريسة النبكية، القشاطي الطازجة، أو المأكولات السورية'
+    : 'Choose your favorite category: sweets by the kilo, Nabkiyah Harissa, fresh cream delicacies, or authentic Syrian savory specialties.';
+
+  // Catalog Section
+  const catlgKicker = document.getElementById('catalog-kicker');
+  if (catlgKicker) catlgKicker.textContent = isAr ? 'قائمة الأسعار والطلب المباشر' : 'Price List & Direct Ordering';
+  const catlgTitle = document.getElementById('catalog-title');
+  if (catlgTitle) catlgTitle.textContent = isAr ? 'قائمة الأصناف الملكية والحلويات الفاخرة' : 'Royal Sweets & Delicacies Catalog';
+  const catlgDesc = document.getElementById('catalog-desc');
+  if (catlgDesc) catlgDesc.textContent = isAr
+    ? 'تصفح بالوزن والصحن، مع خيارات إهداء ملكية وتوصيل طازج يومياً لكافة ولايات السلطنة'
+    : 'Browse by kilo or platter, with royal gifting options and daily fresh delivery across all Oman wilayats.';
+
+  // Best Sellers Section
+  const bestKicker = document.getElementById('best-kicker');
+  if (bestKicker) bestKicker.textContent = isAr ? 'الأكثر طلباً وتفضيلاً لدى عائلات السلطنة' : 'Most Cherished & Favored Across Oman';
+  const bestTitle = document.getElementById('best-title');
+  if (bestTitle) bestTitle.textContent = isAr ? 'مختارات الملك الأكثر مبيعاً 👑' : "King's Choice — Best Sellers 👑";
+  const bestDesc = document.getElementById('best-desc');
+  if (bestDesc) bestDesc.textContent = isAr
+    ? 'أصناف حازت على إعجاب وذوق عملائنا الرفيع في صحار ومسقط وكافة الولايات'
+    : 'Signature confections beloved by our discerning clients in Sohar, Muscat, and all wilayats.';
+
+  // Special Offers Section
+  const offKicker = document.getElementById('offers-kicker');
+  if (offKicker) offKicker.textContent = isAr ? 'عروض حصرية للضيافة والمناسبات' : 'Exclusive Hospitality & Event Offers';
+  const offTitle = document.getElementById('offers-title');
+  if (offTitle) offTitle.textContent = isAr ? 'بوكسات الضيافة الملكية والعروض الخاصة' : 'Royal Hospitality Boxes & Special Offers';
+  const offDesc = document.getElementById('offers-desc');
+  if (offDesc) offDesc.textContent = isAr
+    ? 'بوكسات مشكلة مصممة لأرقى الجمعات العائلية والأعراس ومناسباتكم الخاصة'
+    : 'Curated luxury assortments tailored for family gatherings, weddings, and royal occasions.';
+
+  // Catering & Syrian Specialties Section
+  const evTitle = document.getElementById('cat-event-title');
+  if (evTitle) evTitle.textContent = isAr ? 'ضيافة الأعراس والمناسبات الملكية' : 'Royal Weddings & Event Catering';
+  const evDesc = document.getElementById('cat-event-desc');
+  if (evDesc) evDesc.textContent = isAr
+    ? 'نقدم صواني وبوفيهات حلويات شرقية فاخرة وموالح شامية راقية مجهزة بأعلى معايير الإتقان لمناسباتكم السعيدة في صحار ومسقط وكافة ولايات السلطنة.'
+    : 'We craft magnificent oriental sweets trays, dessert buffets, and Syrian savory catering tailored for your distinguished celebrations across Oman.';
+  const evBtn = document.getElementById('cat-event-btn');
+  if (evBtn) evBtn.textContent = isAr ? '👑 اطلب تسعيرة مناسباتك الخاصة عبر واتساب' : '👑 Request Catering Quote via WhatsApp';
+
+  const syTitle = document.getElementById('cat-syrian-title');
+  if (syTitle) syTitle.textContent = isAr ? 'ركن المأكولات والمحاشي الشامية الأصيلة' : 'Authentic Syrian Cuisine & Savory Delicacies';
+  const syDesc = document.getElementById('cat-syrian-desc');
+  if (syDesc) syDesc.textContent = isAr
+    ? 'يالنجي بزيت الزيتون البكر، كبة شامية مقلية ومشوية، محاشي مشكلة وشيش برك، تُحضر طازجة يومياً على الطلب بأيدي شيف شامي خبير وبنكهة دمشقية أصيلة.'
+    : 'Fresh Syrian Yalanji in extra virgin olive oil, crispy fried Kibbeh, stuffed vegetables, and Shish Barak, handcrafted daily to order by master Damascene chefs.';
+  const syBtn = document.getElementById('cat-syrian-btn');
+  if (syBtn) syBtn.textContent = isAr ? '🍃 اطلب وجبتك الشامية الطازجة الآن' : '🍃 Order Fresh Syrian Delicacies Now';
+
+  // Why Us Section
+  const whyKicker = document.getElementById('why-kicker');
+  if (whyKicker) whyKicker.textContent = isAr ? 'معايير الجودة الملكية' : 'Royal Standards of Quality';
+  const whyTitle = document.getElementById('why-title');
+  if (whyTitle) whyTitle.textContent = isAr ? 'لماذا يختار الذواقة حلويات «تاج الملك»؟' : 'Why Connoisseurs Choose Taj Al Malik';
+
+  const w1Title = document.getElementById('w1-title');
+  if (w1Title) w1Title.textContent = isAr ? 'سمن بلدي وفستق حلبي أول' : 'Pure Ghee & Hand-Picked Pistachios';
+  const w1Desc = document.getElementById('w1-desc');
+  if (w1Desc) w1Desc.textContent = isAr
+    ? 'نستخدم فقط السمن البقري والبلدي الفاخر وحبات الفستق الحلبي الخضراء المنتقاة حبة بحبة.'
+    : 'We exclusively craft our sweets using pure traditional ghee and hand-selected vibrant Aleppo pistachios.';
+
+  const w2Title = document.getElementById('w2-title');
+  if (w2Title) w2Title.textContent = isAr ? 'تحضير يومي طازج' : 'Fresh Daily Preparation';
+  const w2Desc = document.getElementById('w2-desc');
+  if (w2Desc) w2Desc.textContent = isAr
+    ? 'القشاطي، حلاوة الجبن، والقطايف تُحضر صباح كل يوم لتصلكم طازجة وبأعلى درجات النقاء.'
+    : 'Fresh clotted cream, Halawet El Jibn, and Qatayef are prepared every morning with zero compromises.';
+
+  const w3Title = document.getElementById('w3-title');
+  if (w3Title) w3Title.textContent = isAr ? 'توصيل مبرد لكافة الولايات' : 'Chilled Delivery Across Oman';
+  const w3Desc = document.getElementById('w3-desc');
+  if (w3Desc) w3Desc.textContent = isAr
+    ? 'أسطول توصيل سريع ومبرد يضمن وصول الحلويات والمأكولات بطعمها وقوامها المثالي.'
+    : 'Fast, temperature-controlled delivery ensures sweets arrive with their exquisite fresh texture intact.';
+
+  const w4Title = document.getElementById('w4-title');
+  if (w4Title) w4Title.textContent = isAr ? 'بوكسات إهداء وبطاقات ملكية' : 'Royal Gift Packaging & Cards';
+  const w4Desc = document.getElementById('w4-desc');
+  if (w4Desc) w4Desc.textContent = isAr
+    ? 'تصاميم تغليف ملكية فاخرة تليق بضيوفكم مع إمكانية إضافة بطاقة إهداء مخصصة مجاناً.'
+    : 'Opulent royal gift packaging worthy of your guests, complete with complimentary personalized cards.';
+
+  // Testimonials Title
+  const testTitle = document.getElementById('testimonials-title');
+  if (testTitle) testTitle.textContent = isAr ? 'آراء وتجارب عملائنا الكرام' : 'What Our Esteemed Clients Say';
+
+  // Newsletter Section
+  const nlTitle = document.getElementById('nl-title');
+  if (nlTitle) nlTitle.textContent = isAr ? 'انضم لنادي الذواقة الملكي' : 'Join the Royal Gourmet Club';
+  const nlDesc = document.getElementById('nl-desc');
+  if (nlDesc) nlDesc.textContent = isAr
+    ? 'اشترك ليصلك جديد عروضنا وأصناف المواسم والمناسبات الخاصة في سلطنة عُمان'
+    : 'Subscribe to receive news of our seasonal creations, festive boxes, and VIP offers across Oman.';
+  const nlInput = document.getElementById('nl-email-input');
+  if (nlInput) nlInput.placeholder = isAr ? 'أدخل بريدك الإلكتروني ليصلك كل جديد...' : 'Enter your email to receive royal updates...';
+  const nlBtn = document.getElementById('nl-btn-text');
+  if (nlBtn) nlBtn.textContent = isAr ? 'اشتراك' : 'Subscribe';
+
+  // Footer Section
+  const fBio = document.getElementById('f-bio');
+  if (fBio) fBio.textContent = isAr
+    ? 'تاج الملك .. حلا الملوك. أرقى أصناف الحلويات الشرقية الفاخرة، البقلاوة والمبرومة، الهريسة النبكية، القشاطي، والمأكولات الشامية الأصيلة في سلطنة عُمان — ولاية صحار وكافة الولايات.'
+    : 'Taj Al Malik .. Sweets of Kings. The finest authentic Oriental sweets, Mabrouma, Baklava, Nabkiyah Harissa, fresh cream specialties, and Levantine savory delicacies in the Sultanate of Oman.';
+  const fCatsTitle = document.getElementById('f-cats-title');
+  if (fCatsTitle) fCatsTitle.textContent = isAr ? 'الأقسام الملكية' : 'Royal Categories';
+  const fLinksTitle = document.getElementById('f-links-title');
+  if (fLinksTitle) fLinksTitle.textContent = isAr ? 'روابط سريعة' : 'Quick Links';
+  const fContactTitle = document.getElementById('f-contact-title');
+  if (fContactTitle) fContactTitle.textContent = isAr ? 'التواصل وفرع صحار' : 'Contact & Sohar Branch';
+
+  const fLinkBaklava = document.getElementById('f-link-baklava');
+  if (fLinkBaklava) fLinkBaklava.textContent = isAr ? 'البقلاوة والمبرومة والبلورية' : 'Baklava, Mabrouma & Ballourieh';
+  const fLinkHarissa = document.getElementById('f-link-harissa');
+  if (fLinkHarissa) fLinkHarissa.textContent = isAr ? 'الهريسة النبكية والشامية' : 'Nabkiyah & Levantine Harissa';
+  const fLinkPastries = document.getElementById('f-link-pastries');
+  if (fLinkPastries) fLinkPastries.textContent = isAr ? 'القطايف والشعيبيات والفيصلية' : 'Qatayef, Shaibiyat & Faysaliyeh';
+  const fLinkQashati = document.getElementById('f-link-qashati');
+  if (fLinkQashati) fLinkQashati.textContent = isAr ? 'ركن القشاطي وحلاوة الجبن' : 'Al-Qashati & Halawet El Jibn';
+  const fLinkSyrian = document.getElementById('f-link-syrian');
+  if (fLinkSyrian) fLinkSyrian.textContent = isAr ? 'اليالنجي والكبة والمحاشي' : 'Yalanji, Kibbeh & Syrian Cuisine';
+  const fLinkCart = document.getElementById('f-link-cart');
+  if (fLinkCart) fLinkCart.textContent = isAr ? 'سلة التسوق وإتمام الطلب' : 'Shopping Cart & Checkout';
+  const fLinkSitemap = document.getElementById('f-link-sitemap');
+  if (fLinkSitemap) fLinkSitemap.textContent = isAr ? 'خريطة الموقع (Sitemap)' : 'Site Map (Sitemap)';
+
+  const fContactLoc = document.getElementById('f-contact-loc');
+  if (fContactLoc) fContactLoc.innerHTML = isAr ? '<strong>الموقع:</strong> سلطنة عُمان، ولاية صحار' : '<strong>Location:</strong> Sultanate of Oman, Sohar';
+  const fContactWa = document.getElementById('f-contact-wa');
+  if (fContactWa) fContactWa.innerHTML = isAr ? '<strong>واتساب الطلبات:</strong> <span dir="ltr">+968 91247722</span>' : '<strong>WhatsApp:</strong> <span dir="ltr">+968 91247722</span>';
+  const fContactHours = document.getElementById('f-contact-hours');
+  if (fContactHours) fContactHours.innerHTML = isAr ? '<strong>ساعات العمل:</strong> يومياً من 9:00 صباحاً حتى 11:30 مساءً' : '<strong>Opening Hours:</strong> Daily 9:00 AM – 11:30 PM';
+  const fContactCurrency = document.getElementById('f-contact-currency');
+  if (fContactCurrency) fContactCurrency.innerHTML = isAr ? '<strong>العملة الرسمية:</strong> الريال العُماني (OMR)' : '<strong>Currency:</strong> Omani Rial (OMR)';
+
+  const fCopy = document.getElementById('f-copy');
+  if (fCopy) fCopy.textContent = isAr ? '© 2026 تاج الملك — حلا الملوك. جميع الحقوق محفوظة.' : '© 2026 Taj Al Malik — Sweets of Kings. All Rights Reserved.';
+  const fTagline = document.getElementById('f-tagline');
+  if (fTagline) fTagline.textContent = isAr ? 'صُنعت بحب وإتقان ملكي في سلطنة عُمان 🇴🇲' : 'Crafted with royal passion & mastery in the Sultanate of Oman 🇴🇲';
+
+  // Cart Drawer
+  const cTitle = document.getElementById('cart-drawer-title-text');
+  if (cTitle) cTitle.textContent = isAr ? 'سلة الحلويات الملكية' : 'Your Royal Sweets Cart';
+  const cSubLbl = document.getElementById('cart-lbl-subtotal');
+  if (cSubLbl) cSubLbl.textContent = isAr ? 'المجموع الفرعي:' : 'Subtotal:';
+  const cDelivNote = document.getElementById('cart-lbl-delivery-note');
+  if (cDelivNote) cDelivNote.textContent = isAr ? 'يتم احتساب رسوم التوصيل بحسب الولاية في خطوة الدفع' : 'Delivery fee calculated by Wilayat during checkout';
+  const cChkBtn = document.getElementById('cart-btn-checkout-text');
+  if (cChkBtn) cChkBtn.textContent = isAr ? 'متابعة إتمام الطلب (Checkout)' : 'Proceed to Royal Checkout';
+
+  // Checkout Modal Header & Tabs
+  const chkHead = document.getElementById('chk-header-title-text');
+  if (chkHead) chkHead.textContent = isAr ? 'إتمام طلب الضيافة الملكية' : 'Complete Your Royal Order';
+  const chkStep1 = document.getElementById('chk-step1-title');
+  if (chkStep1) chkStep1.textContent = isAr ? '1. بيانات المستلم وعنوان التوصيل في سلطنة عُمان' : '1. Recipient Details & Delivery Address in Oman';
+
+  const tabDel = document.getElementById('tab-delivery');
+  if (tabDel) tabDel.innerHTML = `<svg class="ico-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> <span>${isAr ? 'توصيل لكافة الولايات' : 'Delivery Across Oman'}</span>`;
+  const tabPick = document.getElementById('tab-pickup');
+  if (tabPick) tabPick.innerHTML = `<svg class="ico-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> <span>${isAr ? 'استلام من فرع صحار' : 'Pickup from Sohar Branch'}</span>`;
+
+  // Checkout Form Labels & Placeholders
+  const lblName = document.getElementById('lbl-chk-name');
+  if (lblName) lblName.textContent = isAr ? 'الاسم الكريم *' : 'Full Name *';
+  const inputName = document.getElementById('chk-name');
+  if (inputName) inputName.placeholder = isAr ? 'مثال: الشيخ سالم المعمري' : 'e.g. Salim Al Maamari';
+
+  const lblPhone = document.getElementById('lbl-chk-phone');
+  if (lblPhone) lblPhone.textContent = isAr ? 'رقم الهاتف / واتساب للتنسيق *' : 'Mobile / WhatsApp Number *';
+
+  const lblWil = document.getElementById('lbl-chk-wilayat');
+  if (lblWil) lblWil.textContent = isAr ? 'الولاية / المنطقة *' : 'Wilayat / Region *';
+
+  const lblAddr = document.getElementById('lbl-chk-address');
+  if (lblAddr) lblAddr.textContent = isAr ? 'العنوان التفصيلي (المنطقة، الشارع، رقم المنزل / المعلم) *' : 'Detailed Address (Area, Street, Way / Landmark) *';
+  const inputAddr = document.getElementById('chk-address');
+  if (inputAddr) inputAddr.placeholder = isAr ? 'مثال: صحار - الهمبار، بجوار جامع السلطان قابوس، منزل رقم...' : 'e.g. Sohar - Al Hambar, near Sultan Qaboos Mosque...';
+
+  const lblDate = document.getElementById('lbl-chk-date');
+  if (lblDate) lblDate.textContent = isAr ? 'تاريخ الاستلام أو التوصيل المفضل *' : 'Preferred Delivery / Pickup Date *';
+
+  const optToday = document.getElementById('chk-opt-today');
+  if (optToday) optToday.textContent = isAr ? 'اليوم (طازج وفوري)' : 'Today (Immediate & Fresh)';
+  const optTomorrow = document.getElementById('chk-opt-tomorrow');
+  if (optTomorrow) optTomorrow.textContent = isAr ? 'غداً' : 'Tomorrow';
+  const optDayafter = document.getElementById('chk-opt-dayafter');
+  if (optDayafter) optDayafter.textContent = isAr ? 'بعد غد' : 'Day After Tomorrow';
+  const optLater = document.getElementById('chk-opt-later');
+  if (optLater) optLater.textContent = isAr ? 'موعد لاحق (يُحدد في الملاحظات)' : 'Later Date (Specify in notes)';
+
+  const lblSlot = document.getElementById('lbl-chk-slot');
+  if (lblSlot) lblSlot.textContent = isAr ? 'وقت التوصيل المفضل *' : 'Preferred Delivery Time Slot *';
+
+  const optMorn = document.getElementById('chk-opt-morning');
+  if (optMorn) optMorn.textContent = isAr ? 'الفترة الصباحية (10:00 ص - 1:00 ظ)' : 'Morning (10:00 AM - 1:00 PM)';
+  const optEve = document.getElementById('chk-opt-evening');
+  if (optEve) optEve.textContent = isAr ? 'فترة العصر والمساء (4:30 م - 8:30 م)' : 'Afternoon & Evening (4:30 PM - 8:30 PM)';
+  const optNight = document.getElementById('chk-opt-night');
+  if (optNight) optNight.textContent = isAr ? 'الفترة الليلية (8:30 م - 11:30 م)' : 'Night (8:30 PM - 11:30 PM)';
+
+  // Gift section
+  const lblGift = document.getElementById('lbl-chk-is-gift');
+  if (lblGift) lblGift.textContent = isAr ? 'إرسال هذا الطلب كهدية ملكية مع بطاقة إهداء «تاج الملك - حلا الملوك»' : 'Send this order as a Royal Gift with complimentary greeting card';
+  const lblGName = document.getElementById('lbl-gift-name');
+  if (lblGName) lblGName.textContent = isAr ? 'اسم مستلم الهدية' : 'Gift Recipient Name';
+  const inGName = document.getElementById('chk-gift-name');
+  if (inGName) inGName.placeholder = isAr ? 'اسم الشخص المهدى إليه' : 'Recipient full name';
+
+  const lblGPhone = document.getElementById('lbl-gift-phone');
+  if (lblGPhone) lblGPhone.textContent = isAr ? 'رقم هاتف المستلم' : 'Recipient Phone Number';
+
+  const lblGMsg = document.getElementById('lbl-gift-msg');
+  if (lblGMsg) lblGMsg.textContent = isAr ? 'عبارة بطاقة الإهداء الملكية' : 'Royal Greeting Card Message';
+  const inGMsg = document.getElementById('chk-gift-msg');
+  if (inGMsg) inGMsg.placeholder = isAr ? 'مثال: مبارك عليكم، كل قطعة صنعت بحب من تاج الملك...' : 'e.g. Warmest congratulations, crafted with royal love...';
+
+  const lblNotes = document.getElementById('lbl-chk-notes');
+  if (lblNotes) lblNotes.textContent = isAr ? 'ملاحظات إضافية على الطلب أو التغليف' : 'Additional Order or Packaging Notes';
+  const inNotes = document.getElementById('chk-notes');
+  if (inNotes) inNotes.placeholder = isAr ? 'أي تفاصيل ترغب بإضافتها لفريق التجهيز في تاج الملك...' : 'Any details or preferences for Taj Al Malik preparation team...';
+
+  // Checkout Review Summary
+  const chkStep2 = document.getElementById('chk-step2-title');
+  if (chkStep2) chkStep2.textContent = isAr ? '2. مراجعة ملخص الطلب والأسعار (OMR)' : '2. Order Summary & Price Review (OMR)';
+  const chkRevSub = document.getElementById('chk-rev-lbl-subtotal');
+  if (chkRevSub) chkRevSub.textContent = isAr ? 'المجموع الفرعي للمنتجات:' : 'Items Subtotal:';
+  const chkRevDel = document.getElementById('chk-rev-lbl-delivery');
+  if (chkRevDel) chkRevDel.textContent = isAr ? 'رسوم التوصيل:' : 'Delivery Fee:';
+  const chkRevTot = document.getElementById('chk-rev-lbl-total');
+  if (chkRevTot) chkRevTot.textContent = isAr ? 'الإجمالي النهائي المطلوب:' : 'Total Amount Payable:';
+
+  const chkBtnWa = document.getElementById('btn-submit-wa-order-text');
+  if (chkBtnWa) chkBtnWa.textContent = isAr ? 'اعتماد وحفظ الطلب وإرساله عبر واتساب (+968 91247722)' : 'Confirm & Send Order via WhatsApp (+968 91247722)';
+}
+
 function renderAllStorefront() {
   const { brand, sections, settings } = STATE.store;
   const isAr = STATE.lang === 'ar';
   const t = UI_TEXT[STATE.lang];
+  translateAllStaticElements(isAr, t);
 
   // Desktop Header & Top bar (Directive: keep previous desktop version)
   const headerBrandName = document.getElementById('header-brand-name');
@@ -734,7 +1021,7 @@ function renderProductModalContent() {
         </p>
 
         <div style="background:#FAF5EC;border:1.5px solid var(--border-gold);padding:0.85rem 1.15rem;border-radius:12px;margin-bottom:1.15rem;display:flex;justify-content:space-between;align-items:center;">
-          <span style="font-weight:700;color:var(--text-heading);">السعر حسب الخيار المحدد:</span>
+          <span style="font-weight:700;color:var(--text-heading);">${isAr ? 'السعر حسب الخيار المحدد:' : 'Price for Selected Option:'}</span>
           <span style="font-size:1.45rem;font-weight:800;color:var(--brand-primary);">${formatPriceWithCurrency(unitPrice)}</span>
         </div>
 
@@ -1094,27 +1381,28 @@ async function submitWhatsAppOrder(e) {
     document.getElementById('whatsapp-checkout-form').style.display = 'none';
     const successBox = document.getElementById('checkout-success-box');
     successBox.style.display = 'block';
+    const isAr = STATE.lang === 'ar';
     successBox.innerHTML = `
       <img src="/assets/crown-emblem.svg" style="height:54px;margin-bottom:0.5rem;" />
       <h3 style="color:var(--brand-primary);font-size:1.55rem;margin-bottom:0.4rem;">
-        تم تسجيل طلبك بنجاح في نظام تاج الملك!
+        ${isAr ? 'تم تسجيل طلبك بنجاح في نظام تاج الملك!' : 'Your order has been recorded in Taj Al Malik system!'}
       </h3>
       <div style="display:inline-block;background:var(--brand-primary);color:var(--brand-accent-light);padding:0.4rem 1.25rem;border-radius:999px;font-weight:800;font-size:1.1rem;margin-bottom:1rem;">
-        رقم الطلب المرجعي: #${data.order_number}
+        ${isAr ? `رقم الطلب المرجعي: #${data.order_number}` : `Reference Order #: #${data.order_number}`}
       </div>
 
       <!-- Visual WhatsApp Order Lifecycle Status Bar -->
-      <div style="background:#FAF5EC;border:1.5px solid var(--border-gold);border-radius:14px;padding:1rem;margin-bottom:1.15rem;text-align:right;">
+      <div style="background:#FAF5EC;border:1.5px solid var(--border-gold);border-radius:14px;padding:1rem;margin-bottom:1.15rem;text-align:${isAr ? 'right' : 'left'};">
         <div style="font-weight:700;color:var(--brand-primary);margin-bottom:0.5rem;font-size:0.9rem;">
-          مراحل متابعة طلب واتساب (Order Status Workflow):
+          ${isAr ? 'مراحل متابعة طلب واتساب (Order Status Workflow):' : 'WhatsApp Order Lifecycle Workflow:'}
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:0.4rem;font-size:0.78rem;">
-          <span style="background:#15803D;color:#FFF;padding:0.25rem 0.65rem;border-radius:999px;font-weight:700;">1. تم حفظ الطلب</span>
-          <span style="background:#E5DAC3;color:#5A463F;padding:0.25rem 0.65rem;border-radius:999px;">2. التواصل عبر واتساب</span>
-          <span style="background:#E5DAC3;color:#5A463F;padding:0.25rem 0.65rem;border-radius:999px;">3. تأكيد الطلب</span>
-          <span style="background:#E5DAC3;color:#5A463F;padding:0.25rem 0.65rem;border-radius:999px;">4. قيد التجهيز</span>
-          <span style="background:#E5DAC3;color:#5A463F;padding:0.25rem 0.65rem;border-radius:999px;">5. جاهز</span>
-          <span style="background:#E5DAC3;color:#5A463F;padding:0.25rem 0.65rem;border-radius:999px;">6. مكتمل</span>
+          <span style="background:#15803D;color:#FFF;padding:0.25rem 0.65rem;border-radius:999px;font-weight:700;">${isAr ? '1. تم حفظ الطلب' : '1. Order Saved'}</span>
+          <span style="background:#E5DAC3;color:#5A463F;padding:0.25rem 0.65rem;border-radius:999px;">${isAr ? '2. التواصل عبر واتساب' : '2. WhatsApp Contact'}</span>
+          <span style="background:#E5DAC3;color:#5A463F;padding:0.25rem 0.65rem;border-radius:999px;">${isAr ? '3. تأكيد الطلب' : '3. Confirmation'}</span>
+          <span style="background:#E5DAC3;color:#5A463F;padding:0.25rem 0.65rem;border-radius:999px;">${isAr ? '4. قيد التجهيز' : '4. In Prep'}</span>
+          <span style="background:#E5DAC3;color:#5A463F;padding:0.25rem 0.65rem;border-radius:999px;">${isAr ? '5. جاهز' : '5. Ready'}</span>
+          <span style="background:#E5DAC3;color:#5A463F;padding:0.25rem 0.65rem;border-radius:999px;">${isAr ? '6. مكتمل' : '6. Completed'}</span>
         </div>
       </div>
 
@@ -1123,11 +1411,11 @@ async function submitWhatsAppOrder(e) {
       <div style="display:flex;gap:0.75rem;flex-wrap:wrap;justify-content:center;">
         <a href="${data.whatsapp_url}" target="_blank" rel="noopener" class="whatsapp-btn-big" style="text-decoration:none;flex:1;display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;">
           <svg class="ico-svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.414-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          <span>فتح واتساب وإرسال الطلب الآن (+968 91247722)</span>
+          <span>${isAr ? 'فتح واتساب وإرسال الطلب الآن (+968 91247722)' : 'Open WhatsApp & Send Order Now (+968 91247722)'}</span>
         </a>
         <button type="button" class="btn-royal-gold" onclick="copyOrderWhatsAppText()" style="display:inline-flex;align-items:center;gap:0.45rem;">
           <svg class="ico-svg" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          <span>نسخ نص الرسالة</span>
+          <span>${isAr ? 'نسخ نص الرسالة' : 'Copy Message Text'}</span>
         </button>
       </div>
     `;
@@ -1145,7 +1433,7 @@ function copyOrderWhatsAppText() {
   const el = document.getElementById('generated-wa-text');
   if (!el) return;
   navigator.clipboard.writeText(el.value);
-  showToast('تم نسخ تفاصيل الطلب بنجاح!');
+  showToast(STATE.lang === 'ar' ? 'تم نسخ تفاصيل الطلب بنجاح!' : 'Order details copied to clipboard!');
 }
 
 function openSpecialEventWhatsApp() {
