@@ -289,7 +289,7 @@ function renderCategories() {
   const products = STATE.store.products || [];
 
   const allCard = `
-    <div class="category-card ${STATE.selectedCategory === 'ALL' ? 'active' : ''}" onclick="selectCategory('ALL')">
+    <div class="category-card ${STATE.selectedCategory === 'ALL' ? 'active' : ''}" onclick="selectCategory('ALL', true)">
       <div class="category-card-title">${t.allCategories}</div>
       <div class="category-card-count">${products.length} ${t.itemsCount}</div>
     </div>
@@ -301,7 +301,7 @@ function renderCategories() {
       const count = products.filter((p) => p.category_id === c.id).length;
       const isActive = STATE.selectedCategory === c.code;
       return `
-      <div class="category-card ${isActive ? 'active' : ''}" onclick="selectCategory('${c.code}')">
+      <div class="category-card ${isActive ? 'active' : ''}" onclick="selectCategory('${c.code}', true)">
         <div class="category-card-title">${tr.name}</div>
         <div class="category-card-count">${count} ${t.itemsCount}</div>
       </div>
@@ -321,22 +321,61 @@ function renderCategories() {
       .join('');
 }
 
-function selectCategory(catCode) {
+function selectCategory(catCode, autoScroll = false) {
   STATE.selectedCategory = catCode;
   renderCategories();
-  renderCatalog();
+
+  const grid = document.getElementById('catalog-products-grid');
+  if (grid) {
+    grid.classList.add('page-transitioning');
+    setTimeout(() => {
+      renderCatalog();
+      grid.classList.remove('page-transitioning');
+      grid.classList.add('page-entering');
+      setTimeout(() => grid.classList.remove('page-entering'), 260);
+    }, 70);
+  } else {
+    renderCatalog();
+  }
+
+  if (autoScroll) {
+    const catalogEl = document.getElementById('catalog-section');
+    if (catalogEl) {
+      const header = document.querySelector('.site-header.desktop-only');
+      const headerHeight = (header && window.innerWidth > 768) ? header.offsetHeight : 0;
+      const targetY = Math.max(0, catalogEl.getBoundingClientRect().top + window.pageYOffset - headerHeight - 12);
+      window.scrollTo({
+        top: targetY,
+        behavior: 'smooth'
+      });
+    }
+  }
 }
 
 function selectCategoryFromDropdown(catCode) {
-  selectCategory(catCode);
+  selectCategory(catCode, false);
 }
 
 function scrollToSection(sectionId, catCode) {
   if (catCode) {
-    selectCategory(catCode);
+    selectCategory(catCode, false);
   }
   const el = document.getElementById(sectionId);
-  if (el) el.scrollIntoView({ behavior: 'smooth' });
+  if (!el) return;
+
+  const header = document.querySelector('.site-header.desktop-only');
+  const headerHeight = (header && window.innerWidth > 768) ? header.offsetHeight : 0;
+  const targetY = Math.max(0, el.getBoundingClientRect().top + window.pageYOffset - headerHeight - 12);
+
+  window.scrollTo({
+    top: targetY,
+    behavior: 'smooth'
+  });
+
+  el.classList.remove('section-glided');
+  void el.offsetWidth;
+  el.classList.add('section-glided');
+  setTimeout(() => el.classList.remove('section-glided'), 600);
 }
 
 function openMobileNavDrawer() {
